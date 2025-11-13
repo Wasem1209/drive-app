@@ -1,0 +1,54 @@
+/* variables: colors, spacing, typography */
+
+/* Font */
+@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap");
+
+:root {
+  /* Brand */
+  --color-primary-60: rgba(255, 255, 255, 0.6);  /* "white:60" interpreted as 60% white */
+  --color-primary: #ffffff;
+  --color-secondary: #023E8A;
+  --color-accent: #FFF3B0;
+
+  /* Grayscale */
+  --gray-100: #F2F2F2;
+  --gray-500: #828282;
+  --gray-600: #8E8E93;
+
+  /* Semantic (ordered light → base → dark) */
+  --success-600: #0C7A13;
+  --success-500: #0F9918;
+  --success-700: #095C0E;
+
+  --warning-600: #CC6D00;
+  --warning-500: #FF8800;
+  --warning-700: #995200;
+
+  --error-600: #B73737;
+  --error-500: #E54545;
+  --error-700: #892929;
+
+  /* Spacing scale (px → rem, base 16px) */
+  --space-2: 0.125rem;    /* 2px */
+  --space-4: 0.25rem;     /* 4px */
+  --space-8: 0.5rem;      /* 8px */
+  --space-12: 0.75rem;    /* 12px */
+  --space-16: 1rem;       /* 16px */
+  --space-24: 1.5rem;     /* 24px */
+  --space-32: 2rem;       /* 32px */
+  --space-40: 2.5rem;     /* 40px */
+  --space-48: 3rem;       /* 48px */
+  --space-72: 4.5rem;     /* 72px */
+  --space-96: 6rem;       /* 96px */
+  --space-126: 7.875rem;  /* 126px */
+  --space-160: 10rem;     /* 160px */
+
+  /* Typography base */
+  --font-family: "Quicksand", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  --font-regular: 400;
+  --font-semibold: 600;
+
+  /* Body defaults */
+  --text-color: #000000;
+  --bg-color: #ffffff;
+}
