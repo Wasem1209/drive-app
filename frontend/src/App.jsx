@@ -1,4 +1,6 @@
 import './styles/App.css'
+import './auth/Register.jsx'
+import './auth/Verify.jsx'
 import { AuthProvider, ROLES, useAuth } from './auth/AuthContext.jsx'
 import { HashRouter, Route, Link } from './router/HashRouter.jsx'
 import ProtectedRoute from './components/ProtectedRoute.jsx'
@@ -53,6 +55,8 @@ function App() {
           element={<ProtectedRoute allowedRoles={[ROLES.admin]} element={<Admin />} />}
         />
         <Route path="/unauthorized" element={<Unauthorized />} />
+        <Route path="/Register" element={<Register />} />
+        <Route path="/Verify" element={<Verify />} />
       </HashRouter>
     </AuthProvider>
   )
