@@ -26,16 +26,25 @@ function Verify() {
           ))}
         </div>
         
-        <div style={{display:"flex", flexDirection:"column", justifyContent:"center"}}>
-         <button style={{ backgroundColor:"#023E8A", color:"#FFFFFF", display:"flex", flexDirection:"row"
-          , width:"470px", height:"70px", borderRadius:"12px", justifyContent:"center"
-          }} className="typ-button">Register</button>
+        <div 
+          style={{
+              display:"flex", 
+              flexDirection:"column", 
+              alignItems:"center",
+              textAlign:"center",
+            }}
+        >
+         <button style={{marginBottom:"10px"}} className="typ-button auth-btn">Register</button>
 
-         <p className="typ-button" style={{ color: "#8E8E93", display:"flex", flexDirection:"row"
-          , width:"470px", height:"70px", borderRadius:"12px", justifyContent:"center"}}>Didn’t receive the email? {" "} click{" "}
-          <a href="#" style={{ color: "blue", textDecoration: "none", cursor: "pointer" }}>here
-          </a>{" "} to resend it
-         </p>
+         <a 
+            href="/register"
+            className="typ-button"
+            style={{marginBottom:"32px",
+              color:"var(--gray-600)"
+            }}
+         >
+          Didn’t receive the email? click here to resend it
+         </a> 
 
          <a href="#" className="typ-body-lg">Change email</a>
         </div>
