@@ -1,10 +1,7 @@
 .verify-container {
-  width: 1440px;
-  height: 1129px;
-  top: 48px;
-  left: 2901px;
-  color: #FFFFFF;
   display: flex;
+    width: flex;
+    padding-inline: var(--space-40);
 }
 
 .verify-left{
@@ -15,7 +12,7 @@
     top: 48px;
     left: 40px;
     gap: 96px;
-    padding-inline: var(--space-40, --space-48);
+    margin-right: auto;
 }
 
 .typ-page-title{
@@ -42,13 +39,19 @@
     width: auto;
     height: auto;
     gap: 24px;
+    margin-top: var(--space-96);
+    margin-bottom: var(--space-96);
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .verify-code-input{
     width: 94px;
     height: 94px;
     border-radius: 8px;
-    border: 5px solid #FFF3B0;
+    border: 2px solid #FFF3B0;
+    text-align: center;
+    font-size: 32px;
 }
 
 .type-button{
@@ -73,6 +76,16 @@
   height: 24px;
 }
 
+.auth-btn {
+  width: 570px;
+  height: 70px;
+  border-radius: 12px;
+  background-color: #023E8A;
+  color: #FFFFFF;
+  border: none;
+  cursor: pointer;
+}
+
 .verify-right{
     width: 776px;
     height: 1129px;
@@ -83,6 +96,4 @@
 .illustration{
     width: 590px;
     height: 832px;
-    Top: 149px;
-    Left: 744px;
 }
