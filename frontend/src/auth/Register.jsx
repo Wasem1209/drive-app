@@ -15,26 +15,46 @@ function Register() {
          </p>
         </div>
 
-        <div>
-         <form className="register-form">
-          <label className="typ-form-label">Name</label>
-          <input className="typ-body-lg" type="text" placeholder="Enter your name" />
-          
-          <label className="typ-form-label">Email</label>
-          <input className="typ-body-lg" type="email" placeholder="Enter your email" />
+        <div className="register-form">
+         <form style={{ display:"flex", flexDirection:"column", gap:"24px", width:"auto"}}>
 
-          <label className="typ-form-label">Password</label>
-          <input className="typ-body-lg" type="password" placeholder="Set a password" />
+          <div>
+            <label className="typ-form-label">Name</label>
+            <input className="typ-body-lg form-input" type="text" placeholder="Enter your name" />
+          </div>
 
-          <label className="typ-form-label">Confirm password</label>
-          <input className="typ-body-lg" type="password" placeholder="Confirm password" />
+          <div>
+            <label className="typ-form-label">Email</label>
+            <input className="typ-body-lg form-input" type="email" placeholder="Enter your email" />
+          </div>
+
+          <div>
+            <label className="typ-form-label">Password</label>
+            <input className="typ-body-lg form-input" type="password" placeholder="Set a password" />
+          </div>
+
+          <div>
+            <label className="typ-form-label">Confirm password</label>
+            <input className="typ-body-lg form-input" type="password" placeholder="Confirm password" />
+          </div>
+
          </form>
         </div>
         
-        <div className="register-actions">
-          <button className="typ-button">Register</button>
+        <div style={{
+            display:"flex", 
+            flexDirection:"column", 
+            width:"100%", 
+            height:"auto", 
+            gap:"16px", 
+            textAlign:"center",
+            marginTop:"24px",
+            alignItems:"center",
+          
+          }} className="register-actions">
+          <button className="typ-button auth-btn">Register</button>
         
-          <button className="typ-button">
+          <button className="typ-button auth-btn auth-btn-google">
            <img scale="crop" width="19.25px" height="20px"
             src={google_icon}
             alt="Google icon"/>Continue with Google
