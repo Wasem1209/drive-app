@@ -43,7 +43,7 @@ export default function Login() {
           }} 
           className="login-actions"
         >
-          <button className="typ-button auth-btn">Register</button>
+          <button className="typ-button auth-btn">Login</button>
         
           <button className="typ-button auth-btn auth-btn-google">
            <img src={google_icon} alt="Google icon"/>Continue with Google
