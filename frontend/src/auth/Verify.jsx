@@ -1,5 +1,5 @@
 import React from "react";
-import "./../styles/Verify.css";
+import "./../styles/Auth.css";
 import illustration from "./../assets/image-left.jpg";
 
 function Verify() {
@@ -46,7 +46,7 @@ function Verify() {
           Didn’t receive the email? click here to resend it
          </a> 
 
-         <a href="#" className="typ-body-lg">Change email</a>
+         <a href="#" style={{color:"var(--error-500)"}} className="typ-body-lg">Change email</a>
         </div>
 
       </div>

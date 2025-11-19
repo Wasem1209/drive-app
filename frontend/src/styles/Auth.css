@@ -2,23 +2,20 @@
 @import "./typography.css";
 
 .register-container {
-    display: flex;
-    width: 1440px;
-    height: 1129px;
-    Top: 48px;
-    Left: 1418px;
-    color: #FFFFFF;
+  display: flex;
+  width: flex;
+  padding-inline: var(--space-40);
 }
 
 .register-left {
-    display: flex;
-    flex-direction: column;
-    width: 598px;
-    height: auto;
-    Top: 48px;
-    Left: 40px;
-    Gap: 96px;
-    padding-inline: var(--space-40, --space-48);
+  display: flex;
+  flex-direction: column;
+  width: 598px;
+  height: auto;
+  Top: 48px;
+  Left: 40px;
+  Gap: 96px;
+  margin-right: auto;
 }
 
 .typ-page-title {
@@ -73,6 +70,7 @@
   line-height: 3.5rem;      /* 56px */
   letter-spacing: 0em;      /* 0% */
   color: #023E8A;
+  border: 5px solid #0e0d0c;
 }
 
 .register-actions {
@@ -89,6 +87,7 @@
     height: 1129px;
     Left: 664px;
     color: #F7F7F7;
+    margin-top: 149px;
 }
 
 .illustration {
@@ -102,6 +101,12 @@
     padding-inline: var(--space-40);
  }
 
+ .verify-container {
+  display: flex;
+  width: flex;
+  padding-inline: var(--space-40);
+}
+
  .login-left {
     flex-flow: vertical;
     width: 598px;
@@ -110,17 +115,27 @@
     left: 40px;
     gap: 96px;
     margin-right: auto;
-    
- }
+  }
+
+  .verify-left{
+    display: flex;
+    flex-direction: column;
+    width: 598px;
+    height: auto;
+    top: 48px;
+    left: 40px;
+    gap: 96px;
+    margin-right: auto;
+}
 
  .login-form {
-  display: flex;
-  flex-direction: column;
-  width: auto;
-  height: auto;
-  gap: 24px;
-  margin-top: var(--space-96);
-  margin-bottom: var(--space-96);
+    display: flex;
+    flex-direction: column;
+    width: auto;
+    height: auto;
+    gap: 24px;
+    margin-top: var(--space-96);
+    margin-bottom: var(--space-96);
 }
 
 .login-right {
@@ -130,6 +145,13 @@
   color: #F7F7F7;
 }
 
+.verify-right{
+    width: 776px;
+    height: 1129px;
+    left: 664px;
+    color: #F7F7F7
+}
+
 .login-actions {
   display: flex;
   flex-direction: column;
@@ -137,6 +159,27 @@
   max-width: 598px;
   height: auto;
   gap: 32px;
+}
+
+.verify-code-inputs{
+    display: flex;
+    flex-direction: row;
+    width: auto;
+    height: auto;
+    gap: 24px;
+    margin-top: var(--space-96);
+    margin-bottom: var(--space-96);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.verify-code-input{
+    width: 94px;
+    height: 94px;
+    border-radius: 8px;
+    border: 2px solid #FFF3B0;
+    text-align: center;
+    font-size: 32px;
 }
 
 .form-input {
