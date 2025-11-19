@@ -1,21 +1,25 @@
-import "./../styles/Register.css";
+import "./../styles/Auth.css";
 import illustration from "./../assets/image-left.jpg"; 
-import "./../assets/image.jpg"
+import google_icon from "./../assets/image.png";
 
 function Register() {
   return (
     <div className="register-container">
       <div className="register-left">
-        <h1 className="typ-page-title">Create your account</h1>
-        <p className="typ-subtext">
+
+        <div display="flex" flexDirection="column" width="100%" max-width="598px" height="auto">
+         <h1 className="typ-page-title">Create your account</h1>
+         <p className="typ-subtext">
           Your vehicle’s compliance status, verified in seconds. Fast, secure,
           and corruption-free.
-        </p>
+         </p>
+        </div>
 
-        <form className="register-form">
+        <div>
+         <form className="register-form">
           <label className="typ-form-label">Name</label>
           <input className="typ-body-lg" type="text" placeholder="Enter your name" />
-
+          
           <label className="typ-form-label">Email</label>
           <input className="typ-body-lg" type="email" placeholder="Enter your email" />
 
@@ -24,21 +28,22 @@ function Register() {
 
           <label className="typ-form-label">Confirm password</label>
           <input className="typ-body-lg" type="password" placeholder="Confirm password" />
+         </form>
+        </div>
+        
+        <div className="register-actions">
+          <button className="typ-button">Register</button>
+        
+          <button className="typ-button">
+           <img scale="crop" width="19.25px" height="20px"
+            src={google_icon}
+            alt="Google icon"/>Continue with Google
+          </button>
 
-          <button className=".typ-button">Register</button>
-        </form>
-
-        <button className=".typ-button">
-          <img
-            src="./../assets/image.jpg"
-            alt="Google icon"
-          />
-          Continue with Google
-        </button>
-
-        <p className="typ-body-lg">
+          <p className="typ-body-lg">
           Already have an account? <a href="/login">Log in</a>
-        </p>
+          </p>
+        </div>  
       </div>
 
       <div className="register-right">
