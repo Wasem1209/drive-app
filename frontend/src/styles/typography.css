@@ -1,0 +1,80 @@
+/* text styles */
+
+/* Global */
+html {
+  font-size: 100%; /* 16px */
+}
+
+body {
+  font-family: var(--font-family);
+  color: var(--text-color);
+  background: var(--bg-color);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Desktop */
+.typ-page-title {
+  font-family: var(--font-family);
+  font-weight: var(--font-semibold);
+  font-size: 3rem;          /* 48px */
+  line-height: 1.875rem;    /* 30px */
+  letter-spacing: -0.015em; /* -1.5% */
+}
+
+.typ-subtext {
+  font-family: var(--font-family);
+  font-weight: var(--font-regular);
+  font-size: 1.5rem;        /* 24px */
+  line-height: 2rem;        /* 32px */
+  letter-spacing: 0.012em;  /* +1.2% */
+}
+
+.typ-form-label {
+  font-family: var(--font-family);
+  font-weight: var(--font-regular);
+  font-size: 1.25rem;       /* 20px */
+  line-height: 0.875rem;    /* 14px */
+  letter-spacing: -0.01em;  /* -1% */
+}
+
+.typ-body-lg {
+  font-family: var(--font-family);
+  font-weight: var(--font-regular);
+  font-size: 1rem;          /* 16px */
+  line-height: 1.5rem;      /* 24px */
+  letter-spacing: -0.012em; /* -1.2% */
+}
+
+.typ-button {
+  font-family: var(--font-family);
+  font-weight: var(--font-semibold);
+  font-size: 1.0625rem;     /* 17px */
+  line-height: 3.5rem;      /* 56px */
+  letter-spacing: 0em;      /* 0% */
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .typ-page-title {
+    font-weight: var(--font-semibold);
+    font-size: 2rem;         /* 32px */
+    line-height: 2.5rem;     /* 40px */
+    letter-spacing: -0.012em;/* -1.2% */
+  }
+
+  .typ-subtext {
+    font-weight: var(--font-semibold);
+    font-size: 1.25rem;      /* 20px */
+    line-height: 1.75rem;    /* 28px */
+    letter-spacing: -0.015em;/* -1.5% */
+  }
+
+  .typ-form-label {
+    font-weight: var(--font-semibold);
+    /* NOTE: font-size not specified in brief; set to 1rem for now */
+    font-size: 1rem;         /* 16px (assumed) */
+    line-height: 1.5rem;     /* 24px */
+    letter-spacing: -0.01em; /* -1% */
+  }
+}
