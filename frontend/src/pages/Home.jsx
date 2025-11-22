@@ -28,7 +28,7 @@ export default function Home() {
           Join us for unforgettable travel experiences tailored to your dreams and desires.
         </p>
 
-        <Link to="/register" className="hero-button">
+        <Link to="/Register.jsx" className="hero-button">
           Start Your Adventure
         </Link>
       </MOTION.div>

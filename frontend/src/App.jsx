@@ -1,39 +1,18 @@
-import './styles/App.css'
-import { AuthProvider, ROLES } from './auth/AuthContext.jsx'
-import { HashRouter, Route } from './router/HashRouter.jsx'
-import ProtectedRoute from './components/ProtectedRoute.jsx'
-import Home from './pages/Home.jsx'
-import Drivers from './pages/Drivers.jsx'
-import Passengers from './pages/Passengers.jsx'
-import Police from './pages/Police.jsx'
-import Admin from './pages/Admin.jsx'
-import Unauthorized from './pages/Unauthorized.jsx'
-import NotFound from './pages/NotFound.jsx'
-import Register from './auth/Register.jsx'
-import Verify from './auth/Verify.jsx'
-import Login from './auth/Login.jsx'
+import './styles/App.css';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Home from './pages/Home.jsx';
+import Register from './auth/Register.jsx';
 
 
 function App() {
   return (
-    <AuthProvider>
-      <TopBar />
-      <HashRouter notFound={<NotFound />}>
-        <Route path="/" element={<Home />} />
-        <Route path="/drivers" element={<Drivers />} />
-        <Route path="/passengers" element={<Passengers />} />
-        <Route
-          path="/police"
-          element={<ProtectedRoute allowedRoles={[ROLES.police, ROLES.admin]} element={<Police />} />}
-        />
-        <Route
-          path="/admin"
-          element={<ProtectedRoute allowedRoles={[ROLES.admin]} element={<Admin />} />}
-        />
-        <Route path="/unauthorized" element={<Unauthorized />} />
-      </HashRouter>
-    </AuthProvider>
-  )
+
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/register" element={<Register />} />
+    </Routes>
+
+  );
 }
 
-export default App
+export default App;
