@@ -9,43 +9,30 @@ import Police from './pages/Police.jsx'
 import Admin from './pages/Admin.jsx'
 import Unauthorized from './pages/Unauthorized.jsx'
 import NotFound from './pages/NotFound.jsx'
+import Register from './auth/Register.jsx'
+import Verify from './auth/Verify.jsx'
+import Login from './auth/Login.jsx'
 
 
 function App() {
   return (
-    <>
-      <AuthProvider>
-        <HashRouter notFound={<NotFound />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/drivers" element={<Drivers />} />
-          <Route path="/passengers" element={<Passengers />} />
-
-          <Route
-            path="/police"
-            element={
-              <ProtectedRoute
-                allowedRoles={[ROLES.police, ROLES.admin]}
-                element={<Police />}
-              />
-            }
-          />
-
-          <Route
-            path="/admin"
-            element={
-              <ProtectedRoute
-                allowedRoles={[ROLES.admin]}
-                element={<Admin />}
-              />
-            }
-          />
-
-          <Route path="/unauthorized" element={<Unauthorized />} />
-        </HashRouter>
-      </AuthProvider>
-
-
-    </>
+    <AuthProvider>
+      <TopBar />
+      <HashRouter notFound={<NotFound />}>
+        <Route path="/" element={<Home />} />
+        <Route path="/drivers" element={<Drivers />} />
+        <Route path="/passengers" element={<Passengers />} />
+        <Route
+          path="/police"
+          element={<ProtectedRoute allowedRoles={[ROLES.police, ROLES.admin]} element={<Police />} />}
+        />
+        <Route
+          path="/admin"
+          element={<ProtectedRoute allowedRoles={[ROLES.admin]} element={<Admin />} />}
+        />
+        <Route path="/unauthorized" element={<Unauthorized />} />
+      </HashRouter>
+    </AuthProvider>
   )
 }
 
