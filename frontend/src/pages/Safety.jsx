@@ -79,7 +79,7 @@ export default function Frsc() {
                     <ul>
                         <li>Drivers must maintain proper vehicle documentation and roadworthiness.</li>
                         <li>No use of mobile phones while driving.</li>
-                        <li>Passengers should report reckless driving immediately.</li>
+                        <li>Passengers shoul report reckless driving immediately.</li>
                         <li>Drivers must avoid overloading and maintain safe speed limits.</li>
                     </ul>
                 </div>
