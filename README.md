@@ -8,7 +8,7 @@
 > Autofy secures and digitizes urban mobility by minting a Digital Vehicle Identity (DVI) NFT on Cardano. The DVI anchors compliance metadata, ownership proofs, and verified status on-chain so that drivers, passengers, and enforcement teams share a single tamper-proof source of truth.
 
 <p align="center">
-	<img src="public/images/autofy-hero.svg" alt="Autofy hero" width="620" />
+    <img src="frontend/public/images/autofy-hero.svg" alt="Autofy hero" width="620" />
 </p>
 
 ## 🔎 Product Snapshot
