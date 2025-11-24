@@ -41,7 +41,7 @@ export default function Home() {
       >
 
         {/* DRIVER EXPERIENCE */}
-        <Link to="/driver" className="card-link">
+        <Link to="/drivers" className="card-link">
           <MOTION.div whileHover={{ scale: 1.03 }} className="card">
             <span className="card-badge" style={{ color: "#2563EB", backgroundColor: "#DBEAFE" }}>
               Driver Experiences
