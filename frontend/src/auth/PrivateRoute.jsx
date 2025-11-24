@@ -5,13 +5,14 @@ import { AuthContext } from "./AuthContext";
 export default function PrivateRoute({ children, requiredRole }) {
     const { token, role } = useContext(AuthContext);
 
-    // Not logged in
+    // If not logged in → redirect to login
     if (!token) return <Navigate to="/login" />;
 
-    // Logged in but wrong dashboard
-    if (requiredRole && role !== requiredRole) {
+    // If role is provided but does not match (case-insensitive)
+    if (requiredRole && role?.toLowerCase() !== requiredRole.toLowerCase()) {
         return <Navigate to="/unauthorized" />;
     }
 
+    // Everything correct → allow access
     return children;
 }
