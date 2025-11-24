@@ -1,0 +1,33 @@
+<svg width="1200" height="520" viewBox="0 0 1200 520" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Autofy — Securing Urban Mobility</title>
+  <desc id="desc">A gradient hero banner describing Autofy, a Cardano powered transport compliance platform.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#04163a" />
+      <stop offset="50%" stop-color="#0f4c81" />
+      <stop offset="100%" stop-color="#12c2e9" />
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f9ed69" />
+      <stop offset="50%" stop-color="#f08a5d" />
+      <stop offset="100%" stop-color="#b83b5e" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="520" rx="32" fill="url(#bg)" />
+  <g fill="#ffffff" font-family="'Inter', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif">
+    <text x="80" y="190" font-size="64" font-weight="700">Autofy</text>
+    <text x="80" y="250" font-size="28" opacity="0.9">Digital Vehicle Identity · Cardano · Safe Roads</text>
+    <text x="80" y="320" font-size="22" opacity="0.8">On-chain compliance snapshots, QR rider verification, officer analytics.</text>
+  </g>
+  <g transform="translate(780,110)">
+    <rect width="320" height="520" rx="36" fill="#0d1b2a" />
+    <rect x="20" y="40" width="280" height="440" rx="28" fill="#142c44" />
+    <circle cx="160" cy="420" r="60" fill="url(#accent)" opacity="0.35" />
+    <text x="60" y="120" fill="#00d1ff" font-family="'Inter', sans-serif" font-size="20" font-weight="600">Compliance Snapshot</text>
+    <text x="60" y="160" fill="#ffffff" font-size="16">Roadworthiness ✅</text>
+    <text x="60" y="190" fill="#ffffff" font-size="16">Insurance ✅</text>
+    <text x="60" y="220" fill="#ffffff" font-size="16">Tax ✅</text>
+    <text x="60" y="260" fill="#84d4ff" font-size="15">Safe Driving Score · 92</text>
+    <text x="60" y="300" fill="#84d4ff" font-size="15">Token Rewards · 480 ATO</text>
+  </g>
+</svg>

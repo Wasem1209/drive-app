@@ -8,7 +8,7 @@
 > Autofy secures and digitizes urban mobility by minting a Digital Vehicle Identity (DVI) NFT on Cardano. The DVI anchors compliance metadata, ownership proofs, and verified status on-chain so that drivers, passengers, and enforcement teams share a single tamper-proof source of truth.
 
 <p align="center">
-	<img src="public/images/OIP.webp" alt="Autofy mobile UI preview" width="520" />
+	<img src="public/images/autofy-hero.svg" alt="Autofy hero" width="620" />
 </p>
 
 ## 🔎 Product Snapshot
@@ -44,10 +44,10 @@
 
 | Layer | Tools | Highlights |
 | --- | --- | --- |
-| Frontend 🎨 | React 19, Vite 7, React Router, Framer Motion, Lucide Icons | Responsive marketing + driver/passenger flows, PhoneFrame device previews |
-| Backend ⚙️ | Node.js, Express 5, MongoDB/Mongoose, Lucid Cardano SDK, JWT, Nodemailer | Auth, compliance workflows, digital receipts, email verification |
-| Blockchain ⛓️ | Cardano, Aiken, Lucid | Mint/verify DVIs, safe-driving rewards, govern on-chain receipts |
-| Tooling 🧪 | ESLint 9, TypeScript (backend), npm scripts | Consistent linting, type safety, DX optimizations |
+| Frontend 🎨 | ![React](https://img.shields.io/badge/-React-20232a?logo=react&logoColor=61dafb) ![Vite](https://img.shields.io/badge/-Vite-563d7c?logo=vite&logoColor=ffd62e) ![React Router](https://img.shields.io/badge/-React%20Router-000000?logo=reactrouter&logoColor=ca4245) ![Framer Motion](https://img.shields.io/badge/-Framer%20Motion-000000?logo=framer&logoColor=fff) ![Lucide](https://img.shields.io/badge/-Lucide-111?logo=lucide&logoColor=70c1ff) | Responsive marketing + driver/passenger flows, PhoneFrame device previews |
+| Backend ⚙️ | ![Node.js](https://img.shields.io/badge/-Node.js-3c873a?logo=node.js&logoColor=fff) ![Express](https://img.shields.io/badge/-Express-000000?logo=express&logoColor=fff) ![MongoDB](https://img.shields.io/badge/-MongoDB-001e2b?logo=mongodb&logoColor=4db33d) ![Lucid](https://img.shields.io/badge/-Lucid%20Cardano-0033ad?logo=cardano&logoColor=fff) ![JWT](https://img.shields.io/badge/-JWT-000000?logo=jsonwebtokens&logoColor=fff) ![Nodemailer](https://img.shields.io/badge/-Nodemailer-23c552?logo=gmail&logoColor=fff) | Auth, compliance workflows, digital receipts, email verification |
+| Blockchain ⛓️ | ![Cardano](https://img.shields.io/badge/-Cardano-0033ad?logo=cardano&logoColor=fff) ![Aiken](https://img.shields.io/badge/-Aiken-111?logo=laravelnova&logoColor=fff) ![Lucid](https://img.shields.io/badge/-Lucid%20SDK-0b132b?logo=lua&logoColor=fff) | Mint/verify DVIs, safe-driving rewards, govern on-chain receipts |
+| Tooling 🧪 | ![ESLint](https://img.shields.io/badge/-ESLint-4b32c3?logo=eslint&logoColor=fff) ![TypeScript](https://img.shields.io/badge/-TypeScript-3178c6?logo=typescript&logoColor=fff) ![npm](https://img.shields.io/badge/-npm-cb3837?logo=npm&logoColor=fff) | Consistent linting, type safety, DX optimizations |
 
 ## 📦 Repository Layout
 
