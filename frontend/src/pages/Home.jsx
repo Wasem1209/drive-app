@@ -44,7 +44,7 @@ export default function Home() {
         <Link to="/drivers" className="card-link">
           <MOTION.div whileHover={{ scale: 1.03 }} className="card">
             <span className="card-badge" style={{ color: "#2563EB", backgroundColor: "#DBEAFE" }}>
-              Driver Experiences
+              Driver Experience
             </span>
             <div className="card-icon">
               <FaCar size={65} color="#2563EB" />
