@@ -1,8 +1,8 @@
 import './styles/App.css';
 import { Routes, Route } from 'react-router-dom';
 import Home from './pages/Home.jsx';
-import Register from './auth/Register.jsx';
-import Login from "./auth/Login";
+import Register from './pages/Register.jsx';
+import Login from "./pages/Login.jsx";
 import Drivers from './pages/Drivers.jsx';
 import Passenger from './pages/Passenger.jsx';
 import Safety from './pages/Safety';
