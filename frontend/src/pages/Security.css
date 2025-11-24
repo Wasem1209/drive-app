@@ -1,0 +1,212 @@
+/* ===== SECURITY PAGE STYLES ===== */
+
+:root {
+    --primary: #0a3d62;
+    /* Deep security blue */
+    --secondary: #d63031;
+    /* Red for warnings/emphasis */
+    --text-dark: #1f2937;
+    --text-light: #6b7280;
+    --bg-light: #f5f7fa;
+    --card-bg: #ffffff;
+    --radius: 14px;
+    --shadow: rgba(0, 0, 0, 0.08) 0px 4px 20px;
+    --transition: 0.3s ease;
+}
+
+/* Container */
+.security-container {
+    max-width: 900px;
+    margin: auto;
+    padding: 40px 22px;
+    background: var(--bg-light);
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    animation: fadeIn 0.6s ease-in-out;
+}
+
+/* Header */
+.security-header {
+    text-align: center;
+    margin-bottom: 40px;
+    animation: slideDown 0.7s ease-in-out;
+}
+
+.security-title {
+    font-size: 32px;
+    color: var(--primary);
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.security-icon {
+    font-size: 34px;
+}
+
+.security-subtitle {
+    margin-top: 8px;
+    color: var(--text-light);
+    font-size: 16px;
+}
+
+/* Card */
+.security-card {
+    background: var(--card-bg);
+    padding: 24px;
+    border-radius: var(--radius);
+    margin-bottom: 30px;
+    box-shadow: var(--shadow);
+    border-left: 5px solid var(--primary);
+    animation: fadeUp 0.6s ease-in-out;
+}
+
+/* Title Row */
+.security-section-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--primary);
+    cursor: pointer;
+    user-select: none;
+    gap: 10px;
+}
+
+.security-section-title svg {
+    font-size: 22px;
+}
+
+/* Collapsible */
+.security-section-content {
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+}
+
+.security-section-content.expanded {
+    max-height: 1200px;
+}
+
+.security-section-content.collapsed {
+    max-height: 0;
+}
+
+/* List Styling */
+.security-section-content ul {
+    list-style: none;
+    padding-left: 20px;
+    margin-top: 12px;
+}
+
+.security-section-content ul li {
+    margin-bottom: 10px;
+    color: var(--text-dark);
+    position: relative;
+    padding-left: 18px;
+}
+
+.security-section-content ul li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: var(--secondary);
+    font-size: 20px;
+    line-height: 20px;
+}
+
+/* Register Button */
+.security-register-container {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.security-register-btn {
+    background-color: var(--primary);
+    color: #fff;
+    padding: 12px 28px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: var(--radius);
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: var(--transition);
+}
+
+.security-register-btn:hover {
+    background-color: var(--secondary);
+    transform: translateY(-2px);
+}
+
+.security-register-icon {
+    font-size: 18px;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(14px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-14px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .security-container {
+        padding: 24px 14px;
+    }
+
+    .security-title {
+        font-size: 26px;
+    }
+
+    .security-card {
+        padding: 18px;
+    }
+
+    .security-section-title {
+        font-size: 18px;
+    }
+
+    .security-section-title svg {
+        font-size: 20px;
+    }
+
+    .security-register-btn {
+        padding: 10px 22px;
+        font-size: 14px;
+    }
+}

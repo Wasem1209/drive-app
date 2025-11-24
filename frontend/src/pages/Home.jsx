@@ -41,7 +41,7 @@ export default function Home() {
       >
 
         {/* DRIVER EXPERIENCE */}
-        <Link to="/driver-experience" className="card-link">
+        <Link to="/driver" className="card-link">
           <MOTION.div whileHover={{ scale: 1.03 }} className="card">
             <span className="card-badge" style={{ color: "#2563EB", backgroundColor: "#DBEAFE" }}>
               Driver Experiences
@@ -53,10 +53,9 @@ export default function Home() {
         </Link>
 
         {/* PASSENGER EXPERIENCE */}
-        <Link to="/passenger-experience" className="card-link">
+        <Link to="/passenger" className="card-link">
           <MOTION.div whileHover={{ scale: 1.03 }} className="card">
-            <span className="card-badge" style={{ color: "#DB2777", backgroundColor: "#FCE7F3" }}>
-              Passenger Experience
+            <span className="card-badge" style={{ color: "#DB2777", backgroundColor: "#FCE7F3" }}>TPS Experience
             </span>
             <div className="card-icon">
               <FaUserFriends size={65} color="#DB2777" />
@@ -65,7 +64,7 @@ export default function Home() {
         </Link>
 
         {/* FRSC EXPERIENCE */}
-        <Link to="/frsc-experience" className="card-link">
+        <Link to="/safety" className="card-link">
           <MOTION.div whileHover={{ scale: 1.03 }} className="card">
             <span className="card-badge" style={{ color: "#7C3AED", backgroundColor: "#F3E8FF" }}>
               FRSC Experience
@@ -77,7 +76,7 @@ export default function Home() {
         </Link>
 
         {/* SECURITY EXPERIENCE */}
-        <Link to="/security-experience" className="card-link">
+        <Link to="/security" className="card-link">
           <MOTION.div whileHover={{ scale: 1.03 }} className="card">
             <span className="card-badge" style={{ color: "#059669", backgroundColor: "#D1FAE5" }}>
               Security Experience
