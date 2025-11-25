@@ -2,6 +2,8 @@ import { useState } from "react";
 import "./../styles/Auth.css";
 import { registerUser } from "../api/auth";
 import illustration from "./../assets/image-left.jpg";
+import { Link } from "react-router-dom";
+
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -155,7 +157,7 @@ function Register() {
           </form>
 
           <p className="auth-foot">
-            Already have an account? <a href="/login">Log in</a>
+            Already have an account? <Link to="/login">Log in</Link>
           </p>
         </div>
 

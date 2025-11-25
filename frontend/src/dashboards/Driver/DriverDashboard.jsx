@@ -1,4 +1,4 @@
-export default function OfficersDashboard() {
+export default function DriverDashboard() {
     return (
         <div>
             Admin Dashboard
