@@ -1,16 +1,80 @@
 @import "./tokens.css";
 
+.header-bar{
+    width: 89%;
+    position: absolute;
+    display: flex;
+    justify-content: space-between;
+    padding: 30px 20px;
+    margin: 0 auto;
+}
+.header-left{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.welcom-greeting{
+    font-size: var(--font-size-18);
+    color: var(--brand-primary);
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+.user-name{
+    font-size: 12px;
+    font-weight: 200;
+    color: var(--brand-primary-opaque-60);
+}
 .wallet{
-    width: 85%;
-    height: 110px;
+    width: 89%;
+    height: 120px;
     background-color: var(--brand-primary);
-    top: 160px;
-    /* Center horizontally within the positioned ancestor */
+    position: absolute;
+    top: 100px;
     left: 50%;
     transform: translateX(-50%);
-    position: absolute;
+    margin: 16px auto 0;
     border-radius: var(--space-12);
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.05);
+    /* remove top/left/transform */
+}
+
+.due-notification-container{
+    margin-inline: 20px;
+    margin-block: var(--space-16);
+    display: flex;
+    gap: var(--space-16);
+
+    /* horizontal scrolling rail */
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch; /* momentum scrolling on iOS */
+    scroll-behavior: smooth; /* smooth scroll */
+    padding-bottom: 8px; /* spacing so last card isn't clipped by scrollbar */
+
+    /* optional: makes snapping to each card feel natural */
+    scroll-snap-type: x mandatory;
+}
+
+/* hide WebKit scrollbar for a cleaner look (optional) */
+.due-notification-container::-webkit-scrollbar{
+    height: 8px;
+}
+.due-notification-container::-webkit-scrollbar-track{
+    background: transparent;
+}
+.due-notification-container::-webkit-scrollbar-thumb{
+    background: rgba(0,0,0,0.15);
+    border-radius: 999px;
+}
+
+/* ensure cards form a horizontal rail and don't shrink */
+.due-notification-card{
+    width: 272px;
+    height: 85px;
+    background-color: var(--error-400-tp);
+    flex: 0 0 auto;
+    border-radius: var(--space-8);
+    scroll-snap-align: start;
 }
 
 .streak-card{
@@ -48,4 +112,18 @@
 }
 .roadworthiness-card{
     height: 295px;
+}
+.cta-btn-container{
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    height: auto;
+    margin-top: var(--space-40);
+}
+
+.cta-btn{
+    flex: 1 1 40%;
+    height: 171px;
+    margin: var(--space-8);
+    border-radius: var(--space-12);
 }

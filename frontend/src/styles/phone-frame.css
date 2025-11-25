@@ -47,6 +47,15 @@
 		0 0 0 8px rgba(18, 18, 18, 0.8),
 		0 18px 35px rgba(0, 0, 0, 0.7),
 		0 45px 60px rgba(0, 0, 0, 0.35);
+
+	/* make the phone a bit longer but still responsive */
+	height: min(960px, 120vh);
+
+	/* keep flex layout so inner content can scroll */
+	display: flex;
+	flex-direction: column;
+	/* ensure inner elements can use full height */
+	box-sizing: border-box;
 }
 
 .device-frame::before,
@@ -83,6 +92,11 @@
 	background: #020204;
 	overflow: hidden;
 	box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.07) inset;
+
+	/* make the mask stretch to fill the frame and contain the scrollable area */
+	flex: 1 1 auto;
+	display: flex;
+	flex-direction: column;
 }
 
 .dynamic-island {
@@ -119,11 +133,15 @@
 	box-shadow: 0 0 12px rgba(28, 156, 234, 0.45);
 }
 
+/* ensure the scrollable content is a positioned flex child and won't let absolutely positioned children escape */
 .screen-content {
 	border-radius: inherit;
 	background-color: #ffffff;
 	color: #000000;
-	min-height: auto; /* taller baseline to avoid looking shortened */
+	/* allow the content to shrink inside the flex container and enable scrolling */
+	flex: 1 1 auto;
+	position: relative;
+	min-height: 0;
 	padding:  0px 0px 20px;
 	overflow-y: auto;
 	scrollbar-width: none;
@@ -296,6 +314,10 @@
 		border: none;
 		background: none;
 		box-shadow: none;
+
+		/* allow full-height behavior on small screens */
+		height: auto;
+		display: block;
 	}
 
 	/* Show island & details for authentic phone look */
@@ -320,6 +342,10 @@
 		min-height: 100vh; /* full viewport height */
 		padding: 0; /* remove interior padding as requested */
 		background: #ffffff;
+
+		/* restore default scrolling behavior */
+		flex: none;
+		overflow-y: auto;
 	}
 
 	.dynamic-island {

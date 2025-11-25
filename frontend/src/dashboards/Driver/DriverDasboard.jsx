@@ -2,28 +2,41 @@ import '../../styles/driverdashboard.css'
 import PhoneFrame from "../../components/PhoneFrame";
 import rectangle from "../../assets/rectangle.svg";
 import DueNotification from '../../components/DueNotification';
+import profilePic from '../../assets/image 1@2x.png';
+import notificationBell from '../../assets/elements.png';
 
 export default function DriverDashboard(){
     return(
         <PhoneFrame>
-            <div>
+            <div style={{position: 'relative'}}>
                 <div className='header-bar'>
                     {/* this div contains the component at the left(greeting, user image, user name) */}
                     <div className='header-left'>
                         {/* this div contains the avatar */}
                         <div>
-                            <img />
+                            <img
+                                src={profilePic}
+                                width={40}
+                                height={40}
+                                alt="Profile"
+                            />
                         </div>
                         {/* this div contains the greeting and user name */}
-                        <div>
-                            <p>Welcom</p>
-                            <p>Emeka D.</p>
+                        <div style={{display: 'flex', flexDirection: 'column', lineHeight: '0px',}}>
+                            <p className='welcom-greeting'>Welcom</p>
+                            <p className='user-name'>Emeka D.</p>
                         </div>
                     </div>
 
                     {/* this component at the right is the notification icon button(notification bell) */}
-                    <button>
-                        <img />
+                    <button
+                        style={{
+                            background: 'transparent',
+                            border: 'none',
+                            cursor: 'pointer',
+
+                        }}>
+                        <img src={notificationBell}/>
                     </button>
 
                 </div>
@@ -50,7 +63,7 @@ export default function DriverDashboard(){
                         justifyContent: 'center',
                         alignItems: 'center',
                         gap: '10px',
-                        marginTop: '82px',
+                        marginTop: '62px',
                         paddingInline: '20px',
                     }}
                 >
@@ -84,10 +97,6 @@ export default function DriverDashboard(){
                             gap: '16px',
                         }}
                     >
-                        <div className='safe-driving-card   '>
-
-                        </div>
-
                         <div className='safe-driving-card vehicle-detail-card'>
 
                         </div>
@@ -99,6 +108,54 @@ export default function DriverDashboard(){
                     <div className='roadworthiness-card vehicle-detail-card'>
 
                     </div>
+                </div>
+
+                {/* CTA Buttons(pay road taxs, scan plate no, Pay insurance etc) */}
+                <div className='cta-btn-container'>
+                    <div
+                        className="
+                        cta-btn
+                        cta-pay-tax"
+                        style={{
+                            backgroundColor: "#023e8a80",
+                        }}
+                    >
+
+                    </div>
+
+                    <div
+                        className="
+                        cta-btn
+                        cta-pay-insurance"
+                        style={{
+                            backgroundColor: "#00c8b380",
+                        }}
+                    >
+
+                    </div>
+
+                    <div
+                        className="
+                        cta-btn
+                        cta-scan-plate"
+                        style={{
+                            backgroundColor: "#cb30e080",
+                        }}
+                        >
+                            
+                    </div>
+
+                    <div
+                        className="
+                        cta-btn
+                        cta-trcn-history"
+                        style={{
+                            backgroundColor: "rgba(0, 136, 255, 0.5)",
+                        }}
+                    >
+
+                    </div>
+                    
                 </div>
             </div>
         </PhoneFrame>
