@@ -7,6 +7,7 @@ import Drivers from './pages/Drivers.jsx';
 import Passenger from './pages/Passenger.jsx';
 import Safety from './pages/Safety';
 import Security from './pages/Security.jsx';
+import DriverDashboard from './dashboards/Driver/DriverDasboard.jsx';
 
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
       <Route path="/safety" element={<Safety />} />
       <Route path="/security" element={<Security />} />
       <Route path="/drivers" element={<Drivers />} />
+      <Route path="/driver-dashboard" element={<DriverDashboard />} />
     </Routes>
   );
 }

@@ -38,7 +38,7 @@
 	z-index: 1;
 	width: min(420px, 100%);
 	margin: 0 auto;
-	padding: 16px;
+	padding: 10px;
 	border-radius: 64px;
 	border: 2px solid rgba(255, 255, 255, 0.08);
 	background: linear-gradient(140deg, #3f3f46, #1f1f22);
@@ -123,8 +123,8 @@
 	border-radius: inherit;
 	background-color: #ffffff;
 	color: #000000;
-	min-height: 640px; /* taller baseline to avoid looking shortened */
-	padding: 60px 28px 36px;
+	min-height: auto; /* taller baseline to avoid looking shortened */
+	padding:  0px 0px 20px;
 	overflow-y: auto;
 	scrollbar-width: none;
 }
