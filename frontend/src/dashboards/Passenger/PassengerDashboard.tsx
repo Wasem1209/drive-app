@@ -1,7 +1,7 @@
-import '../../styles/passangerdashboard.css';
+import '../../styles/passangerdashboard.css'
 
 import PhoneFrame from "../../components/PhoneFrame";
-import rectangle from "../../assets/rectangle.svg";
+import rectangle from "../../assets/Rectangle 2.svg";
 import profilePic from '../../assets/image 1@2x.png';
 import notificationBell from '../../assets/elements.png';
 
