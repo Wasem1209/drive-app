@@ -36,9 +36,8 @@ export default function PassangerDashboard(){
                             background: 'transparent',
                             border: 'none',
                             cursor: 'pointer',
-
                         }}>
-                        <img src={notificationBell}/>
+                        <img src={notificationBell} alt="Notifications" />
                     </button>
 
                 </div>
