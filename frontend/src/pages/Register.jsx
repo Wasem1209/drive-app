@@ -2,10 +2,11 @@ import { useState } from "react";
 import "./../styles/Auth.css";
 import { registerUser } from "../api/auth";
 import illustration from "./../assets/image-left.jpg";
-import { Link } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
 
 function Register() {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -13,8 +14,11 @@ function Register() {
     confirmPassword: "",
     role: "",
   });
+
   const [errors, setErrors] = useState({});
   const [serverError, setServerError] = useState("");
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -41,6 +45,9 @@ function Register() {
     e.preventDefault();
     if (!validateForm()) return;
 
+    setLoading(true);
+    setServerError("");
+
     try {
       const res = await registerUser({
         fullName: formData.fullName,
@@ -50,14 +57,15 @@ function Register() {
       });
 
       if (res.success) {
-        alert("Account created successfully! Please login.");
-        window.location.href = "/login"; // redirect to login
+        setShowSuccessModal(true); // show modal
       } else {
         setServerError(res.message || "Registration failed");
       }
       // eslint-disable-next-line no-unused-vars
     } catch (err) {
       setServerError("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -153,7 +161,9 @@ function Register() {
               {errors.role && <div className="error-msg">{errors.role}</div>}
             </div>
 
-            <button type="submit" className="btn-primary">Register</button>
+            <button type="submit" className="btn-primary" disabled={loading}>
+              {loading ? "Creating Account..." : "Register"}
+            </button>
           </form>
 
           <p className="auth-foot">
@@ -165,6 +175,30 @@ function Register() {
           <img src={illustration} alt="" className="auth-illustration" />
         </div>
       </div>
+
+      {/* SUCCESS MODAL */}
+      {showSuccessModal && (
+        <div className="modal-overlay">
+          <div className="modal-box">
+            <h2>Account Created Successfully 🎉</h2>
+            <p>Your account has been created. You can now log in.</p>
+
+            <button
+              className="modal-btn"
+              onClick={() => navigate("/login")}
+            >
+              Go to Login
+            </button>
+
+            <button
+              className="modal-close"
+              onClick={() => setShowSuccessModal(false)}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
