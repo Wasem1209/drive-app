@@ -18,16 +18,25 @@ export async function loginUser(payload) {
 }
 
 export async function registerUser(payload) {
-  const res = await fetch(`${API_BASE}/users/register`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
+  try {
+    const res = await fetch(`${API_BASE}/users/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
 
-  if (!res.ok) {
-    const errorData = await res.json();
-    throw new Error(errorData.message || "Registration failed");
+    const data = await res.json().catch(() => ({}));
+
+    return {
+      success: res.ok,       // true if 200/201
+      status: res.status,    // return actual status code
+      ...data                // include backend fields
+    };
+
+  } catch (error) {
+    return {
+      success: false,
+      message: error.message || "Network error"
+    };
   }
-
-  return res.json();
 }
