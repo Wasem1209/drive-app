@@ -1,33 +1,30 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
+import User from "../models/User";
 
-// Extend Express Request to include `user`
-declare module "express-serve-static-core" {
-    interface Request {
-        user?: { id: string; role: string };
-    }
+interface AuthRequest extends Request {
+    user?: {
+        id: string;
+        role: string;
+    };
 }
 
-export const protect = (req: Request, res: Response, next: NextFunction) => {
+export const protect = async (req: AuthRequest, res: Response, next: NextFunction) => {
     let token;
 
-    if (
-        req.headers.authorization &&
-        req.headers.authorization.startsWith("Bearer")
-    ) {
+    if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
         try {
             token = req.headers.authorization.split(" ")[1];
 
-            if (!process.env.JWT_SECRET) {
-                throw new Error("JWT_SECRET not set in .env");
-            }
+            if (!process.env.JWT_SECRET) throw new Error("JWT_SECRET not set");
 
-            const decoded = jwt.verify(token, process.env.JWT_SECRET) as {
-                id: string;
-                role: string;
-            };
+            const decoded = jwt.verify(token, process.env.JWT_SECRET) as { id: string };
 
-            req.user = { id: decoded.id, role: decoded.role };
+            // Fetch user role from DB
+            const user = await User.findById(decoded.id);
+            if (!user) return res.status(401).json({ message: "User not found" });
+
+            req.user = { id: user._id.toString(), role: user.role };
             next();
         } catch (err) {
             console.error(err);
