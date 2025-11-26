@@ -1,13 +1,20 @@
 import { Router, Request, Response } from "express";
-import { authMiddleware } from "../middleware/auth.middleware";
+import { protect } from "../middleware/auth.middleware";
+
+interface AuthRequest extends Request {
+    user?: {
+        id: string;
+        role: string;
+    };
+}
 
 const router = Router();
 
 // Dashboard route
-router.get("/", authMiddleware, (req: any, res: Response) => {
-    const role = req.user.role;
+router.get("/", protect, (req: AuthRequest, res: Response) => {
+    const role = req.user?.role;
 
-    switch (role) {
+    switch (role?.toLowerCase()) {
         case "driver":
             return res.json({ message: "Driver dashboard data" });
         case "passenger":
