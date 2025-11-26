@@ -1,18 +1,38 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
+import User from "../models/User";
 
-export const authMiddleware = (req: any, res: Response, next: NextFunction) => {
-    const authHeader = req.headers.authorization;
-    if (!authHeader?.startsWith("Bearer "))
-        return res.status(401).json({ message: "Unauthorized" });
+interface AuthRequest extends Request {
+    user?: {
+        id: string;
+        role: string;
+    };
+}
 
-    const token = authHeader.split(" ")[1];
+export const protect = async (req: AuthRequest, res: Response, next: NextFunction) => {
+    let token;
 
-    try {
-        const decoded: any = jwt.verify(token, process.env.JWT_SECRET!);
-        req.user = decoded; // { id, role }
-        next();
-    } catch (err) {
-        res.status(401).json({ message: "Invalid token" });
+    if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
+        try {
+            token = req.headers.authorization.split(" ")[1];
+
+            if (!process.env.JWT_SECRET) throw new Error("JWT_SECRET not set");
+
+            const decoded = jwt.verify(token, process.env.JWT_SECRET) as { id: string };
+
+            // Fetch user role from DB
+            const user = await User.findById(decoded.id);
+            if (!user) return res.status(401).json({ message: "User not found" });
+
+            req.user = { id: user._id.toString(), role: user.role };
+            next();
+        } catch (err) {
+            console.error(err);
+            return res.status(401).json({ message: "Not authorized, token failed" });
+        }
+    }
+
+    if (!token) {
+        return res.status(401).json({ message: "Not authorized, no token" });
     }
 };
