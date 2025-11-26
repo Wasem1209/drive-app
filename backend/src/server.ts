@@ -26,7 +26,7 @@ app.use(helmet()); // Security headers
 // ------------------
 // Routes
 // ------------------
-app.use("/api/auth", authRoutes); // Register/Login endpoints
+app.use("/api/users", authRoutes); // Register/Login endpoints
 app.use("/api/dashboard", dashboardRoutes);
 
 // Basic health check
