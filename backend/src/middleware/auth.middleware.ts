@@ -4,14 +4,13 @@ import jwt from "jsonwebtoken";
 // Extend Express Request to include `user`
 declare module "express-serve-static-core" {
     interface Request {
-        user?: { id: string };
+        user?: { id: string; role: string };
     }
 }
 
 export const protect = (req: Request, res: Response, next: NextFunction) => {
     let token;
 
-    // JWT is usually sent in Authorization header: "Bearer <token>"
     if (
         req.headers.authorization &&
         req.headers.authorization.startsWith("Bearer")
@@ -25,9 +24,10 @@ export const protect = (req: Request, res: Response, next: NextFunction) => {
 
             const decoded = jwt.verify(token, process.env.JWT_SECRET) as {
                 id: string;
+                role: string;
             };
 
-            req.user = { id: decoded.id };
+            req.user = { id: decoded.id, role: decoded.role };
             next();
         } catch (err) {
             console.error(err);
