@@ -33,18 +33,18 @@ function App() {
       <Route
         path="/dashboard/driver"
         element={
-          // <PrivateRoute requiredRole="driver">
+          <PrivateRoute requiredRole="driver">
             <DriverDashboard />
-          // </PrivateRoute>
+          </PrivateRoute>
         }
       />
 
       <Route
         path="/dashboard/passenger"
         element={
-          // <PrivateRoute requiredRole="passenger">
+          <PrivateRoute requiredRole="passenger">
             <PassangerDashboard />
-          // </PrivateRoute>
+          </PrivateRoute>
         }
       />
 
