@@ -37,7 +37,7 @@
   --error-600: #B73737;
   --error-500: #E54545;
   --error-700: #892929;
-
+  --error-400-tp: rgba(229, 69, 69, 0.1); /* 10% opacity */
   /* Spacing scale (px → rem, base 16px) */
   --space-2: 0.125rem;    /* 2px */
   --space-4: 0.25rem;     /* 4px */

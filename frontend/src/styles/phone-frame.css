@@ -124,7 +124,8 @@
 	background-color: #ffffff;
 	color: #000000;
 	min-height: 640px; /* taller baseline to avoid looking shortened */
-	padding: 60px 28px 36px;
+	/* padding: 60px 0px 36px; */
+	padding-bottom: 30px;
 	overflow-y: auto;
 	scrollbar-width: none;
 }

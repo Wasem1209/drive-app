@@ -116,14 +116,16 @@
 .cta-btn-container{
     display: flex;
     flex-wrap: wrap;
-    width: 100%;
+    justify-content: space-evenly; /* or use space-between for edges alignment */
     height: auto;
     margin-top: var(--space-40);
+    gap: var(--space-16);
+    padding-inline: 20px; /* add horizontal padding */
 }
 
 .cta-btn{
     flex: 1 1 40%;
     height: 171px;
-    margin: var(--space-8);
+    /* margin: var(--space-8); */
     border-radius: var(--space-12);
 }
