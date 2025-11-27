@@ -34,9 +34,9 @@ function App() {
       <Route
         path="/dashboard/driver"
         element={
-          <PrivateRoute requiredRole="driver">
+          // <PrivateRoute requiredRole="driver">
             <DriverDashboard />
-          </PrivateRoute>
+          // </PrivateRoute>
         }
       />
 
