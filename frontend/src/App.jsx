@@ -65,6 +65,9 @@ function App() {
           </PrivateRoute>
         }
       />
+
+      {/* Catch-all route for unknown paths */}
+      <Route path="*" element={<Home />} />
     </Routes>
   );
 }
