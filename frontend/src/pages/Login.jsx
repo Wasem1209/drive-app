@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect, useCallback } from "react";
 import "./../styles/Auth.css";
 import { loginUser } from "../api/auth";
 import { AuthContext } from "../auth/AuthContext";
@@ -9,45 +9,65 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [userRole, setUserRole] = useState("");
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
-
-    const payload = { email, password };
+    setLoading(true);
 
     try {
-      const res = await loginUser(payload);
+      const res = await loginUser({ email, password });
+      console.log("Login API response:", res);
 
       if (res.success) {
-        // Save token and role in AuthContext
         login(res.token, res.role);
-
-        // Redirect to dashboard based on role
-        switch (res.role) {
-          case "driver":
-            window.location.href = "/dashboard/driver";
-            break;
-          case "passenger":
-            window.location.href = "/dashboard/passenger";
-            break;
-          case "officer":
-            window.location.href = "/dashboard/officer";
-            break;
-          case "admin":
-            window.location.href = "/dashboard/admin";
-            break;
-          default:
-            window.location.href = "/";
-        }
+        setUserRole(res.role);
+        setShowSuccessModal(true);
       } else {
         setError(res.message || "Invalid email or password");
       }
-      // eslint-disable-next-line no-unused-vars
     } catch (err) {
+      console.error("Login error:", err);
       setError("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
+
+  // Redirect function wrapped with useCallback
+  const handleRedirect = useCallback(() => {
+    setShowSuccessModal(false);
+
+    switch (userRole) {
+      case "driver":
+        window.location.href = "/dashboard/driver";
+        break;
+      case "passenger":
+        window.location.href = "/dashboard/passenger";
+        break;
+      case "officer":
+        window.location.href = "/dashboard/officer";
+        break;
+      case "admin":
+        window.location.href = "/dashboard/admin";
+        break;
+      default:
+        window.location.href = "/";
+    }
+  }, [userRole]);
+
+  // Automatically close modal and redirect after 3 seconds
+  useEffect(() => {
+    if (showSuccessModal) {
+      const timer = setTimeout(() => {
+        handleRedirect();
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [showSuccessModal, handleRedirect]);
 
   return (
     <div className="login-container">
@@ -83,8 +103,8 @@ export default function Login() {
             />
           </div>
 
-          <button className="auth-btn" type="submit">
-            Login
+          <button className="auth-btn" type="submit" disabled={loading}>
+            {loading ? "Logging in..." : "Login"}
           </button>
 
           <p className="login-link">
@@ -94,8 +114,27 @@ export default function Login() {
       </div>
 
       <div className="login-right">
-        {/* Optional illustration can go here */}
+        {/* Optional illustration */}
       </div>
+
+      {/* Success Modal */}
+      {showSuccessModal && (
+        <div className="modal-overlay">
+          <div className="modal-box">
+            <h2>Login Successful 🎉</h2>
+            <p>Welcome back! Redirecting to your dashboard...</p>
+            <button className="modal-btn" onClick={handleRedirect}>
+              Go to Dashboard Now
+            </button>
+            <button
+              className="modal-close"
+              onClick={() => setShowSuccessModal(false)}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,26 +1,25 @@
-import './styles/App.css';
-import { Routes, Route } from 'react-router-dom';
+import "./styles/App.css";
+import { Routes, Route } from "react-router-dom";
 
-import Home from './pages/Home.jsx';
-import Register from './pages/Register.jsx';
-import Login from './pages/Login.jsx';
-import Drivers from './pages/Drivers.jsx';
-import Passenger from './pages/Passenger.jsx';
-import Safety from './pages/Safety.jsx';
-import Security from './pages/Security.jsx';
+import Home from "./pages/Home.jsx";
+import Register from "./pages/Register.jsx";
+import Login from "./pages/Login.jsx";
+import Drivers from "./pages/Drivers.jsx";
+import Passenger from "./pages/Passenger.jsx";
+import Safety from "./pages/Safety.jsx";
+import Security from "./pages/Security.jsx";
 
-import PrivateRoute from './auth/PrivateRoute';
+import PrivateRoute from "./auth/PrivateRoute";
 
-// DASHBOARDS
-import AdminDashboard from './dashboards/Admin/AdminDashboard.jsx';
-import DriverDashboard from './dashboards/Driver/DriverDashboard.jsx';
-import PassengerDashboard from './dashboards/Passenger/PassengerDashboard.jsx';
-import OfficersDashboard from './dashboards/Officers/OfficersDashboard.jsx';
+// Dashboards
+import AdminDashboard from "./dashboards/Admin/AdminDashboard.jsx";
+import DriverDashboard from "./dashboards/Driver/DriverDashboard.jsx";
+import PassengerDashboard from "./dashboards/Passenger/PassengerDashboard.jsx";
+import OfficersDashboard from "./dashboards/Officers/OfficersDashboard.jsx";
 
 function App() {
   return (
     <Routes>
-
       {/* Public Routes */}
       <Route path="/" element={<Home />} />
       <Route path="/register" element={<Register />} />
@@ -67,6 +66,8 @@ function App() {
         }
       />
 
+      {/* Catch-all route for unknown paths */}
+      <Route path="*" element={<Home />} />
     </Routes>
   );
 }

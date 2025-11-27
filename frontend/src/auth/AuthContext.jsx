@@ -4,12 +4,13 @@ import { createContext, useState, useEffect } from "react";
 export const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-    const [user, setUser] = useState(null);     // user info
-    const [role, setRole] = useState(null);     // driver, admin etc
-    const [token, setToken] = useState(null);   // jwt token
+    const [user, setUser] = useState(null);
+    const [role, setRole] = useState(null);
+    const [token, setToken] = useState(null);
+    const [loading, setLoading] = useState(true); // prevent redirect flicker
 
     useEffect(() => {
-        // restore login if stored in browser
+        // Restore saved login
         const savedToken = localStorage.getItem("token");
         const savedRole = localStorage.getItem("role");
 
@@ -18,6 +19,8 @@ export function AuthProvider({ children }) {
             setRole(savedRole);
             setUser({ role: savedRole });
         }
+
+        setLoading(false);
     }, []);
 
     const login = (token, role) => {
@@ -37,6 +40,8 @@ export function AuthProvider({ children }) {
         setRole(null);
         setToken(null);
     };
+
+    if (loading) return null; // prevents broken redirects on page refresh
 
     return (
         <AuthContext.Provider value={{ user, role, token, login, logout }}>
