@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-export default function PersonalInfo({ profile, setProfile }) {
+export default function Profile({ profile, setProfile }) {
     const [form, setForm] = useState({
         fullName: profile.fullName || "",
         email: profile.email || "",
