@@ -14,7 +14,7 @@ import PrivateRoute from "./auth/PrivateRoute";
 // Dashboards
 import AdminDashboard from "./dashboards/Admin/AdminDashboard.jsx";
 import DriverDashboard from "./dashboards/Driver/DriverDashboard.jsx";
-import Profile from "./dashboards/Driver/Profile.jsx";
+import Profile from "./dashboards/Driver/feature/Profile.jsx";
 import OfficersDashboard from "./dashboards/Officers/OfficersDashboard.jsx";
 import PassangerDashboard from "./dashboards/Passenger/PassengerDashboard.jsx";
 
@@ -42,7 +42,7 @@ function App() {
 
       {/* Driver Profile */}
       <Route
-        path="/profile"
+        path="/driver/feature/profile"
         element={
           <PrivateRoute requiredRole="driver">
             <Profile />
