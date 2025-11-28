@@ -22,6 +22,7 @@ import chevron_left_sqr from '../../assets/chevron-left-square.png';
 import pay_tax_img from '../../assets/pay-tax-img.png'
 import scan_plate_img from '../../assets/scan plate img.png'
 import pay_insurance_history from '../../assets/pay_insurance_history_img.png'
+import transaction_history from '../../assets/transactionHst.png'
 
 export default function DriverDashboard(){
     return(
@@ -266,80 +267,83 @@ export default function DriverDashboard(){
                 {/* CTA Buttons(pay road taxs, scan plate no, Pay insurance etc) */}
                 <div className='cta-btn-container'>
                     <div
-                        className="
-                        cta-btn
-                        cta-pay"
+                        className="cta-btn cta-pay"
                         style={{
                             backgroundColor: "#023e8a80",
+                            position: 'relative',
                         }}
                     >
                         <p>Pay Road <br></br>Tax</p>
-                        <img src={chevron_left_sqr}/>
-                        <div style={{
-                                    position:'relative', 
-                                    top:'-60px', 
-                                    left:'40px'
-                                    }}>
+                        <img
+                            src={chevron_left_sqr}
+                            className='cta-chv-btn'
+                        />
+                        <div
+                            className='cta-img-container'
+                            style={{left: '70px', top: '80px'}}
+                        >
                             <img src={pay_tax_img}/>
                         </div>
                         
-
                     </div>
 
                     <div
-                        className="
-                        cta-btn
-                        cta-pay"
+                        className="cta-btn cta-pay"
                         style={{
                             backgroundColor: "#00c8b380",
+                            position: 'relative',
                         }}
                     >
-                        <p>Scan <br></br>Plate No.</p>
-                        <img src={chevron_left_sqr}/>
-                        <div style={{
-                                    position:'relative', 
-                                    top:'-70px', 
-                                    left:'60px'
-                                    }}>
+                        <p>Scan <br />Plate No.</p>
+                        <img
+                            src={chevron_left_sqr}
+                            className='cta-chv-btn'
+                        />
+                        <div
+                            className='cta-img-container'
+                            style={{left: '90px', top: '60px'}}
+                        >
                             <img src={scan_plate_img}/>
                         </div>
                     </div>
 
                     <div
-                        className="
-                        cta-btn
-                        cta-pay"
+                        className="cta-btn cta-pay"
                         style={{
                             backgroundColor: "#cb30e080",
+                            position: 'relative',
                         }}
-                        >
-                            <p>Pay<br></br>Insurance</p>
-                            <img src={chevron_left_sqr}/>
-                            <div style={{
-                                        position:'relative', 
-                                        top:'-65px', 
-                                        left:'40px'
-                                        }}>
+                    >
+                            <p>Pay<br />Insurance</p>
+                            <img
+                                src={chevron_left_sqr}
+                                className='cta-chv-btn'
+                            />
+                            <div
+                                className='cta-img-container'
+                                style={{left: '70px', top: '70px'}}
+                            >
                                 <img src={pay_insurance_history}/>
                             </div>
                     </div>
 
                     <div
-                        className="
-                        cta-btn
-                        cta-pay"
+                        className="cta-btn cta-pay"
                         style={{
                             backgroundColor: "rgba(0, 136, 255, 0.5)",
+                            position: 'relative',
                         }}
                     >
-                        <p>Payment<br></br>History</p>
-                        <img src={chevron_left_sqr}/>
-                        <div style={{
-                                    position:'relative', 
-                                    top:'-65px', 
-                                    left:'40px'
-                                    }}>
-                            <img src={pay_insurance_history}/>
+                        <p>Payment<br />History</p>
+                        <img
+                            src={chevron_left_sqr}
+                            className='cta-chv-btn'
+                        />
+                        <div
+                            className='cta-img-container'
+                            style={{left: '100px', top: '70px'}}
+                        >
+                            <img src={transaction_history}/>
                         </div>
                     </div>
                     
