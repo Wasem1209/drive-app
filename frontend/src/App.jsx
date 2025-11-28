@@ -45,7 +45,7 @@ function App() {
         path="/driver/profile"
         element={
           <PrivateRoute requiredRole="driver">
-            <DriverProfile />
+            <Profile />
           </PrivateRoute>
         }
       />
