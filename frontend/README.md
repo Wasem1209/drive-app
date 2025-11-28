@@ -21,15 +21,18 @@
 ## 🌍 Core Value Propositions
 
 ### 🚘 Drivers
+
 - Real-time compliance snapshot for inspections and peace of mind.
 - Streamlined renewals, taxes, insurance, and fines with on-chain proofs.
 - Tokenized incentives for safe driving and timely documentation.
 
 ### 🧍 Passengers
+
 - One-tap QR verification ensures the vehicle meets safety and insurance thresholds.
 - Digital fare payments with automatic revenue splits and immutable receipts.
 
 ### 🛂 Government & Enforcement
+
 - Instant compliance enforcement backed by tamper-proof DVIs.
 - Digital violation issuance plus national transport analytics for proactive policy.
 
@@ -42,12 +45,12 @@
 
 ## 🧰 Tech Stack
 
-| Layer | Tools | Highlights |
-| --- | --- | --- |
-| Frontend 🎨 | React 19, Vite 7, React Router, Framer Motion, Lucide Icons | Responsive marketing + driver/passenger flows, PhoneFrame device previews |
-| Backend ⚙️ | Node.js, Express 5, MongoDB/Mongoose, Lucid Cardano SDK, JWT, Nodemailer | Auth, compliance workflows, digital receipts, email verification |
-| Blockchain ⛓️ | Cardano, Aiken, Lucid | Mint/verify DVIs, safe-driving rewards, govern on-chain receipts |
-| Tooling 🧪 | ESLint 9, TypeScript (backend), npm scripts | Consistent linting, type safety, DX optimizations |
+| Layer         | Tools                                                                    | Highlights                                                                |
+| ------------- | ------------------------------------------------------------------------ | ------------------------------------------------------------------------- |
+| Frontend 🎨   | React 19, Vite 7, React Router, Framer Motion, Lucide Icons              | Responsive marketing + driver/passenger flows, PhoneFrame device previews |
+| Backend ⚙️    | Node.js, Express 5, MongoDB/Mongoose, Lucid Cardano SDK, JWT, Nodemailer | Auth, compliance workflows, digital receipts, email verification          |
+| Blockchain ⛓️ | Cardano, Aiken, Lucid                                                    | Mint/verify DVIs, safe-driving rewards, govern on-chain receipts          |
+| Tooling 🧪    | ESLint 9, TypeScript (backend), npm scripts                              | Consistent linting, type safety, DX optimizations                         |
 
 ## 📦 Repository Layout
 
@@ -61,18 +64,21 @@ drive-app/
 ## ⚙️ Quick Start
 
 ### Frontend (this package)
+
 1. `cd frontend`
 2. `npm install`
 3. `npm run dev`
 4. Navigate to the printed URL (default `http://localhost:5173`) to explore the marketing site, auth flows, and dashboard mockups.
 
 ### Backend API
+
 1. `cd backend`
 2. `npm install`
 3. Add environment variables (Mongo URI, JWT secret, Cardano keys, Email provider).
 4. `npm run dev` to boot the Express server with hot reload via `ts-node`.
 
 ### Cardano / Smart Contracts
+
 1. `cd blockchain/autofy`
 2. `aiken build` to compile validators.
 3. `aiken check` to run contract tests or `aiken docs` for HTML docs.
@@ -95,6 +101,48 @@ drive-app/
 2. Stream QR verification results from the DVI NFT directly into the PhoneFrame preview.
 3. Embed driver compliance timelines and safe-driving reward balances via Cardano data pulls.
 4. Expand officer dashboard widgets for violation heatmaps and analytics.
+
+## 🔌 Cardano Wallet Bootstrap (Stub Implemented)
+
+The dashboards now include a reusable `ConnectWallet` component (per role) that performs minimal CIP-30 wallet detection and enabling. It lives in each role's `features/ConnectWallet` file and relies on the shared utility `src/blockchain/cardanoWallet.js`.
+
+What exists now:
+
+- Detects installed wallets: Nami, Eternl, Lace, Gero (extend list in `KNOWN_WALLETS`).
+- Simple chooser popover and connect flow; dispatches `cardano:walletConnected` & `cardano:walletEnabled` window events.
+- Exposes the first used address (raw hex/bech32) and shortens it for UI.
+- Placeholders for: `buildUnsignedTx`, richer address decoding, balance parsing.
+
+Blockchain engineer next steps:
+
+1. Replace `getUsedAddresses` post-processing with bech32 decoding or a Lucid-based address normalization.
+2. Implement `buildUnsignedTx` (pull in Lucid or your chosen SDK) and feed into `signTx` + `submitTx` already stubbed.
+3. Add network discrimination (mainnet/testnet) via `api.getNetworkId()` and surface in UI.
+4. Expand emitted events (e.g. `cardano:balanceUpdated`, `cardano:txSubmitted`) for reactive components.
+5. Harden error states (e.g. differentiate user rejection vs internal errors).
+
+Quick usage pattern inside any React component:
+
+```jsx
+import ConnectWallet from "../dashboards/Driver/features/ConnectWallet";
+
+function Example() {
+  const handleConnected = ({ api, key, address }) => {
+    // store in context, fetch balance, etc.
+  };
+  return <ConnectWallet onConnected={handleConnected} />;
+}
+```
+
+Global event hook example:
+
+```js
+window.addEventListener("cardano:walletConnected", (e) => {
+  console.log("Wallet connected:", e.detail);
+});
+```
+
+Extend `cardanoWallet.js` to parse balances (CBOR → lovelace → ADA) and surface token / NFT assets once required.
 
 ## 🤝 Contributing & Support
 

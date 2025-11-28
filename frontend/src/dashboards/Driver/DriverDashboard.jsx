@@ -23,6 +23,7 @@ import pay_tax_img from '../../assets/pay-tax-img.png'
 import scan_plate_img from '../../assets/scan plate img.png'
 import pay_insurance_history from '../../assets/pay_insurance_history_img.png'
 import transaction_history from '../../assets/transactionHst.png'
+import ConnectWallet from './features/ConnectWallet';
 
 export default function DriverDashboard(){
     return(
@@ -107,7 +108,7 @@ export default function DriverDashboard(){
                     </div>
                      
 
-                  <button className="connect-wallet-btn">Connect Wallet</button>  
+                  <ConnectWallet />  
                 </div>
 
                 {/* Weekly goal(streak) section */}
