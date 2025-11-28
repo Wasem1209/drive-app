@@ -25,8 +25,7 @@
     color: var(--brand-primary-opaque-60);
 }
 .wallet{
-    width: 89%;
-    height: 120px;
+    width: 85%;
     background-color: var(--brand-primary);
     position: absolute;
     top: 100px;
@@ -36,17 +35,18 @@
     border-radius: var(--space-12);
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.05);
     display: flex;
-    flex-direction: column;
-    
-    /* remove top/left/transform */
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 15px;
+    padding-bottom: 20px;
+    padding-inline: 20px;
 }
 
 .due-notification-container{
-    margin-inline: 20px;
+    margin-inline: 10px;
     margin-block: var(--space-16);
     display: flex;
     gap: var(--space-16);
-
     /* horizontal scrolling rail */
     overflow-x: auto;
     overflow-y: hidden;
@@ -73,20 +73,34 @@
 /* ensure cards form a horizontal rail and don't shrink */
 .due-notification-card{
     width: 272px;
-    height: 150px;
+    height: 100px;
+    display: flex;
+    align-items: start;
     flex: 0 0 auto;
     border-radius: var(--space-8);
     scroll-snap-align: start;
     background: #ffecec;
     color: #892929;
-    padding: 12px;
+    padding-top: 8px;
+    padding-inline: 8px;
     border-radius: 12px;
 }
-
-.due-footer {
-  display: flex;
-  justify-content: space-between;  /* <--- pushes Renew to the far right */
-  align-items: center;
+.due-date-text{
+    font-size: 12px;
+    margin: 0px;
+    margin-top: 8px;
+}
+.renew-btn{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    cursor: pointer;
+    color: #E54545;
+}
+.due-days{
+    color: #5C1C1C;
+    font-weight: 800;
 }
 
 .streak-card{
@@ -101,6 +115,8 @@
     color: #333333;
     padding-left: 12px;
     gap: 5px;
+    display: flex;
+    overflow: hidden;
 }
 
 .weekly-streak-card{
@@ -113,22 +129,50 @@
     flex-direction: column;
     justify-content: center;
 }
+.streak-weeks-num{
+    color: #333333;
+    font-family: Montserrat;
+    font-size: var(--type-h2);
+    font-weight: 800;
+    margin: 0px;
+}
 
+.streak-weeks{
+    margin: 0px;
+    margin-bottom: 4px;
+    margin-left: 5px;
+    font-size: 10px;
+    font-weight: 800;
+    color: #333333;
+}
+
+.streak-label{
+    font: Montserrat;
+    font-weight: 800;
+    font-size: 12px;
+    color: #333333;
+    margin-top: 5px;
+}
 .weekly-title{
-    font: var(--font-family);
-    font-weight: 600;
+    font-family: Montserrat;
+    font-weight: 800;
     font-size: 14px;
     color: var(--text-color);
-    padding-left: 12px;
-    margin-bottom: 8px;
+    margin: 0px 0px 0px 12px;
+    font-size: 12px;
 }
 
 .week-dots {
     display: flex;
-    justify-content: space-evenly;
+    align-items: center;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
     margin-top: 10px;
     padding: 0 12px;
-    gap: 2px;
+    gap: 5px;
+    font-family: quicksand;
+    font-size: 12px;
 }
 
 .vehicle-details-section{
@@ -146,8 +190,7 @@
     width: 170px;
     border-radius: var(--space-12);
     display: flex;
-    align-items: center;
-    justify-content: center;
+    color: #fff;
 }
 
 .safe-driving-card{
@@ -158,21 +201,37 @@
     display: flex;
     flex-direction: column;
     align-items: start;
-    gap: 10px;
-    padding-left: 10px;
+    padding-left: 14px;
+    padding-top: 14px;
 }
 
 .sd-title {
-  font-size: 14px;
-  font-weight: 700;
+  font-size: 16px;
+  font-weight: 800;
   margin: 0;
-  
+  padding: 0;
 }
 
 .sd-subtitle {
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 400;
   margin: 0;
+  margin-top: 5px;
+  margin-bottom: 16px;
+}
+
+.driving-score{
+    margin: 0px;
+}
+
+.score-percent{
+    color: var(--brand-primary);
+}
+.score-total{
+    margin-bottom: 5px;
+    font-size: 12px;
+    color: #AEAEB2;
+    font-weight: 100;
 }
 
 .insurance-card{
@@ -180,14 +239,28 @@
     display: flex;
     flex-direction: column;
     align-items: start;
-    gap: 10px;
-    padding-left: 10px;
+    position: relative;
+    padding-top: 16px;
+    padding-left: 12px;
     position: relative;
 }
-
+.due-days-left{
+    font-size: 10px;
+    font-weight: 200;
+    margin: 0px;
+    display: flex;
+    gap: 5px;
+    color: #AEAEB2;
+}
+.car-side-view{
+    position: absolute;
+    top: 85px;
+    left: 60px;
+    opacity: .5;
+}
 
 .roadworthiness-card{
-    height: 295px;
+    height: 320px;
     display: flex;
     flex-direction: column;
     align-items: start;
@@ -213,40 +286,37 @@
 }
 
 .small-txt {
-    font: var(--font-family);
-    font-weight: 500;
-    font-size: 12px;
-    color: var(--text-color);
-    padding-left: 16px;
     display: flex;
     align-items: center;
-    gap: 6px;
+    font-size: 12px;
+    color: #000000;
+    /* padding-left: 20px; */
+    width: auto;
+    height: auto;
 }
 
 .wallet-amount {
-  margin-top: 5px;
-  margin-bottom: 40px;
-  margin-left: 15px;
+    margin: 0px;
+    /* margin-left: 20px; */
+    margin-top: 0px;
+    padding: 0;
 }
 
 .wallet-id {
-  font: var(--font-family);
-  font-weight: 600;
-  font-size: 12px;
-  margin-bottom: 50px;
-  margin-left: 15px;
-  color: #8E8E93;
+  padding: 0px;
+  color: var(--gray-600);
+  font-weight: 400;
+  margin: 0px;
+  margin-top: 5px;
 }
 
 .connect-wallet-btn {
-  position: absolute;
-  top: 35px;
-  right: 20px;
   background: #FFF3B0;
   border: none;
   padding: 10px 20px;
   border-radius: 6px;
   cursor: pointer;
+  align-self: center;
   gap: 10px;
 }
 
