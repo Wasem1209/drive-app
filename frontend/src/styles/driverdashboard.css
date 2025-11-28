@@ -264,9 +264,23 @@
     display: flex;
     flex-direction: column;
     align-items: start;
-    gap: 10px;
+    /* gap: 10px; */
     padding-left: 10px;
     position: relative;
+}
+.road-worthy-stat{
+    margin: 0;
+    margin-top: 16px;
+    font-weight: 800;
+    font-size: 16px;
+}
+.road-worthy-user-stat{
+    margin: 0px;
+    font-size: 10px;
+    font-weight: 400;
+    margin: 0;
+    margin-top: 5px;
+    margin-bottom: 16px;
 }
 .cta-btn-container{
     display: flex;

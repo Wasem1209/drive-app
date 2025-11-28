@@ -8,13 +8,14 @@ import notificationBell from '../../assets/elements.png';
 import eye_icon from '../../assets/Eye.png';
 import streakImage from '../../assets/Group 43.png';
 import check_icon from '../../assets/Frame 34.png';
+import goodIcon from '../../assets/check.png'
 import gift_icon from '../../assets/Frame 35.png';
 import calender from '../../assets/calender.png'
 import closeIcon from '../../assets/clsoeIcon.png'
 import rating from '../../assets/Frame 75.png';
 import carSideView from '../../assets/car side view.png';
 import frame_71 from '../../assets/Frame 71.png';
-import car_front_view from '../../assets/car front view.png';
+import carFrontView from '../../assets/car front view.png';
 import frame_72 from '../../assets/Frame 72.png';
 import copy_icon from '../../assets/Copy.png';
 export default function DriverDashboard(){
@@ -31,6 +32,7 @@ export default function DriverDashboard(){
                                 width={40}
                                 height={40}
                                 alt="Profile"
+                                style={{cursor: "pointer"}}
                             />
                         </div>
                         {/* this div contains the greeting and user name */}
@@ -77,6 +79,7 @@ export default function DriverDashboard(){
                                     paddingTop: '15px',
                                     paddingLeft: '8px',
                                     paddingBottom: '12px',
+                                    cursor: 'pointer',
                                 }}
                             />
                         </div>
@@ -87,9 +90,13 @@ export default function DriverDashboard(){
                                 display: "flex",
                                 alignItems: "center",
                                 gap: "8px",
+                                cursor: 'pointer',
                             }}
                         >
-                            <img src={copy_icon} alt="Copy Icon"/>
+                            <img
+                                src={copy_icon}
+                                alt="Copy Icon"
+                            />
                             <h3 className="wallet-id small-txt">Wallet Id: 001123983</h3>
                         </div>
                     </div>
@@ -219,20 +226,36 @@ export default function DriverDashboard(){
                         </div>
                     </div>
                     <div className='roadworthiness-card vehicle-detail-card'>
-                        <p className="sd-title ">Roadworthy</p>
-                        <p className="sd-subtitle">Your Weekly safe <br></br>driving score</p>
-                        <div
-                            style={{
-                                display: "flex",
-                                alignItems: "end",
-                                justifyContent: "center",
-                                marginRight: "12px",
-                                width: "100%",
-                            }}
-                        >
-                            <p className='driving-score score-percent typ-page-title'>75</p>
-                            <p className='driving-score score-total'>/100</p>
-                        </div>
+                        <p className="road-worthy-stat">Roadworthy</p>
+                        <p className="road-worthy-user-stat">Your Vehicle is roadworthy </p>
+                            <img
+                                src={carFrontView}
+                                style={{
+                                    marginLeft: "55px"
+                                }}
+                            />
+                            <div
+                                style={{
+                                    display: "flex",
+                                    alignItems: "end",
+                                    marginTop: 'auto',
+                                    paddingBottom: "15px",
+                                    justifyContent: "space-between",
+                                    width: "100%",
+                                    zIndex: "2"
+                                }}
+                            >
+                                <p
+                                    className='due-days-left'
+                                >
+                                    <img src={calender} />
+                                    Due: 13 Dec 2026
+                                </p>
+                                <img
+                                    style={{paddingRight: "12px",}}
+                                    src={goodIcon}
+                                />
+                            </div>
                     </div>
                 </div>
 
