@@ -42,7 +42,7 @@ export default function DriverDashboard() {
                                 height={40}
                                 alt="Profile"
                                 style={{ cursor: "pointer" }}
-                                onClick={() => navigate("/profile")}
+                                onClick={() => navigate("/driver/profile")}
                             />
                         </div>
 
