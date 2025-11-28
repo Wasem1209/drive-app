@@ -5,7 +5,17 @@
 	display: flex;
 	justify-content: center;
 	align-items: flex-start;
-	background: linear-gradient(135deg, #f6f7f9, #eceff4);
+	/* animated gray gradient: dark -> light -> loop */
+	background: linear-gradient(
+		130deg,
+		#0b0c0d,
+		#15171a,
+		#202429,
+		#2b3137,
+		#374049
+	);
+	background-size: 300% 300%;
+	animation: driverGrayFlow 18s ease-in-out infinite;
 	overflow: hidden;
 }
 
@@ -13,20 +23,32 @@
 	content: "";
 	position: absolute;
 	inset: -20% -10%;
+	/* soften overlay so it complements the gray gradient */
 	background: linear-gradient(
 		130deg,
-		rgba(255, 255, 255, 0.7),
-		rgba(219, 225, 233, 0.6),
-		rgba(236, 240, 246, 0.75)
+		rgba(255, 255, 255, 0.08),
+		rgba(255, 255, 255, 0.05),
+		rgba(0, 0, 0, 0.08)
 	);
-	background-size: 200% 200%;
 	filter: blur(80px);
-	opacity: 0.6;
+	opacity: 0.35;
 	z-index: 0;
 	animation: driverAurora 14s ease-in-out infinite;
 }
 
 @keyframes driverAurora {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
+
+@keyframes driverGrayFlow {
 	0% {
 		background-position: 0% 50%;
 	}
