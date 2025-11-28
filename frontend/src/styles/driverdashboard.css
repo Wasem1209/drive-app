@@ -285,6 +285,7 @@
 .cta-btn-container{
     display: flex;
     flex-wrap: wrap;
+    font-family: 'quicksand', sans-serif;
     justify-content: space-evenly; /* or use space-between for edges alignment */
     height: auto;
     margin-top: var(--space-40);

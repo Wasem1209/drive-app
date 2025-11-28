@@ -42,9 +42,9 @@ function App() {
       <Route
         path="/dashboard/passenger"
         element={
-          // <PrivateRoute requiredRole="passenger">
+          <PrivateRoute requiredRole="passenger">
             <PassangerDashboard />
-          // </PrivateRoute>
+          </PrivateRoute>
         }
       />
 
