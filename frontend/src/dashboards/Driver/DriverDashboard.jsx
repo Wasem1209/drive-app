@@ -18,6 +18,11 @@ import frame_71 from '../../assets/Frame 71.png';
 import carFrontView from '../../assets/car front view.png';
 import frame_72 from '../../assets/Frame 72.png';
 import copy_icon from '../../assets/Copy.png';
+import chevron_left_sqr from '../../assets/chevron-left-square.png';
+import pay_tax_img from '../../assets/pay-tax-img.png'
+import scan_plate_img from '../../assets/scan plate img.png'
+import pay_insurance_history from '../../assets/pay_insurance_history_img.png'
+
 export default function DriverDashboard(){
     return(
         <PhoneFrame>
@@ -48,7 +53,6 @@ export default function DriverDashboard(){
                             background: 'transparent',
                             border: 'none',
                             cursor: 'pointer',
-
                         }}>
                         <img src={notificationBell}/>
                     </button>
@@ -264,45 +268,79 @@ export default function DriverDashboard(){
                     <div
                         className="
                         cta-btn
-                        cta-pay-tax"
+                        cta-pay"
                         style={{
                             backgroundColor: "#023e8a80",
                         }}
                     >
+                        <p>Pay Road <br></br>Tax</p>
+                        <img src={chevron_left_sqr}/>
+                        <div style={{
+                                    position:'relative', 
+                                    top:'-60px', 
+                                    left:'40px'
+                                    }}>
+                            <img src={pay_tax_img}/>
+                        </div>
+                        
 
                     </div>
 
                     <div
                         className="
                         cta-btn
-                        cta-pay-insurance"
+                        cta-pay"
                         style={{
                             backgroundColor: "#00c8b380",
                         }}
                     >
-
+                        <p>Scan <br></br>Plate No.</p>
+                        <img src={chevron_left_sqr}/>
+                        <div style={{
+                                    position:'relative', 
+                                    top:'-70px', 
+                                    left:'60px'
+                                    }}>
+                            <img src={scan_plate_img}/>
+                        </div>
                     </div>
 
                     <div
                         className="
                         cta-btn
-                        cta-scan-plate"
+                        cta-pay"
                         style={{
                             backgroundColor: "#cb30e080",
                         }}
                         >
-                            
+                            <p>Pay<br></br>Insurance</p>
+                            <img src={chevron_left_sqr}/>
+                            <div style={{
+                                        position:'relative', 
+                                        top:'-65px', 
+                                        left:'40px'
+                                        }}>
+                                <img src={pay_insurance_history}/>
+                            </div>
                     </div>
 
                     <div
                         className="
                         cta-btn
-                        cta-trcn-history"
+                        cta-pay"
                         style={{
                             backgroundColor: "rgba(0, 136, 255, 0.5)",
                         }}
                     >
-
+                        <p>Payment<br></br>History</p>
+                        <img src={chevron_left_sqr}/>
+                        <div style={{
+                                    position:'relative', 
+                                    top:'-65px', 
+                                    left:'40px'
+                                    }}>
+                            <img src={pay_insurance_history}/>
+                        </div>
                     </div>
                     
                 </div>
