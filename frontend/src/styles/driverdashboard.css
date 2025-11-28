@@ -212,6 +212,13 @@
     border-radius: var(--space-12);
 }
 
+.cta-pay{
+    color: var(--brand-primary);
+    font-weight: 600;
+    font-size: 20px;
+    padding-left: 16px;
+}
+
 .small-txt {
     font: var(--font-family);
     font-weight: 500;
