@@ -14,7 +14,6 @@ import PrivateRoute from "./auth/PrivateRoute";
 // Dashboards
 import AdminDashboard from "./dashboards/Admin/AdminDashboard.jsx";
 import DriverDashboard from "./dashboards/Driver/DriverDashboard.jsx";
-
 import OfficersDashboard from "./dashboards/Officers/OfficersDashboard.jsx";
 import PassangerDashboard from "./dashboards/Passenger/PassengerDashboard.jsx";
 
@@ -39,8 +38,6 @@ function App() {
           </PrivateRoute>
         }
       />
-
-
 
       <Route
         path="/dashboard/passenger"
@@ -69,7 +66,7 @@ function App() {
         }
       />
 
-      {/* Catch-all route for unknown paths */}
+      {/* Catch-all route */}
       <Route path="*" element={<Home />} />
     </Routes>
   );
