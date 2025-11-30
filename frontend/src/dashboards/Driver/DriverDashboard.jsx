@@ -42,7 +42,7 @@ export default function DriverDashboard() {
                                 height={40}
                                 alt="Profile"
                                 style={{ cursor: "pointer" }}
-                                onClick={() => navigate("/driver/profile")}
+                                onClick={() => navigate("/dashboards/driver/profile")}
                             />
                         </div>
 
@@ -100,7 +100,7 @@ export default function DriverDashboard() {
                         </div>
                     </div>
 
-                  <ConnectWallet />  
+                    <ConnectWallet />
                 </div>
 
                 {/* WEEKLY GOAL */}
