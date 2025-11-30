@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { initiateFarePayment } from '../../../api/payments';
+import { addPassengerTransaction } from '../../../api/transactions';
 import '../../../styles/verify-modal.css';
 
 export default function PayFare({ onClose, onPaymentSuccess }) {
@@ -28,6 +29,16 @@ export default function PayFare({ onClose, onPaymentSuccess }) {
 				wallet,
 			});
 			setReceipt(res);
+			// Persist transaction to local history
+			addPassengerTransaction({
+				id: res.receiptId,
+				driverWallet: walletId.trim(),
+				route: route.trim(),
+				amountAda: Number(amount),
+				split: res.split,
+				txHash: res.txHash,
+				timestamp: Date.now()
+			});
 			setStep('success');
 		} catch (e) {
 			setError(e?.message || 'Payment failed.');

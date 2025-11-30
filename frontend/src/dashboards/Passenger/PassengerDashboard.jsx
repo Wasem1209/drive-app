@@ -19,6 +19,7 @@ import VehicleVerifyModal from './features/VehicleVerifyModal';
 import PayFare from './features/PayFare';
 import DriverReview from './features/DriverReview';
 import ReportDriver from './features/ReportDriver';
+import TransactionHistory from './features/TransactionHistory';
 
 // Add React state/hooks
 import { useState, useEffect, useRef } from 'react';
@@ -65,6 +66,7 @@ export default function DriverDashboard(){
     const [showPayFare, setShowPayFare] = useState(false);
     const [postPaymentDriver, setPostPaymentDriver] = useState(null);
     const [showReport, setShowReport] = useState(false);
+    const [showHistory, setShowHistory] = useState(false);
 
     // Inject shake animation keyframes only once
     useEffect(() => {
@@ -421,7 +423,10 @@ export default function DriverDashboard(){
                         style={{
                             backgroundColor: "rgba(0, 136, 255, 0.5)",
                             position: 'relative',
+                            cursor: 'pointer'
                         }}
+                        onClick={() => setShowHistory(true)}
+                        title="View past fare payments"
                     >
                         <p>Payment <br />History</p>
                         <img
@@ -459,6 +464,9 @@ export default function DriverDashboard(){
                                 onClose={() => setShowReport(false)}
                                 prefillWallet={postPaymentDriver?.walletId}
                             />
+                        )}
+                        {showHistory && (
+                            <TransactionHistory onClose={() => setShowHistory(false)} />
                         )}
         </PhoneFrame>
     )
