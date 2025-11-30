@@ -15,9 +15,10 @@ import payTpFareIcon from '../../assets/payTpIcon.png'
 import reportDriverIcon from '../../assets/ReportDriverIcon.png'
 import transaction_history from '../../assets/transactionHst.png'
 import ConnectWallet from './features/ConnectWallet';
+import VehicleVerifyModal from '../../components/VehicleVerifyModal';
 
 // Add React state/hooks
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 export default function DriverDashboard(){
     const [showBalance, setShowBalance] = useState(true);
@@ -47,13 +48,17 @@ export default function DriverDashboard(){
         setCopyTimer(t);
     };
 
-    // Weekly goal / reward state
+    // Weekly daily reward progression
     const allDays = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-    // Show checks only up to Wednesday; Thursday is the shaking gift (claim day)
-    const initialCompleted = ['Mon','Tue','Wed'];
-    const [completedDays, setCompletedDays] = useState(initialCompleted);
-    const [rewardClaimed, setRewardClaimed] = useState(false);
+    // progressIndex: 0..6 => current claim day (Mon..Sun). Days < progressIndex are completed.
+    // unlockAt: timestamp (ms) when current day's gift becomes "active" (starts shaking/claimable).
+    const [progressIndex, setProgressIndex] = useState(0);
+    const [unlockAt, setUnlockAt] = useState(Date.now());
+    const [isActive, setIsActive] = useState(true);
     const [showClaimModal, setShowClaimModal] = useState(false);
+    const [earlyHint, setEarlyHint] = useState("");
+    const earlyHintTimerRef = useRef(null);
+    const [showVerify, setShowVerify] = useState(false);
 
     // Inject shake animation keyframes only once
     useEffect(() => {
@@ -65,18 +70,68 @@ export default function DriverDashboard(){
             document.head.appendChild(style);
         }
     }, []);
+    
+    // Utilities
+    const getNextLocalMidnight = () => {
+        const d = new Date();
+        // Sets to next local midnight
+        d.setHours(24, 0, 0, 0);
+        return d.getTime();
+    };
+
+    // Load persisted progression on mount
+    useEffect(() => {
+        try {
+            const savedIdx = localStorage.getItem('weekly.progressIndex');
+            const savedUnlock = localStorage.getItem('weekly.unlockAt');
+            if (savedIdx !== null) setProgressIndex(parseInt(savedIdx, 10));
+            if (savedUnlock !== null) setUnlockAt(parseInt(savedUnlock, 10));
+        } catch {}
+    }, []);
+
+    // Keep isActive in sync with unlockAt and set a timer to flip when time elapses
+    useEffect(() => {
+        const now = Date.now();
+        if (now >= unlockAt) {
+            setIsActive(true);
+            return;
+        }
+        setIsActive(false);
+        const t = setTimeout(() => setIsActive(true), Math.max(0, unlockAt - now) + 50);
+        return () => clearTimeout(t);
+    }, [unlockAt]);
+
+    // Persist changes
+    useEffect(() => {
+        try { localStorage.setItem('weekly.progressIndex', String(progressIndex)); } catch {}
+    }, [progressIndex]);
+    useEffect(() => {
+        try { localStorage.setItem('weekly.unlockAt', String(unlockAt)); } catch {}
+    }, [unlockAt]);
 
     const handleGiftClick = () => {
-        if (rewardClaimed) return;
+        // Allow claim only when active
+        if (!isActive) {
+            // Brief hint showing when it unlocks
+            const nextDayName = allDays[progressIndex];
+            setEarlyHint(`Available on ${nextDayName}`);
+            if (earlyHintTimerRef.current) clearTimeout(earlyHintTimerRef.current);
+            earlyHintTimerRef.current = setTimeout(() => setEarlyHint(""), 1500);
+            return;
+        }
         setShowClaimModal(true);
     };
 
     const confirmClaim = () => {
-        setRewardClaimed(true);
-        setCompletedDays(allDays); // now all days completed
+        // Mark current day complete and advance pointer
+        const nextIdx = (progressIndex + 1) % allDays.length;
+        setProgressIndex(nextIdx);
+        // Next gift unlocks at next local midnight
+        setUnlockAt(getNextLocalMidnight());
+        setIsActive(false);
         setShowClaimModal(false);
-        // Potential future: dispatch event or call backend
-        window.dispatchEvent(new CustomEvent('weeklyReward:claimed', { detail: { days: allDays } }));
+        // Optional event hook
+        window.dispatchEvent(new CustomEvent('weeklyReward:claimed', { detail: { dayIndex: (progressIndex), day: allDays[progressIndex] } }));
     };
 
     const closeModal = () => setShowClaimModal(false);
@@ -213,7 +268,7 @@ export default function DriverDashboard(){
                             <p
                                 className="streak-weeks-num"
                                 style={{paddingTop: "20px"}}
-                            >3</p>
+                            >{progressIndex}</p>
                             <p className="streak-label">Days <br></br>Streak</p>
                         </div>
 
@@ -234,31 +289,33 @@ export default function DriverDashboard(){
                             <p className="weekly-title" style={{textAlign:'left'}}>Daily Reward</p>
 
                         <div className="week-dots">
-                            {allDays.map((day)=> {
-                                const isGiftDay = day === 'Thu' && !rewardClaimed;
-                                const isCompleted = completedDays.includes(day) || (rewardClaimed && day !== 'Thu');
+                            {allDays.map((day, idx)=> {
+                                const isCompleted = idx < progressIndex;
+                                const isCurrent = idx === progressIndex;
                                 let iconNode;
-                                if (isGiftDay) {
+                                if (isCurrent) {
                                     iconNode = (
                                         <img
                                             src={gift_icon}
                                             onClick={handleGiftClick}
-                                            style={{ cursor: 'pointer', animation: 'giftShake 1.2s ease-in-out infinite' }}
-                                            alt="Weekly Reward Gift"
+                                            style={{ cursor: 'pointer', animation: isActive ? 'giftShake 1.2s ease-in-out infinite' : 'none', opacity: isActive ? 1 : 0.85 }}
+                                            alt={isActive ? 'Daily Reward (Active)' : 'Daily Reward (Available soon)'}
                                         />
                                     );
-                                } else if (rewardClaimed && day === 'Thu') {
-                                    // After claim, gift converts to check
-                                    iconNode = <img src={check_icon} alt="Claimed" />;
                                 } else if (isCompleted) {
                                     iconNode = <img src={check_icon} alt="Completed" />;
                                 } else {
-                                    iconNode = <img src={check_icon} alt="Pending" style={{ opacity: 0.2 }} />;
+                                    iconNode = <img src={check_icon} alt="Pending" style={{ opacity: 0.2}} />;
                                 }
                                 return (
                                     <div className="day-item" key={day} style={{ position: 'relative' }}>
                                         {iconNode}
                                         <span>{day}</span>
+                                        {isCurrent && earlyHint && (
+                                            <div style={{ position: 'absolute', top: '-26px', left: '50%', transform: 'translateX(-50%)', background: '#111827', color: '#fff', padding: '4px 8px', borderRadius: 8, fontSize: 11, whiteSpace: 'nowrap', boxShadow: '0 6px 12px rgba(0,0,0,0.15)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                                                {earlyHint}
+                                            </div>
+                                        )}
                                     </div>
                                 );
                             })}
@@ -291,7 +348,10 @@ export default function DriverDashboard(){
                         style={{
                             backgroundColor: "rgba(52, 199, 89, 0.5)",
                             position: 'relative',
+                            cursor: 'pointer'
                         }}
+                        onClick={() => setShowVerify(true)}
+                        title="Scan or manually verify a vehicle"
                     >
                         <p>Scan <br />& Verify</p>
                         <img
@@ -304,7 +364,6 @@ export default function DriverDashboard(){
                         >
                             <img src={scanPlateIcon}/>
                         </div>
-                        
                     </div>
 
                     <div
@@ -369,6 +428,7 @@ export default function DriverDashboard(){
                     
                 </div>
             </div>
+            {showVerify && <VehicleVerifyModal onClose={() => setShowVerify(false)} />}
         </PhoneFrame>
     )
 }
