@@ -24,7 +24,7 @@ import TransactionHistory from './features/TransactionHistory';
 // Add React state/hooks
 import { useState, useEffect, useRef } from 'react';
 
-export default function DriverDashboard(){
+export default function DriverDashboard() {
     const [showBalance, setShowBalance] = useState(true);
     const walletId = '001123983';
     const walletAmount = '₦10,000.00';
@@ -53,7 +53,7 @@ export default function DriverDashboard(){
     };
 
     // Weekly daily reward progression
-    const allDays = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    const allDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
     // progressIndex: 0..6 => current claim day (Mon..Sun). Days < progressIndex are completed.
     // unlockAt: timestamp (ms) when current day's gift becomes "active" (starts shaking/claimable).
     const [progressIndex, setProgressIndex] = useState(0);
@@ -78,7 +78,7 @@ export default function DriverDashboard(){
             document.head.appendChild(style);
         }
     }, []);
-    
+
     // Utilities
     const getNextLocalMidnight = () => {
         const d = new Date();
@@ -94,7 +94,7 @@ export default function DriverDashboard(){
             const savedUnlock = localStorage.getItem('weekly.unlockAt');
             if (savedIdx !== null) setProgressIndex(parseInt(savedIdx, 10));
             if (savedUnlock !== null) setUnlockAt(parseInt(savedUnlock, 10));
-        } catch {}
+        } catch { /* empty */ }
     }, []);
 
     // Keep isActive in sync with unlockAt and set a timer to flip when time elapses
@@ -111,10 +111,10 @@ export default function DriverDashboard(){
 
     // Persist changes
     useEffect(() => {
-        try { localStorage.setItem('weekly.progressIndex', String(progressIndex)); } catch {}
+        try { localStorage.setItem('weekly.progressIndex', String(progressIndex)); } catch { /* empty */ }
     }, [progressIndex]);
     useEffect(() => {
-        try { localStorage.setItem('weekly.unlockAt', String(unlockAt)); } catch {}
+        try { localStorage.setItem('weekly.unlockAt', String(unlockAt)); } catch { /* empty */ }
     }, [unlockAt]);
 
     const handleGiftClick = () => {
@@ -144,9 +144,9 @@ export default function DriverDashboard(){
 
     const closeModal = () => setShowClaimModal(false);
 
-    return(
+    return (
         <PhoneFrame>
-            <div style={{position: 'relative'}}>
+            <div style={{ position: 'relative' }}>
                 <div className='header-bar'>
                     {/* this div contains the component at the left(greeting, user image, user name) */}
                     <div className='header-left'>
@@ -157,11 +157,11 @@ export default function DriverDashboard(){
                                 width={40}
                                 height={40}
                                 alt="Profile"
-                                style={{cursor: "pointer"}}
+                                style={{ cursor: "pointer" }}
                             />
                         </div>
                         {/* this div contains the greeting and user name */}
-                        <div style={{display: 'flex', flexDirection: 'column', lineHeight: '0px',}}>
+                        <div style={{ display: 'flex', flexDirection: 'column', lineHeight: '0px', }}>
                             <p className='welcom-greeting'>Welcom</p>
                             <p className='user-name'>Emeka D.</p>
                         </div>
@@ -174,7 +174,7 @@ export default function DriverDashboard(){
                             border: 'none',
                             cursor: 'pointer',
                         }}>
-                        <img src={notificationBell}/>
+                        <img src={notificationBell} />
                     </button>
 
                 </div>
@@ -184,7 +184,7 @@ export default function DriverDashboard(){
                     style={{
                         width: '100%',
                         height: 'auto',
-                    }} 
+                    }}
                 />
 
                 {/* wallet */}
@@ -193,7 +193,7 @@ export default function DriverDashboard(){
                 >
                     <div>
                         <div className='small-txt'>
-                            <p style={{margin: "0px"}}>Available Balance</p>
+                            <p style={{ margin: "0px" }}>Available Balance</p>
                             <img
                                 src={eye_icon}
                                 alt={showBalance ? "Hide balance" : "Show balance"}
@@ -227,7 +227,7 @@ export default function DriverDashboard(){
                                 src={copy_icon}
                                 alt="Copy Wallet ID"
                                 onClick={copyWalletId}
-                                style={{cursor: 'pointer'}}
+                                style={{ cursor: 'pointer' }}
                             />
                             <h3 className="wallet-id small-txt" title="Click to copy">
                                 Wallet Id: {walletId}
@@ -255,9 +255,9 @@ export default function DriverDashboard(){
                             )}
                         </div>
                     </div>
-                     
 
-                  <ConnectWallet />  
+
+                    <ConnectWallet />
                 </div>
 
                 {/* Weekly goal(streak) section */}
@@ -275,7 +275,7 @@ export default function DriverDashboard(){
                         <div>
                             <p
                                 className="streak-weeks-num"
-                                style={{paddingTop: "20px"}}
+                                style={{ paddingTop: "20px" }}
                             >{progressIndex}</p>
                             <p className="streak-label">Days <br></br>Streak</p>
                         </div>
@@ -285,7 +285,7 @@ export default function DriverDashboard(){
                             style={{
                                 width: "50px",
                                 height: "70px",
-                                marginTop:"auto",
+                                marginTop: "auto",
                                 marginLeft: "1px"
                             }}
                         />
@@ -293,11 +293,11 @@ export default function DriverDashboard(){
 
                     <div
                         className='weekly-streak-card'
-                    >   
-                            <p className="weekly-title" style={{textAlign:'left'}}>Daily Reward</p>
+                    >
+                        <p className="weekly-title" style={{ textAlign: 'left' }}>Daily Reward</p>
 
                         <div className="week-dots">
-                            {allDays.map((day, idx)=> {
+                            {allDays.map((day, idx) => {
                                 const isCompleted = idx < progressIndex;
                                 const isCurrent = idx === progressIndex;
                                 let iconNode;
@@ -313,7 +313,7 @@ export default function DriverDashboard(){
                                 } else if (isCompleted) {
                                     iconNode = <img src={check_icon} alt="Completed" />;
                                 } else {
-                                    iconNode = <img src={check_icon} alt="Pending" style={{ opacity: 0.2}} />;
+                                    iconNode = <img src={check_icon} alt="Pending" style={{ opacity: 0.2 }} />;
                                 }
                                 return (
                                     <div className="day-item" key={day} style={{ position: 'relative' }}>
@@ -348,7 +348,7 @@ export default function DriverDashboard(){
                         </div>
                     </div>
                 )}
-            
+
                 {/* CTA Buttons(pay road taxs, scan plate no, Pay insurance etc) */}
                 <div className='cta-btn-container'>
                     <div
@@ -368,9 +368,9 @@ export default function DriverDashboard(){
                         />
                         <div
                             className='cta-img-container'
-                            style={{left: '90px', top: '50px'}}
+                            style={{ left: '90px', top: '50px' }}
                         >
-                            <img src={scanPlateIcon}/>
+                            <img src={scanPlateIcon} />
                         </div>
                     </div>
 
@@ -389,9 +389,9 @@ export default function DriverDashboard(){
                         />
                         <div
                             className='cta-img-container'
-                            style={{left: '78px', top: '80px'}}
+                            style={{ left: '78px', top: '80px' }}
                         >
-                            <img src={payTpFareIcon}/>
+                            <img src={payTpFareIcon} />
                         </div>
                     </div>
 
@@ -412,9 +412,9 @@ export default function DriverDashboard(){
                         />
                         <div
                             className='cta-img-container'
-                            style={{left: '90px', top: '70px'}}
+                            style={{ left: '90px', top: '70px' }}
                         >
-                            <img src={reportDriverIcon}/>
+                            <img src={reportDriverIcon} />
                         </div>
                     </div>
 
@@ -435,39 +435,39 @@ export default function DriverDashboard(){
                         />
                         <div
                             className='cta-img-container'
-                            style={{left: '100px', top: '70px'}}
+                            style={{ left: '100px', top: '70px' }}
                         >
-                            <img src={transaction_history}/>
+                            <img src={transaction_history} />
                         </div>
                     </div>
-                    
+
                 </div>
             </div>
-                        {showVerify && <VehicleVerifyModal onClose={() => setShowVerify(false)} />}
-                        {showPayFare && (
-                            <PayFare
-                                onClose={() => setShowPayFare(false)}
-                                onPaymentSuccess={(driverInfo) => {
-                                    setShowPayFare(false);
-                                    setPostPaymentDriver(driverInfo);
-                                }}
-                            />
-                        )}
-                        {postPaymentDriver && (
-                            <DriverReview
-                                driver={postPaymentDriver}
-                                onClose={() => setPostPaymentDriver(null)}
-                            />
-                        )}
-                        {showReport && (
-                            <ReportDriver
-                                onClose={() => setShowReport(false)}
-                                prefillWallet={postPaymentDriver?.walletId}
-                            />
-                        )}
-                        {showHistory && (
-                            <TransactionHistory onClose={() => setShowHistory(false)} />
-                        )}
+            {showVerify && <VehicleVerifyModal onClose={() => setShowVerify(false)} />}
+            {showPayFare && (
+                <PayFare
+                    onClose={() => setShowPayFare(false)}
+                    onPaymentSuccess={(driverInfo) => {
+                        setShowPayFare(false);
+                        setPostPaymentDriver(driverInfo);
+                    }}
+                />
+            )}
+            {postPaymentDriver && (
+                <DriverReview
+                    driver={postPaymentDriver}
+                    onClose={() => setPostPaymentDriver(null)}
+                />
+            )}
+            {showReport && (
+                <ReportDriver
+                    onClose={() => setShowReport(false)}
+                    prefillWallet={postPaymentDriver?.walletId}
+                />
+            )}
+            {showHistory && (
+                <TransactionHistory onClose={() => setShowHistory(false)} />
+            )}
         </PhoneFrame>
     )
 }
