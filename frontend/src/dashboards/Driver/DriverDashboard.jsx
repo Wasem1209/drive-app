@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Outlet } from "react-router-dom";
 import '../../styles/driverdashboard.css';
 
 import PhoneFrame from "../../components/PhoneFrame";
@@ -276,6 +276,9 @@ export default function DriverDashboard() {
                     </div>
 
                 </div>
+
+                {/* 🔥 This is where Profile.jsx will appear */}
+                <Outlet />
 
             </div>
         </PhoneFrame>

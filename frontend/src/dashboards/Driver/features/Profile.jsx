@@ -1,15 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-export default function Profile({ profile, setProfile }) {
+export default function Profile({ profile = {}, setProfile }) {
     const [form, setForm] = useState({
-        fullName: profile.fullName || "",
-        email: profile.email || "",
-        phone: profile.phone || "",
-        address: profile.address || "",
+        fullName: "",
+        email: "",
+        phone: "",
+        address: "",
     });
 
     const [loading, setLoading] = useState(false);
     const [saved, setSaved] = useState(false);
+
+    // When profile is loaded (from parent), update form fields
+    useEffect(() => {
+        if (profile) {
+            setForm({
+                fullName: profile.fullName || "",
+                email: profile.email || "",
+                phone: profile.phone || "",
+                address: profile.address || "",
+            });
+        }
+    }, [profile]);
 
     function handleChange(e) {
         setForm({ ...form, [e.target.name]: e.target.value });
@@ -30,7 +42,6 @@ export default function Profile({ profile, setProfile }) {
             const data = await res.json();
 
             if (res.ok) {
-                // Update parent profile state
                 setProfile((prev) => ({ ...prev, ...form }));
                 setSaved(true);
             } else {
@@ -43,12 +54,16 @@ export default function Profile({ profile, setProfile }) {
         setLoading(false);
     }
 
+    // If profile hasn't loaded yet
+    if (!profile) {
+        return <p className="p-4">Loading profile...</p>;
+    }
+
     return (
         <div className="bg-surface p-lg shadow-md rounded-lg">
             <h3 className="text-lg font-semibold mb-md">Personal Information</h3>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-lg">
-
                 {/* Full Name */}
                 <div>
                     <label className="text-sm font-medium">Full Name</label>
