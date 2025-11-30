@@ -15,7 +15,10 @@ import payTpFareIcon from '../../assets/payTpIcon.png'
 import reportDriverIcon from '../../assets/ReportDriverIcon.png'
 import transaction_history from '../../assets/transactionHst.png'
 import ConnectWallet from './features/ConnectWallet';
-import VehicleVerifyModal from '../../components/VehicleVerifyModal';
+import VehicleVerifyModal from './features/VehicleVerifyModal';
+import PayFare from './features/PayFare';
+import DriverReview from './features/DriverReview';
+import ReportDriver from './features/ReportDriver';
 
 // Add React state/hooks
 import { useState, useEffect, useRef } from 'react';
@@ -59,6 +62,9 @@ export default function DriverDashboard(){
     const [earlyHint, setEarlyHint] = useState("");
     const earlyHintTimerRef = useRef(null);
     const [showVerify, setShowVerify] = useState(false);
+    const [showPayFare, setShowPayFare] = useState(false);
+    const [postPaymentDriver, setPostPaymentDriver] = useState(null);
+    const [showReport, setShowReport] = useState(false);
 
     // Inject shake animation keyframes only once
     useEffect(() => {
@@ -372,6 +378,7 @@ export default function DriverDashboard(){
                             backgroundColor: "rgba(0, 200, 179, 0.5)",
                             position: 'relative',
                         }}
+                        onClick={() => setShowPayFare(true)}
                     >
                         <p>Pay  <br />TP Fare</p>
                         <img
@@ -391,19 +398,22 @@ export default function DriverDashboard(){
                         style={{
                             backgroundColor: "rgba(234, 106, 106, 0.5)",
                             position: 'relative',
+                            cursor: 'pointer'
                         }}
+                        onClick={() => setShowReport(true)}
+                        title="Report unsafe or illegal activity"
                     >
-                            <p>Report <br />Driver</p>
-                            <img
-                                src={chevron_left_sqr}
-                                className='cta-chv-btn'
-                            />
-                            <div
-                                className='cta-img-container'
-                                style={{left: '90px', top: '70px'}}
-                            >
-                                <img src={reportDriverIcon}/>
-                            </div>
+                        <p>Report <br />Driver</p>
+                        <img
+                            src={chevron_left_sqr}
+                            className='cta-chv-btn'
+                        />
+                        <div
+                            className='cta-img-container'
+                            style={{left: '90px', top: '70px'}}
+                        >
+                            <img src={reportDriverIcon}/>
+                        </div>
                     </div>
 
                     <div
@@ -428,7 +438,28 @@ export default function DriverDashboard(){
                     
                 </div>
             </div>
-            {showVerify && <VehicleVerifyModal onClose={() => setShowVerify(false)} />}
+                        {showVerify && <VehicleVerifyModal onClose={() => setShowVerify(false)} />}
+                        {showPayFare && (
+                            <PayFare
+                                onClose={() => setShowPayFare(false)}
+                                onPaymentSuccess={(driverInfo) => {
+                                    setShowPayFare(false);
+                                    setPostPaymentDriver(driverInfo);
+                                }}
+                            />
+                        )}
+                        {postPaymentDriver && (
+                            <DriverReview
+                                driver={postPaymentDriver}
+                                onClose={() => setPostPaymentDriver(null)}
+                            />
+                        )}
+                        {showReport && (
+                            <ReportDriver
+                                onClose={() => setShowReport(false)}
+                                prefillWallet={postPaymentDriver?.walletId}
+                            />
+                        )}
         </PhoneFrame>
     )
 }
