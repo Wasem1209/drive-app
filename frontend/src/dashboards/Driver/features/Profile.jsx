@@ -22,6 +22,7 @@ export default function Profile({ profile, setProfile, walletAddress }) {
 
     const [form, setForm] = useState({
         fullName: "",
+        email: "",
         phone: "",
         address: "",
         licenseNumber: "",
