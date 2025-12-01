@@ -55,7 +55,7 @@ export default function Home() {
         {/* PASSENGER EXPERIENCE */}
         <Link to="/passenger" className="card-link">
           <MOTION.div whileHover={{ scale: 1.03 }} className="card">
-            <span className="card-badge" style={{ color: "#DB2777", backgroundColor: "#FCE7F3" }}>TPS Experience
+            <span className="card-badge" style={{ color: "#DB2777", backgroundColor: "#FCE7F3" }}> Client Experience
             </span>
             <div className="card-icon">
               <FaUserFriends size={65} color="#DB2777" />
