@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { detectWallets, enableWallet, getUsedAddresses, shorten } from '../../../blockchain/cardanoWallet';
+import { detectWallets, enableWallet, getUsedAddresses, shorten } from '../../../../../blockchain/cardanoWallet';
 
 export default function ConnectWallet({ onConnected }) {
 	const [available, setAvailable] = useState([]);
