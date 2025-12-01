@@ -1,0 +1,353 @@
+@import "./tokens.css";
+
+.header-bar{
+    width: 89%;
+    position: absolute;
+    display: flex;
+    justify-content: space-between;
+    padding: 30px 20px;
+    margin: 0 auto;
+}
+.header-left{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.welcom-greeting{
+    font-size: var(--font-size-18);
+    color: var(--brand-primary);
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+.user-name{
+    font-size: 12px;
+    font-weight: 200;
+    color: var(--brand-primary-opaque-60);
+}
+.wallet{
+    width: 85%;
+    background-color: var(--brand-primary);
+    position: absolute;
+    top: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 16px auto 0;
+    border-radius: var(--space-12);
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 15px;
+    padding-bottom: 20px;
+    padding-inline: 20px;
+}
+
+.due-notification-container{
+    margin-inline: 10px;
+    margin-block: var(--space-16);
+    display: flex;
+    gap: var(--space-16);
+    /* horizontal scrolling rail */
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch; /* momentum scrolling on iOS */
+    scroll-behavior: smooth; /* smooth scroll */
+    padding-bottom: 8px; /* spacing so last card isn't clipped by scrollbar */
+
+    /* optional: makes snapping to each card feel natural */
+    scroll-snap-type: x mandatory;
+}
+
+/* hide WebKit scrollbar for a cleaner look (optional) */
+.due-notification-container::-webkit-scrollbar{
+    height: 8px;
+}
+.due-notification-container::-webkit-scrollbar-track{
+    background: transparent;
+}
+.due-notification-container::-webkit-scrollbar-thumb{
+    background: rgba(0,0,0,0.15);
+    border-radius: 999px;
+}
+
+/* ensure cards form a horizontal rail and don't shrink */
+.due-notification-card{
+    width: 272px;
+    height: 100px;
+    display: flex;
+    align-items: start;
+    flex: 0 0 auto;
+    border-radius: var(--space-8);
+    scroll-snap-align: start;
+    background: #ffecec;
+    color: #892929;
+    padding-top: 8px;
+    padding-inline: 8px;
+    border-radius: 12px;
+}
+.due-date-text{
+    font-size: 12px;
+    margin: 0px;
+    margin-top: 8px;
+}
+.renew-btn{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    cursor: pointer;
+    color: #E54545;
+}
+.due-days{
+    color: #5C1C1C;
+    font-weight: 800;
+}
+
+.streak-card{
+    width: 150px;
+    height: 100px;
+    background-color: var(--color-accent);
+    /* margin-top: 92px; */
+    border-radius: 8px;
+    font: Montserrat;
+    font-weight: 600;
+    font-size: 12px;
+    color: #333333;
+    padding-left: 12px;
+    gap: 5px;
+    display: flex;
+    overflow: hidden;
+}
+
+.weekly-streak-card{
+    width: 100%;
+    height: 100px;
+    background-color: var(--brand-primary);
+    box-shadow: 0px 2px 8px 0 rgba(0,0,0,0.05);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.streak-weeks-num{
+    color: #333333;
+    font-family: Montserrat;
+    font-size: var(--type-h2);
+    font-weight: 800;
+    margin: 0px;
+}
+
+.streak-weeks{
+    margin: 0px;
+    margin-bottom: 4px;
+    margin-left: 5px;
+    font-size: 10px;
+    font-weight: 800;
+    color: #333333;
+}
+
+.streak-label{
+    font: Montserrat;
+    font-weight: 800;
+    font-size: 12px;
+    color: #333333;
+    margin-top: 5px;
+}
+.weekly-title{
+    font-family: Montserrat;
+    font-weight: 800;
+    font-size: 14px;
+    color: var(--text-color);
+    margin: 0px 0px 0px 12px;
+    font-size: 12px;
+}
+
+.week-dots {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    margin-top: 10px;
+    padding: 0 12px;
+    gap: 5px;
+    font-family: quicksand;
+    font-size: 12px;
+}
+
+.vehicle-details-section{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: end;
+    margin-top: var(--space-16);
+    gap: 16px;
+}
+/* center card inner content and allow flexible sizing */
+.vehicle-detail-card{
+    background-color: #000000;
+    height: 140px;
+    width: 170px;
+    border-radius: var(--space-12);
+    display: flex;
+    color: #fff;
+}
+
+.safe-driving-card{
+    font: var(--font-family);
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--brand-primary);
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    padding-left: 14px;
+    padding-top: 14px;
+}
+
+.sd-title {
+  font-size: 16px;
+  font-weight: 800;
+  margin: 0;
+  padding: 0;
+}
+
+.sd-subtitle {
+  font-size: 10px;
+  font-weight: 400;
+  margin: 0;
+  margin-top: 5px;
+  margin-bottom: 16px;
+}
+
+.driving-score{
+    margin: 0px;
+}
+
+.score-percent{
+    color: var(--brand-primary);
+}
+.score-total{
+    margin-bottom: 5px;
+    font-size: 12px;
+    color: #AEAEB2;
+    font-weight: 100;
+}
+
+.insurance-card{
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    position: relative;
+    padding-top: 16px;
+    padding-left: 12px;
+    position: relative;
+}
+.due-days-left{
+    font-size: 10px;
+    font-weight: 200;
+    margin: 0px;
+    display: flex;
+    gap: 5px;
+    color: #AEAEB2;
+}
+.car-side-view{
+    position: absolute;
+    top: 85px;
+    left: 60px;
+    opacity: .5;
+}
+
+.roadworthiness-card{
+    height: 320px;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    /* gap: 10px; */
+    padding-left: 10px;
+    position: relative;
+}
+.road-worthy-stat{
+    margin: 0;
+    margin-top: 16px;
+    font-weight: 800;
+    font-size: 16px;
+}
+.road-worthy-user-stat{
+    margin: 0px;
+    font-size: 10px;
+    font-weight: 400;
+    margin: 0;
+    margin-top: 5px;
+    margin-bottom: 16px;
+}
+.cta-btn-container{
+    display: flex;
+    flex-wrap: wrap;
+    font-family: 'quicksand', sans-serif;
+    justify-content: space-evenly; /* or use space-between for edges alignment */
+    height: auto;
+    margin-top: var(--space-40);
+    gap: var(--space-16);
+    padding-inline: 20px; /* add horizontal padding */
+}
+
+.cta-btn{
+    flex: 1 1 40%;
+    height: 171px;
+    /* margin: var(--space-8); */
+    border-radius: var(--space-12);
+    cursor: pointer;
+}
+
+.cta-pay{
+    color: var(--brand-primary);
+    font-weight: 600;
+    font-size: 20px;
+    padding-left: 16px;
+}
+
+.cta-chv-btn{
+    margin-top: 32px;
+}
+
+.cta-img-container{
+    position: absolute;
+}
+
+.small-txt {
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    color: #000000;
+    /* padding-left: 20px; */
+    width: auto;
+    height: auto;
+}
+
+.wallet-amount {
+    margin: 0px;
+    /* margin-left: 20px; */
+    margin-top: 0px;
+    padding: 0;
+}
+
+.wallet-id {
+  padding: 0px;
+  color: var(--gray-600);
+  font-weight: 400;
+  margin: 0px;
+  margin-top: 5px;
+}
+
+.connect-wallet-btn {
+  background: #FFF3B0;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  align-self: center;
+  gap: 10px;
+}
+

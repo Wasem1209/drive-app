@@ -182,9 +182,9 @@
   .auth-illustration {
     width: 100%;
     max-width: 520px;
-    border-radius: 14px;
+    /* border-radius: 14px; */
     object-fit: cover;
-    box-shadow: 0 12px 40px rgba(15, 20, 32, 0.06);
+    /* box-shadow: 0 12px 40px rgba(15, 20, 32, 0.06); */
   }
 
   .auth-title {
