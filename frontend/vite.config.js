@@ -1,10 +1,20 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import NodePolyfills from "rollup-plugin-node-polyfills";
 
 export default defineConfig({
   plugins: [react()],
-  build: {
-    outDir: "dist",
+  optimizeDeps: {
+    include: ["lucid-cardano/browser"],
   },
-  base: "/" // Make sure this is correct for your deployment URL
+  build: {
+    rollupOptions: {
+      plugins: [
+        NodePolyfills()
+      ],
+    },
+  },
+  define: {
+    "process.env": {},
+  },
 });
