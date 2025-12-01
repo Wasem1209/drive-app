@@ -1,8 +1,8 @@
 // Profile.jsx (Cardano-ready: Nami + Lucid primary, polling-based live updates, Aiken placeholders)
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import '../../styles/Profile.css';
-import ConnectWallet from './features/ConnectWallet';
-import copy_icon from '../../assets/Copy.png';
+import '../../../styles/Profile.css';
+import ConnectWallet from './ConnectWallet.jsx';
+import copy_icon from '../../../assets/Copy.png';
 
 // Lucid + Mesh helpers
 import { Lucid, Blockfrost, Utils } from "lucid-cardano";

@@ -1,35 +1,33 @@
 .driver-page {
 	position: relative;
 	min-height: 100vh;
-	padding: 36px 24px; /* slightly reduced to give frame more vertical space */
+	padding: 36px 24px;
+	/* slightly reduced to give frame more vertical space */
 	display: flex;
 	justify-content: center;
 	align-items: flex-start;
 	/* animated gray gradient: dark -> light -> loop */
-	background: linear-gradient(
-		130deg,
-		#0b0c0d,
-		#15171a,
-		#202429,
-		#2b3137,
-		#374049
-	);
+	background: linear-gradient(130deg,
+			#0b0c0d,
+			#15171a,
+			#202429,
+			#2b3137,
+			#374049);
 	background-size: 300% 300%;
 	animation: driverGrayFlow 18s ease-in-out infinite;
 	overflow: hidden;
 }
+
 
 .driver-page::before {
 	content: "";
 	position: absolute;
 	inset: -20% -10%;
 	/* soften overlay so it complements the gray gradient */
-	background: linear-gradient(
-		130deg,
-		rgba(255, 255, 255, 0.08),
-		rgba(255, 255, 255, 0.05),
-		rgba(0, 0, 0, 0.08)
-	);
+	background: linear-gradient(130deg,
+			rgba(255, 255, 255, 0.08),
+			rgba(255, 255, 255, 0.05),
+			rgba(0, 0, 0, 0.08));
 	filter: blur(80px);
 	opacity: 0.35;
 	z-index: 0;
@@ -40,9 +38,11 @@
 	0% {
 		background-position: 0% 50%;
 	}
+
 	50% {
 		background-position: 100% 50%;
 	}
+
 	100% {
 		background-position: 0% 50%;
 	}
@@ -52,9 +52,11 @@
 	0% {
 		background-position: 0% 50%;
 	}
+
 	50% {
 		background-position: 100% 50%;
 	}
+
 	100% {
 		background-position: 0% 50%;
 	}
@@ -128,7 +130,8 @@
 	justify-content: center;
 	align-items: center;
 	gap: 6px;
-	z-index: 1000; /* ensure island sits above modals */
+	z-index: 1000;
+	/* ensure island sits above modals */
 }
 
 .dynamic-speaker {
@@ -150,7 +153,8 @@
 	border-radius: inherit;
 	background-color: #ffffff;
 	color: #000000;
-	min-height: 640px; /* taller baseline to avoid looking shortened */
+	min-height: 640px;
+	/* taller baseline to avoid looking shortened */
 	/* padding: 60px 0px 36px; */
 	padding-bottom: 30px;
 	overflow-y: auto;
@@ -166,10 +170,12 @@
 	.driver-page::before {
 		display: none;
 	}
+
 	/* Remove outer padding & dark background: edge-to-edge white experience */
 	.driver-page {
 		padding: 0;
-		background: #ffffff; /* eliminate black screen */
+		background: #ffffff;
+		/* eliminate black screen */
 		align-items: stretch;
 	}
 
@@ -177,7 +183,8 @@
 	.device-frame {
 		width: 100%;
 		margin: 0;
-		padding: 0; /* no internal frame padding */
+		padding: 0;
+		/* no internal frame padding */
 		border-radius: 0;
 		border: none;
 		background: none;
@@ -189,9 +196,11 @@
 		inset: 10px;
 		border-radius: 32px;
 	}
+
 	.device-frame::before,
 	.device-frame::after {
-		display: none; /* trim side details on small screens */
+		display: none;
+		/* trim side details on small screens */
 	}
 
 	.screen-mask {
@@ -203,22 +212,27 @@
 
 	.screen-content {
 		border-radius: 0;
-		min-height: 100vh; /* full viewport height */
-		padding: 0; /* remove interior padding as requested */
+		min-height: 100vh;
+		/* full viewport height */
+		padding: 0;
+		/* remove interior padding as requested */
 		background: #ffffff;
 	}
 
 	.dynamic-island {
-		display: none; /* island hidden when frame removed */
+		display: none;
+		/* island hidden when frame removed */
 	}
 }
 
 /* Ultra-narrow mobile (<=380px): further simplify layout & improve tap targets */
 @media (max-width: 380px) {
+
 	/* Keep zero outer padding; ensure full-height usage */
 	.driver-page {
 		padding: 0;
 	}
+
 	.screen-content {
 		padding: 0;
 		min-height: 100vh;
@@ -229,6 +243,7 @@
 	.driver-page::before {
 		display: none;
 	}
+
 	/* Keep the gray background on small screens */
 	.driver-page {
 		padding: 0;
@@ -240,7 +255,8 @@
 	.device-frame {
 		width: 100%;
 		margin: 0;
-		padding: 0; /* no internal frame padding */
+		padding: 0;
+		/* no internal frame padding */
 		border-radius: 0;
 		border: none;
 		background: none;
@@ -252,9 +268,11 @@
 		inset: 10px;
 		border-radius: 32px;
 	}
+
 	.device-frame::before,
 	.device-frame::after {
-		display: none; /* trim side details on small screens */
+		display: none;
+		/* trim side details on small screens */
 	}
 
 	.screen-mask {
@@ -266,12 +284,15 @@
 
 	.screen-content {
 		border-radius: 0;
-		min-height: 100vh; /* full viewport height */
-		padding: 0; /* remove interior padding as requested */
+		min-height: 100vh;
+		/* full viewport height */
+		padding: 0;
+		/* remove interior padding as requested */
 		background: #ffffff;
 	}
 
 	.dynamic-island {
-		display: none; /* island hidden when frame removed */
+		display: none;
+		/* island hidden when frame removed */
 	}
 }
