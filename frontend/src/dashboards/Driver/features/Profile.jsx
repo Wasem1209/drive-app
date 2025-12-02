@@ -1,145 +1,86 @@
-// Profile.jsx — TEST MODE (no blockchain)
-// Safe for Vite build, backend tests, and UI display.
+// Profile.jsx (hybrid structure)
+// Main glue component that imports subcomponents and holds shared state
+import React, { useState, useEffect, useCallback } from "react";
+import "../../../styles/Profile.css";
+import IdentitySection from "./components/IdentitySection";
+import ComplianceSection from "./components/ComplianceSection";
+import OnchainActions from "./components/OnchainActions";
+import ConnectWallet from "./ConnectWallet.jsx";
 
-import React, { useState, useEffect } from "react";
-import '../../../styles/Profile.css';
-import ConnectWallet from './ConnectWallet.jsx';
-
-export default function Profile({ profile, setProfile }) {
-    // Basic form state
-    const [form, setForm] = useState({
-        fullName: "",
-        email: "",
-        phone: "",
-        address: "",
-        licenseNumber: "",
-        licenseExpiry: "",
-        vehiclePlate: "",
-        vehicleModel: "",
-        vehicleYear: "",
-        vehicleType: "",
-    });
-
-    // Documents placeholder
-    // eslint-disable-next-line no-empty-pattern
-    const [] = useState({
-        licenseFile: null,
-        insuranceFile: null,
-        roadworthyFile: null,
-        idFile: null,
-    });
-
-    // Fake KYC + On-chain Status
-    const [, setKycStatus] = useState("not_submitted");
-    const [driverOnChain, setDriverOnChain] = useState({
-        insuranceDue: "2025-12-01",
-        roadTaxDue: "2025-12-01",
+export default function Profile({ profileProp, setProfileProp, walletAddress }) {
+    // profileProp comes from backend (user object)
+    const [profile, setProfile] = useState(profileProp || {});
+    const [onChainState, setOnChainState] = useState({
+        insuranceDue: null,
+        roadTaxDue: null,
         roadworthy: false,
-        safeDrivingScore: 80,
+        safeDrivingScore: 0,
         verifiedOnChain: false,
+        vehicleNft: null,
     });
-
     const [loading, setLoading] = useState(false);
-    const [saved, setSaved] = useState(false);
     const [error, setError] = useState("");
 
-    // Load backend profile if provided
-    useEffect(() => {
-        if (profile) {
-            setForm(prev => ({ ...prev, ...profile }));
-            if (profile.kycStatus) setKycStatus(profile.kycStatus);
-        }
-    }, [profile]);
-
-    // Format date safely
-    const formatDate = (d) => {
-        if (!d) return "N/A";
-        try { return new Date(d).toLocaleDateString(); }
-        catch { return d; }
-    };
-
-    // Form changes
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setForm(prev => ({ ...prev, [name]: value }));
-    };
-
-    // Fake file handler
-
-    // ---- PLACEHOLDER: Save profile (Backend only) ----
-    const handleSave = async () => {
-        setLoading(true);
-        setError("");
-
+    // load server-side profile (optional)
+    const fetchProfile = useCallback(async () => {
         try {
-            // Upload docs ONLY to backend (placeholder)
-            const res = await fetch("/api/driver/profile/update", {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(form),
-            });
-
-            if (!res.ok) throw new Error("Backend update failed");
-
-            setProfile(prev => ({ ...prev, ...form }));
-            setSaved(true);
-
-        } catch (err) {
-            setError(err.message || "Save failed");
-        } finally {
-            setLoading(false);
+            const res = await fetch("/api/driver/profile");
+            if (!res.ok) throw new Error("Failed to load profile");
+            const json = await res.json();
+            setProfile(json);
+        } catch (e) {
+            console.warn("fetchProfile:", e.message);
         }
+    }, []);
+
+    useEffect(() => { fetchProfile(); }, [fetchProfile]);
+
+    // Callback to update profile in parent or local state
+    const handleProfileUpdate = (newProfile) => {
+        setProfile(prev => ({ ...prev, ...newProfile }));
+        if (setProfileProp) setProfileProp(prev => ({ ...prev, ...newProfile }));
     };
-
-    // ---- PLACEHOLDER: Pay Insurance (Fake on-chain) ----
-    const onPayInsurance = async () => {
-        setLoading(true);
-
-        // Simulate a 2-second blockchain action
-        setTimeout(() => {
-            setDriverOnChain(prev => ({
-                ...prev,
-                insuranceDue: "2026-01-01",
-                verifiedOnChain: true,
-            }));
-            setLoading(false);
-        }, 2000);
-    };
-
 
     return (
-        <div className="driver-profile-page profile-hybrid">
-            {/* KEEP your JSX here exactly as before */}
-            {/* The only thing replaced is the logic above */}
-
-            <h2>Driver Profile (Test Mode)</h2>
-
-            {/* Example: */}
-            <div>
-                <label>Full Name</label>
-                <input
-                    name="fullName"
-                    value={form.fullName}
-                    onChange={handleChange}
-                />
+        <div className="driver-profile-page">
+            <div className="profile-topbar">
+                <h1>Driver Profile</h1>
+                <div className="wallet-connect">
+                    <ConnectWallet />
+                </div>
             </div>
 
-            <button onClick={handleSave} disabled={loading}>
-                {loading ? "Saving..." : "Save Profile"}
-            </button>
+            <div className="profile-grid">
+                <div className="left">
+                    <IdentitySection
+                        profile={profile}
+                        onSave={handleProfileUpdate}
+                        setError={setError}
+                        setLoading={setLoading}
+                    />
+                </div>
 
-            <button onClick={onPayInsurance} disabled={loading}>
-                {loading ? "Processing..." : "Pay Insurance (TEST)"}
-            </button>
+                <div className="right">
+                    <ComplianceSection
+                        profile={profile}
+                        onChainState={onChainState}
+                        setOnChainState={setOnChainState}
+                    />
 
-            {saved && <p style={{ color: "green" }}>Saved successfully!</p>}
-            {error && <p style={{ color: "red" }}>{error}</p>}
-
-            <div style={{ marginTop: "20px" }}>
-                <p><strong>Insurance Due:</strong> {formatDate(driverOnChain.insuranceDue)}</p>
-                <p><strong>Safe Driving Score:</strong> {driverOnChain.safeDrivingScore}</p>
-                <p><strong>Verified On-Chain:</strong> {driverOnChain.verifiedOnChain ? "Yes" : "No"}</p>
+                    <OnchainActions
+                        walletAddress={walletAddress}
+                        profile={profile}
+                        onChainState={onChainState}
+                        setOnChainState={setOnChainState}
+                        setError={setError}
+                        setLoading={setLoading}
+                        onSavedProfile={handleProfileUpdate}
+                    />
+                </div>
             </div>
+
+            {loading && <div className="overlay">Processing...</div>}
+            {error && <div className="error-banner">{error}</div>}
         </div>
     );
 }

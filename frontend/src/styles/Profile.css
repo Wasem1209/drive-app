@@ -1,114 +1,137 @@
-/* Container */
+/* Profile.css - hackathon-ready, compact & responsive */
 .driver-profile-page {
-    max-width: 900px;
-    margin: 40px auto;
-    padding: 25px;
-    background: #ffffff;
-    border-radius: 14px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    font-family: "Inter", sans-serif;
+    max-width: 1200px;
+    margin: 28px auto;
+    padding: 18px;
+    font-family: Inter, system-ui, sans-serif;
 }
 
-.driver-profile-page h2 {
-    font-size: 26px;
-    font-weight: 700;
-    margin-bottom: 25px;
-    color: #1a1a1a;
+.profile-topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
 }
 
-/* Form layout */
-.driver-profile-page label {
+.profile-grid {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 18px;
+}
+
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 6px 20px rgba(8, 15, 30, 0.06);
+    margin-bottom: 12px;
+}
+
+.form-grid label {
     display: block;
-    font-weight: 500;
-    margin-bottom: 6px;
-    color: #333;
+    margin-bottom: 12px;
 }
 
-.driver-profile-page input,
-.driver-profile-page select {
+.form-grid input[type="text"],
+.form-grid input[type="date"],
+.form-grid input[type="email"] {
     width: 100%;
-    padding: 12px;
-    font-size: 15px;
+    padding: 10px;
     border-radius: 8px;
-    border: 1px solid #ccc;
-    margin-bottom: 18px;
-    transition: 0.2s;
+    border: 1px solid #e0e6ef;
 }
 
-.driver-profile-page input:focus,
-.driver-profile-page select:focus {
-    border-color: #007bff;
-    outline: none;
+.actions {
+    margin-top: 12px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
 }
 
-/* Buttons */
-.driver-profile-page button {
-    padding: 12px 20px;
-    background: #007bff;
+button {
+    background: #0066ff;
     color: white;
     border: none;
+    padding: 10px 14px;
     border-radius: 8px;
-    font-size: 15px;
     cursor: pointer;
-    margin-right: 10px;
-    margin-top: 10px;
-    transition: 0.2s;
 }
 
-.driver-profile-page button:hover {
-    background: #0056b3;
-}
-
-.driver-profile-page button:disabled {
-    background: #9bbcea;
+button:disabled {
+    opacity: 0.6;
     cursor: not-allowed;
 }
 
-/* Status boxes */
-.status-box {
-    padding: 12px 15px;
-    background: #f4f6f8;
-    border-left: 4px solid #007bff;
+.cards {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.stat {
+    flex: 1;
+    background: #f5f8ff;
+    padding: 12px;
     border-radius: 8px;
-    margin-top: 15px;
-    font-size: 14px;
+    text-align: center;
 }
 
-/* Success & Error messages */
-.success-msg {
-    color: green;
-    margin-top: 12px;
-    font-weight: 500;
+.stat .label {
+    font-size: 12px;
+    color: #666;
 }
 
-.error-msg {
-    color: red;
-    margin-top: 12px;
-    font-weight: 500;
+.stat .value {
+    font-weight: 700;
+    margin-top: 6px;
+    font-size: 16px;
 }
 
-/* Wallet copy icon */
-.copy-icon {
-    width: 22px;
-    height: 22px;
-    cursor: pointer;
-    margin-left: 10px;
-    vertical-align: middle;
+.vehicle-id {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-top: 10px;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-    .driver-profile-page {
-        margin: 20px;
-        padding: 20px;
-    }
+.qr {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
-    .driver-profile-page h2 {
-        font-size: 22px;
-    }
+.qr-label {
+    font-size: 12px;
+    color: #666;
+    margin-top: 6px;
+}
 
-    .driver-profile-page button {
-        width: 100%;
-        margin-bottom: 10px;
+.right .card {
+    margin-bottom: 14px;
+}
+
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    color: white;
+    z-index: 1200;
+}
+
+.error-banner {
+    background: #fff4f4;
+    color: #7f1d1d;
+    padding: 12px;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+
+@media (max-width:900px) {
+    .profile-grid {
+        grid-template-columns: 1fr;
     }
 }
