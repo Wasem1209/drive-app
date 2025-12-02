@@ -1,86 +1,142 @@
-// Profile.jsx (hybrid structure)
-// Main glue component that imports subcomponents and holds shared state
-import React, { useState, useEffect, useCallback } from "react";
-import "../../../styles/Profile.css";
-import IdentitySection from "./components/IdentitySection";
-import ComplianceSection from "./components/ComplianceSection";
-import OnchainActions from "./components/OnchainActions";
-import ConnectWallet from "./ConnectWallet.jsx";
+import React, { useEffect, useState } from "react";
+import "./Profile.css";
 
-export default function Profile({ profileProp, setProfileProp, walletAddress }) {
-    // profileProp comes from backend (user object)
-    const [profile, setProfile] = useState(profileProp || {});
-    const [onChainState, setOnChainState] = useState({
-        insuranceDue: null,
-        roadTaxDue: null,
-        roadworthy: false,
-        safeDrivingScore: 0,
-        verifiedOnChain: false,
-        vehicleNft: null,
-    });
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
+const Profile = () => {
+    const [user, setUser] = useState({});
+    const [plate, setPlate] = useState("");
+    const [carInfo, setCarInfo] = useState(null);
+    const [nin, setNin] = useState("");
+    const [ninInfo, setNinInfo] = useState(null);
+    const [accepted, setAccepted] = useState(false);
 
-    // load server-side profile (optional)
-    const fetchProfile = useCallback(async () => {
-        try {
-            const res = await fetch("/api/driver/profile");
-            if (!res.ok) throw new Error("Failed to load profile");
-            const json = await res.json();
-            setProfile(json);
-        } catch (e) {
-            console.warn("fetchProfile:", e.message);
-        }
+    // Fetch user info automatically
+    useEffect(() => {
+        const loadUser = async () => {
+            const res = await fetch("/api/user/profile");
+            const data = await res.json();
+            setUser(data);
+        };
+        loadUser();
     }, []);
 
-    useEffect(() => { fetchProfile(); }, [fetchProfile]);
+    // Fetch car info
+    const fetchCarInfo = async () => {
+        const res = await fetch("/api/car/lookup", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ plateNumber: plate }),
+        });
 
-    // Callback to update profile in parent or local state
-    const handleProfileUpdate = (newProfile) => {
-        setProfile(prev => ({ ...prev, ...newProfile }));
-        if (setProfileProp) setProfileProp(prev => ({ ...prev, ...newProfile }));
+        const data = await res.json();
+        setCarInfo(data);
+    };
+
+    // Fetch NIN data
+    const fetchNinInfo = async () => {
+        const res = await fetch("/api/nin/lookup", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ nin }),
+        });
+
+        const data = await res.json();
+        setNinInfo(data);
+    };
+
+    // Save Acceptance
+    const saveAcceptance = async () => {
+        const res = await fetch("/api/driver/accept-terms", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ userId: user.id, accepted: true }),
+        });
+
+        const data = await res.json();
+        if (data.status === "success") {
+            setAccepted(true);
+        }
     };
 
     return (
-        <div className="driver-profile-page">
-            <div className="profile-topbar">
-                <h1>Driver Profile</h1>
-                <div className="wallet-connect">
-                    <ConnectWallet />
+        <div className="profile-container">
+
+            {/* PERSONAL INFO */}
+            <section className="profile-section">
+                <h2>Personal Information</h2>
+                <div className="info-box">
+                    <p><strong>Name:</strong> {user.name}</p>
+                    <p><strong>Email:</strong> {user.email}</p>
                 </div>
-            </div>
+            </section>
 
-            <div className="profile-grid">
-                <div className="left">
-                    <IdentitySection
-                        profile={profile}
-                        onSave={handleProfileUpdate}
-                        setError={setError}
-                        setLoading={setLoading}
+            {/* CAR INFO */}
+            <section className="profile-section">
+                <h2>Car Information</h2>
+                <input
+                    type="text"
+                    placeholder="Enter Plate Number"
+                    value={plate}
+                    onChange={(e) => setPlate(e.target.value)}
+                    className="input-field"
+                />
+                <button onClick={fetchCarInfo} className="submit-btn">Get Car Info</button>
+
+                {carInfo && (
+                    <div className="info-box">
+                        <p><strong>Make:</strong> {carInfo.make}</p>
+                        <p><strong>Model:</strong> {carInfo.model}</p>
+                        <p><strong>Year:</strong> {carInfo.year}</p>
+                        <p><strong>Color:</strong> {carInfo.color}</p>
+                    </div>
+                )}
+            </section>
+
+            {/* NIN INFO */}
+            <section className="profile-section">
+                <h2>NIN Lookup</h2>
+                <input
+                    type="text"
+                    placeholder="Enter NIN"
+                    value={nin}
+                    onChange={(e) => setNin(e.target.value)}
+                    className="input-field"
+                />
+                <button onClick={fetchNinInfo} className="submit-btn">Fetch NIN Data</button>
+
+                {ninInfo && (
+                    <div className="info-box">
+                        <p><strong>Name:</strong> {ninInfo.firstName} {ninInfo.lastName}</p>
+                        <p><strong>DOB:</strong> {ninInfo.dob}</p>
+                        <p><strong>Gender:</strong> {ninInfo.gender}</p>
+                        <p><strong>Address:</strong> {ninInfo.address}</p>
+                    </div>
+                )}
+            </section>
+
+            {/* ACCEPT TERMS */}
+            <section className="profile-section">
+                <h2>Driver Agreement</h2>
+                <label className="checkbox-row">
+                    <input
+                        type="checkbox"
+                        checked={accepted}
+                        onChange={() => { }}
+                        disabled={accepted}
                     />
-                </div>
+                    <span>I confirm that I have read and agree to the driver terms.</span>
+                </label>
 
-                <div className="right">
-                    <ComplianceSection
-                        profile={profile}
-                        onChainState={onChainState}
-                        setOnChainState={setOnChainState}
-                    />
+                {!accepted && (
+                    <button onClick={saveAcceptance} className="submit-btn">
+                        Accept & Save
+                    </button>
+                )}
 
-                    <OnchainActions
-                        walletAddress={walletAddress}
-                        profile={profile}
-                        onChainState={onChainState}
-                        setOnChainState={setOnChainState}
-                        setError={setError}
-                        setLoading={setLoading}
-                        onSavedProfile={handleProfileUpdate}
-                    />
-                </div>
-            </div>
+                {accepted && <p className="success-text">✔ Saved Successfully</p>}
+            </section>
 
-            {loading && <div className="overlay">Processing...</div>}
-            {error && <div className="error-banner">{error}</div>}
         </div>
     );
-}
+};
+
+export default Profile;
