@@ -9,20 +9,10 @@
             }
         }
     ],
-    "routes": [
+    "rewrites": [
         {
-            "src": "/(.*)",
-            "dest": "/index.html",
-            "has": [
-                {
-                    "type": "host",
-                    "value": ".*"
-                }
-            ]
-        },
-        {
-            "src": "/(.*\\.(js|css|png|jpg|jpeg|gif|svg|ico|json))",
-            "dest": "/$1"
+            "source": "/((?!assets|favicon\\.ico|robots\\.txt).*)",
+            "destination": "/index.html"
         }
     ]
 }
