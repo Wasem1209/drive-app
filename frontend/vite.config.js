@@ -4,6 +4,7 @@ import NodePolyfills from "rollup-plugin-node-polyfills";
 
 export default defineConfig({
   plugins: [react()],
+  base: "./", // <-- THIS FIXES blank page in production
   optimizeDeps: {
     include: ["lucid-cardano/browser"],
   },
