@@ -48,7 +48,7 @@ export default function DriverDashboard() {
 
                         <div style={{ display: 'flex', flexDirection: 'column', lineHeight: '0px' }}>
                             <p className='welcom-greeting'>Welcome</p>
-                            <p className='user-name'>Emeka D.</p>
+                            <p className='user-name'>Emeka David.</p>
                         </div>
                     </div>
 
