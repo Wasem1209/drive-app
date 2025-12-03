@@ -1,50 +1,42 @@
 import express, { Application, Request, Response, NextFunction } from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import { connectDB } from "./config/db"; // MongoDB connection
-import authRoutes from "./routes/auth.routes"; // auth routes
+import { connectDB } from "./config/db";
+import authRoutes from "./routes/auth.routes";
+import profileRoutes from "./routes/profile.routes";
 import helmet from "helmet";
 import dashboardRoutes from "./routes/dashboardRoutes";
 
-// Load environment variables
 dotenv.config();
 
-// Initialize Express
 const app: Application = express();
 const PORT = process.env.PORT || 5000;
 
-// Connect to MongoDB
+// DB Connection
 connectDB();
 
-// ------------------
 // Middlewares
-// ------------------
-app.use(cors()); // Enable cross-origin requests
-app.use(express.json()); // Parse JSON bodies
-app.use(helmet()); // Security headers
+app.use(cors());
+app.use(express.json());
+app.use(helmet());
 
-// ------------------
 // Routes
-// ------------------
-app.use("/api/users", authRoutes); // Register/Login endpoints
+app.use("/api/users", authRoutes);
 app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/profile", profileRoutes);
 
-// Basic health check
-app.get("/", (req: Request, res: Response) => {
+// Health Check
+app.get("/", (_req: Request, res: Response) => {
     res.send("🚦 Autofy Backend API is running...");
 });
 
-// ------------------
-// Catch-all for unknown routes
-// ------------------
-app.use((req: Request, res: Response) => {
+// 404
+app.use((_req: Request, res: Response) => {
     res.status(404).json({ message: "Route not found" });
 });
 
-// ------------------
-// Global error handler
-// ------------------
-app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+// Global Error Handler
+app.use((err: any, _req: Request, res: Response) => {
     console.error("Global error:", err);
     res.status(500).json({
         message: "Server Error",
@@ -52,9 +44,7 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
     });
 });
 
-// ------------------
-// Start server
-// ------------------
+// Start Server
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
