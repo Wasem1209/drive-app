@@ -61,3 +61,60 @@
     color: green;
     font-weight: bold;
 }
+
+.profile-container {
+    max-width: 650px;
+    margin: auto;
+    padding: 20px;
+}
+
+.card {
+    background: #ffffff;
+    padding: 18px;
+    margin-bottom: 18px;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+.card h2 {
+    margin-bottom: 10px;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #999;
+    margin-bottom: 10px;
+}
+
+button {
+    padding: 10px 15px;
+    background: #005eff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+button:hover {
+    opacity: 0.8;
+}
+
+.result-box {
+    margin-top: 12px;
+    padding: 10px;
+    background: #f4f4f4;
+    border-radius: 8px;
+}
+
+.agree-btn {
+    background: #00b341;
+}
+
+.success {
+    color: #00b341;
+    font-weight: bold;
+}

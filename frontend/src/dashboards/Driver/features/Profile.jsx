@@ -1,140 +1,126 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Profile.css";
 
+const API = "https://autofy-ys5x.onrender.com/api/profile";
+
 const Profile = () => {
-    const [user, setUser] = useState({});
-    const [plate, setPlate] = useState("");
-    const [carInfo, setCarInfo] = useState(null);
+    const [personal, setPersonal] = useState({ name: "", email: "" });
+    const [plateNumber, setPlateNumber] = useState("");
+    const [carData, setCarData] = useState(null);
     const [nin, setNin] = useState("");
-    const [ninInfo, setNinInfo] = useState(null);
-    const [accepted, setAccepted] = useState(false);
+    const [ninData, setNinData] = useState(null);
+    const [agreementAccepted, setAgreementAccepted] = useState(false);
 
-    // Fetch user info automatically
+    const token = localStorage.getItem("token");
+
     useEffect(() => {
-        const loadUser = async () => {
-            const res = await fetch("/api/user/profile");
-            const data = await res.json();
-            setUser(data);
-        };
-        loadUser();
-    }, []);
+        fetch(`${API}/me`, {
+            headers: { Authorization: `Bearer ${token}` },
+        })
+            .then(res => res.json())
+            .then(data => setPersonal(data));
+    }, [token]);
 
-    // Fetch car info
-    const fetchCarInfo = async () => {
-        const res = await fetch("/api/car/lookup", {
+    const submitCar = async () => {
+        const res = await fetch(`${API}/car`, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ plateNumber: plate }),
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ plateNumber }),
         });
 
         const data = await res.json();
-        setCarInfo(data);
+        setCarData(data.data);
     };
 
-    // Fetch NIN data
-    const fetchNinInfo = async () => {
-        const res = await fetch("/api/nin/lookup", {
+    const submitNin = async () => {
+        const res = await fetch(`${API}/nin`, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
             body: JSON.stringify({ nin }),
         });
 
         const data = await res.json();
-        setNinInfo(data);
+        setNinData(data.data);
     };
 
-    // Save Acceptance
-    const saveAcceptance = async () => {
-        const res = await fetch("/api/driver/accept-terms", {
+    const acceptAgreement = async () => {
+        const res = await fetch(`${API}/agreement`, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ userId: user.id, accepted: true }),
+            headers: { Authorization: `Bearer ${token}` },
         });
 
         const data = await res.json();
-        if (data.status === "success") {
-            setAccepted(true);
-        }
+        if (data.data) setAgreementAccepted(true);
     };
 
     return (
         <div className="profile-container">
 
-            {/* PERSONAL INFO */}
-            <section className="profile-section">
+            {/* 1️⃣ Personal Info */}
+            <section className="card">
                 <h2>Personal Information</h2>
-                <div className="info-box">
-                    <p><strong>Name:</strong> {user.name}</p>
-                    <p><strong>Email:</strong> {user.email}</p>
-                </div>
+                <p><strong>Name:</strong> {personal.name}</p>
+                <p><strong>Email:</strong> {personal.email}</p>
             </section>
 
-            {/* CAR INFO */}
-            <section className="profile-section">
+            {/* 2️⃣ Car Information */}
+            <section className="card">
                 <h2>Car Information</h2>
                 <input
                     type="text"
                     placeholder="Enter Plate Number"
-                    value={plate}
-                    onChange={(e) => setPlate(e.target.value)}
-                    className="input-field"
+                    value={plateNumber}
+                    onChange={(e) => setPlateNumber(e.target.value)}
                 />
-                <button onClick={fetchCarInfo} className="submit-btn">Get Car Info</button>
+                <button onClick={submitCar}>Fetch Car Info</button>
 
-                {carInfo && (
-                    <div className="info-box">
-                        <p><strong>Make:</strong> {carInfo.make}</p>
-                        <p><strong>Model:</strong> {carInfo.model}</p>
-                        <p><strong>Year:</strong> {carInfo.year}</p>
-                        <p><strong>Color:</strong> {carInfo.color}</p>
+                {carData && (
+                    <div className="result-box">
+                        <p>Car Make: {carData.carMake}</p>
+                        <p>Model: {carData.carModel}</p>
+                        <p>Year: {carData.carYear}</p>
                     </div>
                 )}
             </section>
 
-            {/* NIN INFO */}
-            <section className="profile-section">
-                <h2>NIN Lookup</h2>
+            {/* 3️⃣ NIN */}
+            <section className="card">
+                <h2>NIN Verification</h2>
                 <input
                     type="text"
                     placeholder="Enter NIN"
                     value={nin}
                     onChange={(e) => setNin(e.target.value)}
-                    className="input-field"
                 />
-                <button onClick={fetchNinInfo} className="submit-btn">Fetch NIN Data</button>
+                <button onClick={submitNin}>Fetch NIN Info</button>
 
-                {ninInfo && (
-                    <div className="info-box">
-                        <p><strong>Name:</strong> {ninInfo.firstName} {ninInfo.lastName}</p>
-                        <p><strong>DOB:</strong> {ninInfo.dob}</p>
-                        <p><strong>Gender:</strong> {ninInfo.gender}</p>
-                        <p><strong>Address:</strong> {ninInfo.address}</p>
+                {ninData && (
+                    <div className="result-box">
+                        <p>Name: {ninData.ninData.firstname} {ninData.ninData.lastname}</p>
+                        <p>Age: {ninData.ninData.age}</p>
+                        <p>Gender: {ninData.ninData.gender}</p>
                     </div>
                 )}
             </section>
 
-            {/* ACCEPT TERMS */}
-            <section className="profile-section">
+            {/* 4️⃣ Agreement */}
+            <section className="card">
                 <h2>Driver Agreement</h2>
-                <label className="checkbox-row">
-                    <input
-                        type="checkbox"
-                        checked={accepted}
-                        onChange={() => { }}
-                        disabled={accepted}
-                    />
-                    <span>I confirm that I have read and agree to the driver terms.</span>
-                </label>
 
-                {!accepted && (
-                    <button onClick={saveAcceptance} className="submit-btn">
+                {!agreementAccepted ? (
+                    <button className="agree-btn" onClick={acceptAgreement}>
                         Accept & Save
                     </button>
+                ) : (
+                    <p className="success">✔ Agreement Accepted</p>
                 )}
-
-                {accepted && <p className="success-text">✔ Saved Successfully</p>}
             </section>
-
         </div>
     );
 };
