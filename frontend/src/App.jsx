@@ -16,13 +16,10 @@ import AdminDashboard from "./dashboards/Admin/AdminDashboard.jsx";
 import DriverDashboard from "./dashboards/Driver/DriverDashboard.jsx";
 import OfficersDashboard from "./dashboards/Officers/OfficersDashboard.jsx";
 import PassangerDashboard from "./dashboards/Passenger/PassengerDashboard.jsx";
+
+// Driver Features
 import DriverProfile from "./dashboards/Driver/features/Profile.jsx";
 import PayRoadTax from "./dashboards/Driver/features/PayRoadTax.jsx";
-
-
-
-
-
 
 function App() {
   return (
@@ -36,7 +33,7 @@ function App() {
       <Route path="/security" element={<Security />} />
       <Route path="/drivers" element={<Drivers />} />
 
-      {/* Protected Dashboards */}
+      {/* Protected Driver Dashboard with nested routes */}
       <Route
         path="/dashboard/driver"
         element={
@@ -44,35 +41,31 @@ function App() {
             <DriverDashboard />
           </PrivateRoute>
         }
-      />
+      >
+        {/* Nested Routes */}
+        <Route
+          index
+          element={<div style={{ padding: "20px" }}>Welcome to your driver dashboard</div>}
+        />
+        <Route
+          path="profile"
+          element={
+            <PrivateRoute requiredRole="driver">
+              <DriverProfile />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="PayRoadTax"
+          element={
+            <PrivateRoute requiredRole="driver">
+              <PayRoadTax />
+            </PrivateRoute>
+          }
+        />
+      </Route>
 
-      <Route
-        path="/dashboard/driver/profile"
-        element={
-          <PrivateRoute requiredRole="driver">
-            <DriverProfile />
-          </PrivateRoute>
-        }
-      />
-
-      <Route
-        path="/dashboard/driver/PayRoadTax"
-        element={
-          <PrivateRoute requiredRole="driver">
-            <PayRoadTax />
-          </PrivateRoute>
-        }
-      />
-
-      <Route
-        path="/dashboard/driver/profile"
-        element={
-          <PrivateRoute requiredRole="driver">
-            <DriverProfile />
-          </PrivateRoute>
-        }
-      />
-
+      {/* Other Dashboards */}
       <Route
         path="/dashboard/passenger"
         element={
@@ -81,7 +74,6 @@ function App() {
           </PrivateRoute>
         }
       />
-
       <Route
         path="/dashboard/admin"
         element={
@@ -90,7 +82,6 @@ function App() {
           </PrivateRoute>
         }
       />
-
       <Route
         path="/dashboard/officer"
         element={
@@ -100,7 +91,7 @@ function App() {
         }
       />
 
-      {/* Catch-all route */}
+      {/* Catch-all */}
       <Route path="*" element={<Home />} />
     </Routes>
   );
