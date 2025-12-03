@@ -229,7 +229,7 @@ export default function DriverDashboard() {
 
                     <div
                         className="cta-btn cta-pay"
-                        onClick={() => navigate("/dashboard/driver/PayRoad")}
+                        onClick={() => navigate("/dashboard/driver/PayRoadTax")}
                         style={{ backgroundColor: "#023e8a80", cursor: "pointer" }}
                     >
                         <p>Pay Road <br />Tax</p>
