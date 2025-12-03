@@ -55,10 +55,10 @@ function App() {
       />
 
       <Route
-        path="PayRoad"
+        path="/dashboard/driver/PayRoad"
         element={
           <PrivateRoute requiredRole="driver">
-            <PayRoad />
+            <DriverPayRoad />
           </PrivateRoute>
         }
       />
