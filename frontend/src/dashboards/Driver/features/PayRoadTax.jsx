@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useWallet } from "./hooks/useWallet";
 import { useLucid } from "./hooks/useLucid";
 import "./PayRoad.css";
+import PhoneFrame from "../../../components/PhoneFrame";
 
 export default function PayRoad() {
   const { connect } = useWallet();
@@ -62,32 +63,34 @@ export default function PayRoad() {
   };
 
   return (
-    <div className="tax-container">
-      <h1>Pay Road Tax</h1>
-      <p className="desc">Submit payment on-chain and mint your official receipt NFT.</p>
+    <PhoneFrame>
+      <div className="tax-container">
+        <h1>Pay Road Tax</h1>
+        <p className="desc">Submit payment on-chain and mint your official receipt NFT.</p>
 
-      {!connected && (
-        <button className="pay-btn" onClick={handleConnect}>
-          Connect Wallet
-        </button>
-      )}
-
-      {connected && (
-        <>
-          <p><strong>Wallet:</strong> {walletAddress}</p>
-          <div className="input-group">
-            <label>Amount (ADA)</label>
-            <input type="number" value={amount} onChange={(e) => setAmount(Number(e.target.value))} />
-          </div>
-          <button className="pay-btn" onClick={handlePay} disabled={loading}>
-            {loading ? "Processing..." : "Pay & Mint Receipt"}
+        {!connected && (
+          <button className="pay-btn" onClick={handleConnect}>
+            Connect Wallet
           </button>
-        </>
-      )}
+        )}
 
-      {txHash && <p className="success">Transaction Submitted: {txHash}</p>}
-      {error && <p className="error">{error}</p>}
-    </div>
+        {connected && (
+          <>
+            <p><strong>Wallet:</strong> {walletAddress}</p>
+            <div className="input-group">
+              <label>Amount (ADA)</label>
+              <input type="number" value={amount} onChange={(e) => setAmount(Number(e.target.value))} />
+            </div>
+            <button className="pay-btn" onClick={handlePay} disabled={loading}>
+              {loading ? "Processing..." : "Pay & Mint Receipt"}
+            </button>
+          </>
+        )}
+
+        {txHash && <p className="success">Transaction Submitted: {txHash}</p>}
+        {error && <p className="error">{error}</p>}
+      </div>
+    </PhoneFrame>
   );
 }
 

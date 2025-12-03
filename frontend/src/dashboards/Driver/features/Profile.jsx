@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./Profile.css";
+import PhoneFrame from "../../../components/PhoneFrame";
 
 const API = "https://autofy-ys5x.onrender.com/api/profile";
 
@@ -97,75 +98,77 @@ const Profile = () => {
     };
 
     return (
-        <div className="profile-container">
-            {loading && <div className="loading">⏳ Loading...</div>}
-            {error && <div className="error">{error}</div>}
+        <PhoneFrame>
+            <div className="profile-container">
+                {loading && <div className="loading">⏳ Loading...</div>}
+                {error && <div className="error">{error}</div>}
 
-            {/* Personal Info */}
-            <section className="card">
-                <h2>Personal Information</h2>
-                <p>
-                    <strong>Name:</strong> {personal.name}
-                </p>
-                <p>
-                    <strong>Email:</strong> {personal.email}
-                </p>
-            </section>
+                {/* Personal Info */}
+                <section className="card">
+                    <h2>Personal Information</h2>
+                    <p>
+                        <strong>Name:</strong> {personal.name}
+                    </p>
+                    <p>
+                        <strong>Email:</strong> {personal.email}
+                    </p>
+                </section>
 
-            {/* Car Information */}
-            <section className="card">
-                <h2>Car Information</h2>
-                <input
-                    type="text"
-                    placeholder="Enter Plate Number"
-                    value={plateNumber}
-                    onChange={(e) => setPlateNumber(e.target.value)}
-                />
-                <button onClick={submitCar}>Submit</button>
+                {/* Car Information */}
+                <section className="card">
+                    <h2>Car Information</h2>
+                    <input
+                        type="text"
+                        placeholder="Enter Plate Number"
+                        value={plateNumber}
+                        onChange={(e) => setPlateNumber(e.target.value)}
+                    />
+                    <button onClick={submitCar}>Submit</button>
 
-                {carData && (
-                    <div className="result-box">
-                        <p>Car Make: {carData.carMake}</p>
-                        <p>Model: {carData.carModel}</p>
-                        <p>Year: {carData.carYear}</p>
-                    </div>
-                )}
-            </section>
+                    {carData && (
+                        <div className="result-box">
+                            <p>Car Make: {carData.carMake}</p>
+                            <p>Model: {carData.carModel}</p>
+                            <p>Year: {carData.carYear}</p>
+                        </div>
+                    )}
+                </section>
 
-            {/* NIN Verification */}
-            <section className="card">
-                <h2>NIN Verification</h2>
-                <input
-                    type="text"
-                    placeholder="Enter NIN"
-                    value={nin}
-                    onChange={(e) => setNin(e.target.value)}
-                />
-                <button onClick={submitNin}>Submit</button>
+                {/* NIN Verification */}
+                <section className="card">
+                    <h2>NIN Verification</h2>
+                    <input
+                        type="text"
+                        placeholder="Enter NIN"
+                        value={nin}
+                        onChange={(e) => setNin(e.target.value)}
+                    />
+                    <button onClick={submitNin}>Submit</button>
 
-                {ninData && (
-                    <div className="result-box">
-                        <p>
-                            Name: {ninData.firstname} {ninData.lastname}
-                        </p>
-                        <p>Age: {ninData.age}</p>
-                        <p>Gender: {ninData.gender}</p>
-                    </div>
-                )}
-            </section>
+                    {ninData && (
+                        <div className="result-box">
+                            <p>
+                                Name: {ninData.firstname} {ninData.lastname}
+                            </p>
+                            <p>Age: {ninData.age}</p>
+                            <p>Gender: {ninData.gender}</p>
+                        </div>
+                    )}
+                </section>
 
-            {/* Driver Agreement */}
-            <section className="card">
-                <h2>Driver Agreement</h2>
-                {!agreementAccepted ? (
-                    <button className="agree-btn" onClick={acceptAgreement}>
-                        Accept & Save
-                    </button>
-                ) : (
-                    <p className="success">✔ Agreement Accepted</p>
-                )}
-            </section>
-        </div>
+                {/* Driver Agreement */}
+                <section className="card">
+                    <h2>Driver Agreement</h2>
+                    {!agreementAccepted ? (
+                        <button className="agree-btn" onClick={acceptAgreement}>
+                            Accept & Save
+                        </button>
+                    ) : (
+                        <p className="success">✔ Agreement Accepted</p>
+                    )}
+                </section>
+            </div>
+        </PhoneFrame>
     );
 };
 
