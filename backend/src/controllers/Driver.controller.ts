@@ -1,6 +1,6 @@
 // src/controllers/driver.controller.ts
 import { Request, Response } from "express";
-import Driver from "../models/DriverProfile";
+import Driver from "../models/DriverProfile.model";
 import { ServiceDriver } from "../service/servicedriver";
 export const getProfile = async (req: Request, res: Response) => {
     try {
