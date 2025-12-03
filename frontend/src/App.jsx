@@ -56,7 +56,7 @@ function App() {
       />
 
       <Route
-        path="/PayRoadTax"
+        path="/dashboard/driver/PayRoadTax"
         element={
           <PrivateRoute requiredRole="driver">
             <PayRoadTax />
