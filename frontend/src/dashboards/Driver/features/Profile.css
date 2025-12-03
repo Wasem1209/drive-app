@@ -1,120 +1,141 @@
+/* Container */
 .profile-container {
-    max-width: 650px;
-    margin: 30px auto;
+    max-width: 800px;
+    margin: 40px auto;
     padding: 20px;
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
 }
 
-.profile-section {
-    background: #ffffff;
-    padding: 20px;
+/* Card Sections */
+.card {
+    background-color: #ffffff;
     border-radius: 12px;
-    margin-bottom: 25px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 25px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    transition: transform 0.2s ease;
 }
 
-.profile-section h2 {
-    margin-bottom: 15px;
-    color: #1a1a1a;
+.card:hover {
+    transform: translateY(-3px);
 }
 
-.info-box {
-    background: #f8f8f8;
-    padding: 15px;
-    border-radius: 10px;
-    margin-top: 10px;
+/* Section Headings */
+.card h2 {
+    margin-bottom: 12px;
+    font-size: 1.4rem;
+    color: #333;
+    border-bottom: 2px solid #4caf50;
+    display: inline-block;
+    padding-bottom: 4px;
 }
 
-.input-field {
-    width: 100%;
-    padding: 12px;
+/* Inputs */
+.card input {
+    padding: 10px 14px;
     border-radius: 8px;
     border: 1px solid #ccc;
-    margin-bottom: 10px;
-    font-size: 15px;
-}
-
-.submit-btn {
     width: 100%;
-    padding: 12px;
-    background: #0066ff;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    cursor: pointer;
-    margin-top: 5px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s ease;
 }
 
-.submit-btn:hover {
-    background: #0051cc;
+.card input:focus {
+    border-color: #4caf50;
 }
 
-.checkbox-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.success-text {
+/* Buttons */
+.card button {
     margin-top: 10px;
-    color: green;
-    font-weight: bold;
-}
-
-.profile-container {
-    max-width: 650px;
-    margin: auto;
-    padding: 20px;
-}
-
-.card {
-    background: #ffffff;
-    padding: 18px;
-    margin-bottom: 18px;
-    border-radius: 12px;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-}
-
-.card h2 {
-    margin-bottom: 10px;
-    font-size: 20px;
-    font-weight: 600;
-}
-
-input {
-    width: 100%;
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid #999;
-    margin-bottom: 10px;
-}
-
-button {
-    padding: 10px 15px;
-    background: #005eff;
-    color: white;
+    padding: 10px 20px;
+    background-color: #4caf50;
+    color: #fff;
     border: none;
     border-radius: 8px;
+    font-size: 1rem;
     cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
-button:hover {
-    opacity: 0.8;
+.card button:hover {
+    background-color: #43a047;
+    transform: translateY(-2px);
 }
 
+.card button:active {
+    transform: translateY(1px);
+}
+
+/* Result Boxes */
 .result-box {
-    margin-top: 12px;
-    padding: 10px;
-    background: #f4f4f4;
+    margin-top: 15px;
+    padding: 15px;
+    background-color: #f9f9f9;
     border-radius: 8px;
+    border-left: 4px solid #4caf50;
 }
 
-.agree-btn {
-    background: #00b341;
+.result-box p {
+    margin: 5px 0;
 }
 
+/* Success & Error Messages */
 .success {
-    color: #00b341;
+    color: #2e7d32;
     font-weight: bold;
+}
+
+.error {
+    background-color: #ffebee;
+    color: #c62828;
+    padding: 12px 15px;
+    border-radius: 8px;
+    font-weight: 500;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+/* Loading Spinner */
+.loading {
+    background-color: #e3f2fd;
+    color: #1565c0;
+    padding: 12px 15px;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 500;
+}
+
+/* Agreement Button */
+.agree-btn {
+    background-color: #1976d2;
+}
+
+.agree-btn:hover {
+    background-color: #1565c0;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .profile-container {
+        padding: 15px;
+    }
+
+    .card {
+        padding: 20px;
+    }
+
+    .card h2 {
+        font-size: 1.2rem;
+    }
+
+    .card button {
+        font-size: 0.95rem;
+        padding: 8px 16px;
+    }
 }
