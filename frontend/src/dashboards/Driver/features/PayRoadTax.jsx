@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-
-import { useWallet } from "./hooks/useWallet";
+import { useWallet } from "../hooks/useWallet";
 import { useLucid } from "./hooks/useLucid";
-import "./PayRoadtax.css";
+import "../../../styles/PayRoadtax.css";
 import PhoneFrame from "../../../components/PhoneFrame";
 
 export default function PayRoadTax() {
@@ -11,7 +10,7 @@ export default function PayRoadTax() {
 
   const [walletAddress, setWalletAddress] = useState("");
   const [connected, setConnected] = useState(false);
-  const [amount, setAmount] = useState(2); // ADA
+  const [amount, setAmount] = useState(2);
   const [loading, setLoading] = useState(false);
   const [txHash, setTxHash] = useState(null);
   const [error, setError] = useState(null);
@@ -38,11 +37,11 @@ export default function PayRoadTax() {
 
       if (!connected) throw new Error("Connect wallet first");
 
-      // Hackathon placeholder: CBOR fetch (mock validator)
       await fetch("/aiken/receipt_policy.cbor");
 
       const tx = lucid
-        ? await lucid.newTx()
+        ? await lucid
+          .newTx()
           .payToAddress(GOVT_ADDRESS, { lovelace: amount * 1_000_000 })
           .complete()
         : await mockTx();
@@ -50,7 +49,6 @@ export default function PayRoadTax() {
       const hash = tx.txHash || tx;
       setTxHash(hash);
 
-      // Notify backend
       await fetch("/api/receipts/verify", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -67,7 +65,7 @@ export default function PayRoadTax() {
     <PhoneFrame>
       <div className="tax-container">
         <h1>Pay Road Tax</h1>
-        <p className="desc">Submit payment on-chain and mint your official receipt NFT.</p>
+        <p className="desc">Submit your payment on-chain and mint your official receipt NFT.</p>
 
         {!connected && (
           <button className="pay-btn" onClick={handleConnect}>
@@ -78,20 +76,25 @@ export default function PayRoadTax() {
         {connected && (
           <>
             <p><strong>Wallet:</strong> {walletAddress}</p>
+
             <div className="input-group">
               <label>Amount (ADA)</label>
-              <input type="number" value={amount} onChange={(e) => setAmount(Number(e.target.value))} />
+              <input
+                type="number"
+                value={amount}
+                onChange={(e) => setAmount(Number(e.target.value))}
+              />
             </div>
+
             <button className="pay-btn" onClick={handlePay} disabled={loading}>
-              {loading ? "Processing..." : "Pay & Mint Receipt"}
+              {loading ? "Processing..." : "Pay Road Tax"}
             </button>
           </>
         )}
 
-        {txHash && <p className="success">Transaction Submitted: {txHash}</p>}
+        {txHash && <p className="success">✔ Transaction Submitted: {txHash}</p>}
         {error && <p className="error">{error}</p>}
       </div>
     </PhoneFrame>
   );
 }
-

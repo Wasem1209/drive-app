@@ -1,17 +1,31 @@
-export default function ConnectWallet({ onConnected }) {
-    const fakeWallet = {
-        label: "Demo Wallet",
-        address: "addr1qxxxxxx",
-    };
+import React from "react";
+import { useWallet } from "../hooks/usewallet";
 
-    const connect = () => {
-        if (onConnected) onConnected(fakeWallet);
-        alert("Connected to Demo Wallet!");
+export default function ConnectWallet() {
+    const { connect } = useWallet();
+
+    const handleConnect = async () => {
+        try {
+            await connect();
+            alert("Wallet Connected Successfully!");
+        } catch (e) {
+            alert(e.message);
+        }
     };
 
     return (
-        <button onClick={connect} style={{ padding: "8px 12px", borderRadius: 8 }}>
-            Connect Wallet (Demo)
+        <button
+            style={{
+                padding: "8px 14px",
+                background: "#003566",
+                color: "white",
+                borderRadius: "6px",
+                border: "none",
+                cursor: "pointer",
+            }}
+            onClick={handleConnect}
+        >
+            Connect Wallet
         </button>
     );
 }
