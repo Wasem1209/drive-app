@@ -1,10 +1,11 @@
 import React, { useState } from "react";
+
 import { useWallet } from "./hooks/useWallet";
 import { useLucid } from "./hooks/useLucid";
 import "./PayRoadtax.css";
 import PhoneFrame from "../../../components/PhoneFrame";
 
-export default function PayRoad() {
+export default function PayRoadTax() {
   const { connect } = useWallet();
   const { lucid, initLucid, mockTx } = useLucid();
 
