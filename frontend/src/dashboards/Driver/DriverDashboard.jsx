@@ -22,7 +22,6 @@ import pay_tax_img from '../../assets/pay-tax-img.png'
 import scan_plate_img from '../../assets/scan plate img.png'
 import pay_insurance_history from '../../assets/pay_insurance_history_img.png'
 import transaction_history from '../../assets/transactionHst.png'
-import ConnectWallet from './features/ConnectWallet';
 
 export default function DriverDashboard() {
     const navigate = useNavigate();
@@ -104,7 +103,7 @@ export default function DriverDashboard() {
 
                     {/*Add your button here */}
                     <button
-                        onClick={() => navigate("/connectwallet")}
+                        onClick={() => navigate("/wallet")}
                         className="connect-btn"
                     >
                         Connect Wallet

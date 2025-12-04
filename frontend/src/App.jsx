@@ -18,7 +18,7 @@ import OfficersDashboard from "./dashboards/Officers/OfficersDashboard.jsx";
 import PassangerDashboard from "./dashboards/Passenger/PassengerDashboard.jsx";
 import DriverProfile from "./dashboards/Driver/features/Profile.jsx";
 
-import ConnectWallet from "./dashboards/Driver/features/ConnectWallet.jsx";
+import ConnectWallet from "./dashboards/Driver/features/Wallet.jsx";
 
 
 
