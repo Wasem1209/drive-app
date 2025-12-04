@@ -67,36 +67,32 @@ export default function DriverDashboard() {
                 <img src={rectangle} alt="Rectangle" style={{ width: '100%', height: 'auto' }} />
 
                 {/* WALLET */}
-                <div
-                    className="wallet"
-                    style={{ cursor: "pointer" }}
-                    onClick={() => navigate("/dashboard/driver/connect-wallet")}
-                >
+                <div className="wallet">
                     <div>
-                        <div className="small-txt">
+                        <div className='small-txt'>
                             <p style={{ margin: "0px" }}>Available Balance</p>
                             <img
                                 src={eye_icon}
                                 alt="Eye Icon"
                                 style={{
-                                    width: "12px",
-                                    height: "12px",
-                                    paddingTop: "15px",
-                                    paddingLeft: "8px",
-                                    paddingBottom: "12px",
-                                    cursor: "pointer",
+                                    width: '12px',
+                                    height: '12px',
+                                    paddingTop: '15px',
+                                    paddingLeft: '8px',
+                                    paddingBottom: '12px',
+                                    cursor: 'pointer',
                                 }}
                             />
                         </div>
 
-                        <h2 className="wallet-amount">₦10,000.00</h2>
+                        <h2 className='wallet-amount'>₦10,000.00</h2>
 
                         <div
                             style={{
                                 display: "flex",
                                 alignItems: "center",
                                 gap: "8px",
-                                cursor: "pointer",
+                                cursor: 'pointer',
                             }}
                         >
                             <img src={copy_icon} alt="Copy Icon" />
@@ -104,9 +100,8 @@ export default function DriverDashboard() {
                         </div>
                     </div>
 
-                    {/* Clicking wallet navigates to a page where ConnectWallet is rendered */}
+                    <ConnectWallet />
                 </div>
-
                 {/* WEEKLY GOAL */}
                 <div
                     style={{
