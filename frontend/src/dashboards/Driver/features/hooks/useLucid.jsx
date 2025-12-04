@@ -1,24 +1,33 @@
 import { useState } from "react";
-import { Lucid } from "lucid-cardano";
+import {
+    Lucid,
+    Blockfrost
+} from "lucid-cardano";
 
-// Hook for Lucid integration
 export function useLucid() {
     const [lucid, setLucid] = useState(null);
 
-    // Initialize Lucid with the browser wallet
     const initLucid = async () => {
-        if (!window.cardano) throw new Error("No Cardano wallet detected");
+        if (!window.cardano?.nami)
+            throw new Error("Nami Wallet not detected");
 
-        const lucid = await Lucid.new(
-            window.cardano.nami, // browser wallet
-            "Mainnet" // or "Preview", "Testnet"
+        // Enable wallet
+        const api = await window.cardano.nami.enable();
+
+        // Create Lucid instance that works in the browser
+        const lucidInstance = await Lucid.new(
+            undefined,
+            "Mainnet"
         );
 
-        setLucid(lucid);
-        return lucid;
+        // Select browser wallet
+        lucidInstance.selectWallet(api);
+
+        setLucid(lucidInstance);
+        return lucidInstance;
     };
 
-    // Mock TX for testing without blockchain
+    // Mock TX for development
     const mockTx = async () => {
         return "mock_tx_hash_123456789";
     };

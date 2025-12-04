@@ -1,27 +1,35 @@
 import { useState } from "react";
 
-// A simple browser-compatible wallet hook for Nami, Eternl, etc.
+// Browser-safe wallet hook for Nami, Eternl, Lace, etc.
 export function useWallet() {
   const [walletApi, setWalletApi] = useState(null);
+  const [walletName, setWalletName] = useState(null);
 
-  // Connect wallet (Nami/Eternl)
+  // Connect wallet
   const connect = async () => {
-    if (!window.cardano) throw new Error("No Cardano wallet found in browser");
+    if (!window.cardano) throw new Error("No Cardano wallets found");
 
-    // Example: check for Nami
-    const nami = window.cardano.nami;
-    if (!nami) throw new Error("Nami wallet not installed");
+    // Prefer Nami → Eternl → Lace
+    const wallet =
+      window.cardano.nami ||
+      window.cardano.eternl ||
+      window.cardano.lace;
 
-    await nami.enable();
-    setWalletApi(nami);
-    return nami;
+    if (!wallet) throw new Error("No supported Cardano wallet installed");
+
+    const api = await wallet.enable(); // Lucid-compatible API
+
+    setWalletApi(api);
+    setWalletName(wallet.name || "Cardano Wallet");
+
+    return api; // IMPORTANT: return real API, not provider
   };
 
   const getBalance = async () => {
     if (!walletApi) throw new Error("Wallet not connected");
-    const balance = await walletApi.getBalance(); // lovelace
-    return Number(balance);
+    const balanceHex = await walletApi.getBalance();
+    return BigInt(balanceHex); // wallet returns hex → convert to bigint
   };
 
-  return { connect, walletApi, getBalance };
+  return { connect, walletApi, walletName, getBalance };
 }
