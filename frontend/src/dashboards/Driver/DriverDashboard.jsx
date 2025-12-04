@@ -87,7 +87,7 @@ export default function DriverDashboard() {
                             />
                         </div>
 
-                        <h2 className="wallet-amount">$10,000.00</h2>
+                        <h2 className="wallet-amount">10,000.00</h2>
 
                         <div
                             style={{
@@ -104,7 +104,7 @@ export default function DriverDashboard() {
 
                     {/*Add your button here */}
                     <button
-                        onClick={() => navigate("/connect-wallet")}
+                        onClick={() => navigate("/connectwallet")}
                         className="connect-btn"
                     >
                         Connect Wallet
