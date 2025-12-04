@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useWallet } from "./hooks/usePhilip";
+import { useWallet } from "./hooks/useWallet";
 import { useLucid } from "./hooks/useLucid";
 import "../../../styles/PayRoadtax.css";
 import PhoneFrame from "../../../components/PhoneFrame";
