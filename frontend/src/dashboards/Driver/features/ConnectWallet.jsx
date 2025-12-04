@@ -1,31 +1,48 @@
-import React from "react";
-import { useWallet } from "./hooks/useWallet";
+// ConnectWallet.jsx
+import React, { useState, useEffect } from "react";
 
-export default function ConnectWallet() {
-    const { connect } = useWallet();
+const ConnectWallet = () => {
+    const [walletFound, setWalletFound] = useState(false);
+    const [walletConnected, setWalletConnected] = useState(false);
+    const [address, setAddress] = useState("");
 
-    const handleConnect = async () => {
+    useEffect(() => {
+        // Check if Nami Wallet is installed
+        if (window.cardano && window.cardano.nami) {
+            setWalletFound(true);
+        }
+    }, []);
+
+    const connectWallet = async () => {
         try {
-            await connect();
-            alert("Wallet Connected Successfully!");
-        } catch (e) {
-            alert(e.message);
+            if (!walletFound) return alert("Nami Wallet not found!");
+
+            // Enable Nami
+            const nami = await window.cardano.nami.enable();
+            const addr = await nami.getUsedAddresses();
+            setAddress(addr[0] || "");
+            setWalletConnected(true);
+        } catch (err) {
+            console.error("Wallet connection failed:", err);
         }
     };
 
     return (
-        <button
-            style={{
-                padding: "8px 14px",
-                background: "#003566",
-                color: "white",
-                borderRadius: "6px",
-                border: "none",
-                cursor: "pointer",
-            }}
-            onClick={handleConnect}
-        >
-            Connect Wallet
-        </button>
+        <div className="wallet-connector">
+            {walletFound ? (
+                walletConnected ? (
+                    <div>
+                        <p>Wallet Connected!</p>
+                        <p>Address: {address}</p>
+                    </div>
+                ) : (
+                    <button onClick={connectWallet}>Connect Nami Wallet</button>
+                )
+            ) : (
+                <p>Please install Nami Wallet to continue.</p>
+            )}
+        </div>
     );
-}
+};
+
+export default ConnectWallet;
