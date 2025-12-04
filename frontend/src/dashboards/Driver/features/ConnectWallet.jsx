@@ -1,48 +1,21 @@
-// ConnectWallet.jsx
-import React, { useState, useEffect } from "react";
+// frontend/src/dashboards/Driver/features/ConnectWallet.jsx
+import React from "react";
+import { useWallet, ConnectWallet as MeshConnectWallet } from "@meshsdk/react";
 
-const ConnectWallet = () => {
-    const [walletFound, setWalletFound] = useState(false);
-    const [walletConnected, setWalletConnected] = useState(false);
-    const [address, setAddress] = useState("");
-
-    useEffect(() => {
-        // Check if Nami Wallet is installed
-        if (window.cardano && window.cardano.nami) {
-            setWalletFound(true);
-        }
-    }, []);
-
-    const connectWallet = async () => {
-        try {
-            if (!walletFound) return alert("Nami Wallet not found!");
-
-            // Enable Nami
-            const nami = await window.cardano.nami.enable();
-            const addr = await nami.getUsedAddresses();
-            setAddress(addr[0] || "");
-            setWalletConnected(true);
-        } catch (err) {
-            console.error("Wallet connection failed:", err);
-        }
-    };
+export default function ConnectWallet() {
+    const { connected, name } = useWallet();
 
     return (
-        <div className="wallet-connector">
-            {walletFound ? (
-                walletConnected ? (
-                    <div>
-                        <p>Wallet Connected!</p>
-                        <p>Address: {address}</p>
-                    </div>
-                ) : (
-                    <button onClick={connectWallet}>Connect Nami Wallet</button>
-                )
-            ) : (
-                <p>Please install Nami Wallet to continue.</p>
+        <div style={{ cursor: "pointer" }}>
+            {/* Render Mesh’s connect button */}
+            <MeshConnectWallet />
+
+            {/* Show wallet info if connected */}
+            {connected && (
+                <p style={{ marginTop: "8px" }}>
+                    Connected: <strong>{name}</strong>
+                </p>
             )}
         </div>
     );
-};
-
-export default ConnectWallet;
+}
