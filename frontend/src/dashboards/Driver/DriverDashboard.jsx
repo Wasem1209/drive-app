@@ -1,4 +1,5 @@
 import { useNavigate, Outlet } from "react-router-dom";
+import { useState } from "react";
 
 import '../../styles/driverdashboard.css';
 
@@ -26,7 +27,6 @@ import transaction_history from '../../assets/transactionHst.png'
 export default function DriverDashboard() {
     const navigate = useNavigate();
 
-    // eslint-disable-next-line no-undef
     const [walletModalOpen, setWalletModalOpen] = useState(false);
 
     // Mock connect function (replace with Nami / Lucid logic if needed)
