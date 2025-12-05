@@ -86,7 +86,7 @@ export default function DriverDashboard() {
                             />
                         </div>
 
-                        <h2 className="wallet-amount">$10,000.00</h2>
+                        <h2 className="wallet-amount">₳10,000.00</h2>
 
                         <div
                             style={{
