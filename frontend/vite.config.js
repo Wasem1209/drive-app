@@ -5,8 +5,21 @@ import { NodeModulesPolyfillPlugin } from "@esbuild-plugins/node-modules-polyfil
 
 export default defineConfig({
   plugins: [react()],
+  resolve: {
+    alias: {
+      // Browser polyfills for Node modules
+      fs: false,
+      path: "path-browserify",
+      stream: "stream-browserify",
+      util: "util/",
+      crypto: "crypto-browserify",
+    },
+  },
   optimizeDeps: {
     esbuildOptions: {
+      define: {
+        global: "globalThis", // some Lucid packages expect global
+      },
       plugins: [
         NodeGlobalsPolyfillPlugin({
           buffer: true,
@@ -17,7 +30,8 @@ export default defineConfig({
   },
   build: {
     rollupOptions: {
-      plugins: [],
+      // ensure external Node modules are ignored
+      external: ["fs", "path", "stream", "util", "crypto"],
     },
   },
 });

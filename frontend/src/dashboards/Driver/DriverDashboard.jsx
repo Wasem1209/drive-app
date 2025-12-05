@@ -1,5 +1,4 @@
 import { useNavigate, Outlet } from "react-router-dom";
-import { useState } from "react";
 
 import '../../styles/driverdashboard.css';
 
@@ -26,14 +25,6 @@ import transaction_history from '../../assets/transactionHst.png'
 
 export default function DriverDashboard() {
     const navigate = useNavigate();
-
-    const [walletModalOpen, setWalletModalOpen] = useState(false);
-
-    // Mock connect function (replace with Nami / Lucid logic if needed)
-    const connectWallet = async () => {
-        alert("Wallet connected!"); // you can replace this with your Nami wallet connection
-        setWalletModalOpen(false);
-    };
 
     return (
         <PhoneFrame>
@@ -81,37 +72,46 @@ export default function DriverDashboard() {
                     <div>
                         <div className="small-txt">
                             <p style={{ margin: "0px" }}>Available Balance</p>
-                            <img src={eye_icon} alt="Eye Icon" style={{ width: "12px", height: "12px", paddingTop: "15px", paddingLeft: "8px", cursor: "pointer" }} />
+                            <img
+                                src={eye_icon}
+                                alt="Eye Icon"
+                                style={{
+                                    width: "12px",
+                                    height: "12px",
+                                    paddingTop: "15px",
+                                    paddingLeft: "8px",
+                                    paddingBottom: "12px",
+                                    cursor: "pointer",
+                                }}
+                            />
                         </div>
 
                         <h2 className="wallet-amount">$10,000.00</h2>
 
-                        <div style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer" }}>
+                        <div
+                            style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "8px",
+                                cursor: "pointer",
+                            }}
+                        >
                             <img src={copy_icon} alt="Copy Icon" />
                             <h3 className="wallet-id small-txt">Wallet Id: 001123983</h3>
                         </div>
                     </div>
 
-                    {/* CONNECT WALLET BUTTON */}
-                    <button className="connect-btn" onClick={() => setWalletModalOpen(true)}>
+                    {/*Add your button here */}
+                    <button
+                        onClick={() => navigate("/wallet")}
+                        className="connect-btn"
+                    >
                         Connect Wallet
                     </button>
-                </div>
 
-                {/* --- CONNECT WALLET MODAL --- */}
-                {walletModalOpen && (
-                    <div style={modalStyles.overlay}>
-                        <div style={modalStyles.modal}>
-                            <h3>Connect Wallet</h3>
-                            <button style={modalStyles.primaryBtn} onClick={connectWallet}>
-                                Connect Nami Wallet
-                            </button>
-                            <button style={modalStyles.cancelBtn} onClick={() => setWalletModalOpen(false)}>
-                                Cancel
-                            </button>
-                        </div>
-                    </div>
-                )}
+                    {/* If you want to render the component directly instead of navigating */}
+                    {/* <ConnectWallet /> */}
+                </div>
 
                 {/* WEEKLY GOAL */}
                 <div
@@ -294,44 +294,3 @@ export default function DriverDashboard() {
         </PhoneFrame>
     );
 }
-
-// --- MODAL STYLES ---
-const modalStyles = {
-    overlay: {
-        position: "fixed",
-        top: 0,
-        left: 0,
-        width: "100vw",
-        height: "100vh",
-        background: "rgba(0,0,0,0.4)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        zIndex: 9999,
-    },
-    modal: {
-        width: "260px",
-        padding: "20px",
-        background: "#fff",
-        borderRadius: "12px",
-        textAlign: "center",
-    },
-    primaryBtn: {
-        width: "100%",
-        padding: "10px",
-        background: "#0058fb",
-        color: "#fff",
-        borderRadius: "8px",
-        border: "none",
-        marginBottom: "10px",
-        cursor: "pointer"
-    },
-    cancelBtn: {
-        width: "100%",
-        padding: "8px",
-        background: "#ddd",
-        borderRadius: "8px",
-        border: "none",
-        cursor: "pointer"
-    }
-};
