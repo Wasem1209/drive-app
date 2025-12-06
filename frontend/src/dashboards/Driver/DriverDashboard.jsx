@@ -1,4 +1,5 @@
 import { useNavigate, Outlet } from "react-router-dom";
+import { useState } from 'react';
 
 import '../../styles/driverdashboard.css';
 
@@ -23,8 +24,16 @@ import scan_plate_img from '../../assets/scan plate img.png'
 import pay_insurance_history from '../../assets/pay_insurance_history_img.png'
 import transaction_history from '../../assets/transactionHst.png'
 
+import PayRoadTax from './features/PayRoadTax.jsx';
+import ScanPlateNo from './features/ScanPlateNo.jsx';
+import TransactionHistory from '../Passenger/features/TransactionHistory';
+
 export default function DriverDashboard() {
     const navigate = useNavigate();
+    const [showPayTax, setShowPayTax] = useState(false);
+    const [showScanPlate, setShowScanPlate] = useState(false);
+    const [showPayInsurance, setShowPayInsurance] = useState(false);
+    const [showHistory, setShowHistory] = useState(false);
 
     return (
         <PhoneFrame>
@@ -239,7 +248,7 @@ export default function DriverDashboard() {
 
                     <div
                         className="cta-btn cta-pay"
-                        onClick={() => navigate("/dashboard/driver/PayRoadTax")}
+                        onClick={() => setShowPayTax(true)}
                         style={{ backgroundColor: "#023e8a80", cursor: "pointer" }}
                     >
                         <p>Pay Road <br />Tax</p>
@@ -251,7 +260,7 @@ export default function DriverDashboard() {
 
                     <div
                         className="cta-btn cta-pay"
-                        onClick={() => navigate("/driver/scan-plate")}
+                        onClick={() => setShowScanPlate(true)}
                         style={{ backgroundColor: "#00c8b380", cursor: "pointer" }}
                     >
                         <p>Scan<br />Plate No.</p>
@@ -263,7 +272,7 @@ export default function DriverDashboard() {
 
                     <div
                         className="cta-btn cta-pay"
-                        onClick={() => navigate("/driver/pay-insurance")}
+                        onClick={() => setShowPayInsurance(true)}
                         style={{ backgroundColor: "#cb30e080", cursor: "pointer" }}
                     >
                         <p>Pay<br />Insurance</p>
@@ -275,7 +284,7 @@ export default function DriverDashboard() {
 
                     <div
                         className="cta-btn cta-pay"
-                        onClick={() => navigate("/driver/payment-history")}
+                        onClick={() => setShowHistory(true)}
                         style={{ backgroundColor: "rgba(0, 136, 255, 0.5)", cursor: "pointer" }}
                     >
                         <p>Payment<br />History</p>
@@ -289,6 +298,20 @@ export default function DriverDashboard() {
 
                 {/* This is where Profile.jsx will appear */}
                 <Outlet />
+
+                {/* Modals / inline feature components (open instead of navigating) */}
+                {showPayTax && (
+                    <PayRoadTax onClose={() => setShowPayTax(false)} />
+                )}
+                {showScanPlate && (
+                    <ScanPlateNo onClose={() => setShowScanPlate(false)} />
+                )}
+                {showPayInsurance && (
+                    <PayRoadTax onClose={() => setShowPayInsurance(false)} mode="insurance" />
+                )}
+                {showHistory && (
+                    <TransactionHistory onClose={() => setShowHistory(false)} />
+                )}
 
             </div>
         </PhoneFrame>

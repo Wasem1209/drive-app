@@ -18,7 +18,10 @@ import OfficersDashboard from "./dashboards/Officers/OfficersDashboard.jsx";
 import PassangerDashboard from "./dashboards/Passenger/PassengerDashboard.jsx";
 import DriverProfile from "./dashboards/Driver/features/Profile.jsx";
 
+// Features
 import ConnectWallet from "./dashboards/Driver/features/Wallet.jsx";
+import PayRoadTax from "./dashboards/Driver/features/PayRoadTax.jsx";
+import ScanPlateNo from "./dashboards/Driver/features/ScanPlateNo.jsx";
 
 
 
@@ -101,6 +104,25 @@ function App() {
           </PrivateRoute>
         }
       />
+
+      {/* Features */}
+        <Route
+          path="/dashboard/driver/pay-road-tax"
+          element={
+            <PrivateRoute requiredRole="driver">
+              <PayRoadTax />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/dashboard/driver/scan-plate"
+          element={
+            <PrivateRoute requiredRole="driver">
+              <ScanPlateNo />
+            </PrivateRoute>
+          }
+        />
 
       {/* Catch-all route */}
       <Route path="*" element={<Home />} />
