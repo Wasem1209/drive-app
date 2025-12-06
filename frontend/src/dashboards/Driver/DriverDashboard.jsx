@@ -529,7 +529,7 @@ export default function DriverDashboard() {
                     >
                         <p>Scan<br />Plate No.</p>
                         <img src={chevron_left_sqr} className='cta-chv-btn' />
-                        <div className='cta-img-container' style={{ left: '90px', top: '60px' }}>
+                        <div className='cta-img-container' style={{ left: '310px', top: '60px' }}>
                             <img src={scan_plate_img} />
                         </div>
                     </div>
@@ -541,7 +541,7 @@ export default function DriverDashboard() {
                     >
                         <p>Pay<br />Insurance</p>
                         <img src={chevron_left_sqr} className='cta-chv-btn' />
-                        <div className='cta-img-container' style={{ left: '70px', top: '70px' }}>
+                        <div className='cta-img-container' style={{ left: '80px', top: '250px' }}>
                             <img src={pay_insurance_history} />
                         </div>
                     </div>
@@ -553,7 +553,7 @@ export default function DriverDashboard() {
                     >
                         <p>Payment<br />History</p>
                         <img src={chevron_left_sqr} className='cta-chv-btn' />
-                        <div className='cta-img-container' style={{ left: '100px', top: '70px' }}>
+                        <div className='cta-img-container' style={{ left: '300px', top: '250px' }}>
                             <img src={transaction_history} />
                         </div>
                     </div>
