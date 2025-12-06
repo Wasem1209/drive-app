@@ -41,9 +41,7 @@ export default function DriverDashboard() {
 
                 {/* HEADER */}
                 <div className='header-bar'>
-
                     <div className='header-left'>
-                        {/* PROFILE IMAGE (CLICKABLE) */}
                         <div>
                             <img
                                 src={profilePic}
@@ -70,13 +68,11 @@ export default function DriverDashboard() {
                     >
                         <img src={notificationBell} alt="Notifications" />
                     </button>
-
                 </div>
 
                 <img src={rectangle} alt="Rectangle" style={{ width: '100%', height: 'auto' }} />
 
-
-
+                {/* WALLET SECTION */}
                 <div className="wallet">
                     <div>
                         <div className="small-txt">
@@ -95,32 +91,90 @@ export default function DriverDashboard() {
                             />
                         </div>
 
-                        <h2 className="wallet-amount">₳10,000.00</h2>
+                        <h2 className="wallet-amount">
+                            {walletConnected ? `₳${balance}` : "₳0.00"}
+                        </h2>
 
-                        <div
-                            style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: "8px",
-                                cursor: "pointer",
-                            }}
-                        >
-                            <img src={copy_icon} alt="Copy Icon" />
-                            <h3 className="wallet-id small-txt">Wallet Id: 001123983</h3>
-                        </div>
+                        {walletConnected && (
+                            <div
+                                style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: "8px",
+                                    cursor: "pointer",
+                                }}
+                            >
+                                <img src={copy_icon} alt="Copy Icon" />
+                                <h3 className="wallet-id small-txt">
+                                    {walletAddress.slice(0, 12)}...{walletAddress.slice(-6)}
+                                </h3>
+                            </div>
+                        )}
                     </div>
 
-                    {/*Add your button here */}
+                    {/* OPEN WALLET MODAL BUTTON */}
                     <button
-                        onClick={() => navigate("/wallet")}
+                        onClick={() => setWalletModalOpen(true)}
                         className="connect-btn"
                     >
-                        Connect Wallet
+                        {walletConnected ? "Wallet Connected ✔" : "Connect Wallet"}
                     </button>
-
-                    {/* If you want to render the component directly instead of navigating */}
-                    {/* <ConnectWallet /> */}
                 </div>
+
+                {/* WALLET MODAL */}
+                {walletModalOpen && (
+                    <div style={modalOverlay}>
+                        <div style={modalBox}>
+
+                            <h2 style={{ marginBottom: "10px" }}>
+                                {walletConnected ? "Wallet Connected" : "Connect Wallet"}
+                            </h2>
+
+                            {!walletConnected ? (
+                                <>
+                                    <p style={{ marginBottom: "20px" }}>
+                                        Select wallet to connect
+                                    </p>
+
+                                    <button
+                                        style={modalBtn}
+                                        onClick={connectNamiWallet}
+                                    >
+                                        Connect Nami Wallet
+                                    </button>
+
+                                    <button
+                                        style={modalCancel}
+                                        onClick={() => setWalletModalOpen(false)}
+                                    >
+                                        Cancel
+                                    </button>
+                                </>
+                            ) : (
+                                <>
+                                    <p style={{ marginBottom: "20px" }}>
+                                        Connected as <br />
+                                        <b>{walletAddress.slice(0, 12)}...{walletAddress.slice(-6)}</b>
+                                    </p>
+
+                                    <button
+                                        style={modalBtnRed}
+                                        onClick={disconnectWallet}
+                                    >
+                                        Disconnect Wallet
+                                    </button>
+
+                                    <button
+                                        style={modalCancel}
+                                        onClick={() => setWalletModalOpen(false)}
+                                    >
+                                        Close
+                                    </button>
+                                </>
+                            )}
+                        </div>
+                    </div>
+                )}
 
                 {/* WEEKLY GOAL */}
                 <div
@@ -164,12 +218,11 @@ export default function DriverDashboard() {
                     <DueNotification />
                 </div>
 
-                {/* VEHICLE DETAILS (CLICKABLE CARDS) */}
+                {/* VEHICLE DETAILS */}
                 <div className='vehicle-details-section'>
-
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
 
-                        {/* Safe Driving Card */}
+                        {/* Safe Driving */}
                         <div
                             className='safe-driving-card vehicle-detail-card'
                             onClick={() => navigate("/driver/safe-driving")}
@@ -183,7 +236,7 @@ export default function DriverDashboard() {
                             </div>
                         </div>
 
-                        {/* Insurance Card */}
+                        {/* Insurance */}
                         <div
                             className='insurance-card vehicle-detail-card'
                             onClick={() => navigate("/driver/insurance")}
@@ -213,7 +266,7 @@ export default function DriverDashboard() {
                         </div>
                     </div>
 
-                    {/* Roadworthiness Card */}
+                    {/* Roadworthiness */}
                     <div
                         className='roadworthiness-card vehicle-detail-card'
                         onClick={() => navigate("/driver/roadworthiness")}
@@ -243,9 +296,8 @@ export default function DriverDashboard() {
                     </div>
                 </div>
 
-                {/* CTA BUTTONS — Clickable */}
+                {/* CTA BUTTONS */}
                 <div className='cta-btn-container'>
-
                     <div
                         className="cta-btn cta-pay"
                         onClick={() => setShowPayTax(true)}
@@ -293,10 +345,9 @@ export default function DriverDashboard() {
                             <img src={transaction_history} />
                         </div>
                     </div>
-
                 </div>
 
-                {/* This is where Profile.jsx will appear */}
+                {/* Profile Pages Render Here */}
                 <Outlet />
 
                 {/* Modals / inline feature components (open instead of navigating) */}
@@ -317,3 +368,63 @@ export default function DriverDashboard() {
         </PhoneFrame>
     );
 }
+
+
+// ===== MODAL INLINE STYLES =====
+const modalOverlay = {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    background: "rgba(0,0,0,0.5)",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 999,
+};
+
+const modalBox = {
+    width: "85%",
+    maxWidth: "400px",
+    background: "#fff",
+    padding: "25px",
+    borderRadius: "12px",
+    textAlign: "center",
+    animation: "fadeIn 0.2s ease-in-out",
+};
+
+const modalBtn = {
+    width: "100%",
+    padding: "12px",
+    background: "#4caf50",
+    color: "white",
+    border: "none",
+    borderRadius: "8px",
+    fontSize: "1rem",
+    marginBottom: "10px",
+    cursor: "pointer"
+};
+
+const modalBtnRed = {
+    width: "100%",
+    padding: "12px",
+    background: "#d32f2f",
+    color: "white",
+    border: "none",
+    borderRadius: "8px",
+    fontSize: "1rem",
+    marginBottom: "10px",
+    cursor: "pointer"
+};
+
+const modalCancel = {
+    width: "100%",
+    padding: "10px",
+    background: "#e0e0e0",
+    color: "#333",
+    border: "none",
+    borderRadius: "8px",
+    fontSize: "0.9rem",
+    cursor: "pointer"
+};

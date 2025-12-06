@@ -64,7 +64,7 @@ export default function Login() {
     if (showSuccessModal) {
       const timer = setTimeout(() => {
         handleRedirect();
-      }, 3000);
+      }, 1000);
       return () => clearTimeout(timer);
     }
   }, [showSuccessModal, handleRedirect]);
@@ -118,7 +118,7 @@ export default function Login() {
       </div>
 
       {/* Success Modal */}
-      {showSuccessModal && (
+   {showSuccessModal && (
         <div className="modal-overlay">
           <div className="modal-box">
             <h2>Login Successful 🎉</h2>
@@ -135,6 +135,7 @@ export default function Login() {
           </div>
         </div>
       )}
+
     </div>
   );
 }

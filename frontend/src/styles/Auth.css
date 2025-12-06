@@ -740,3 +740,35 @@
     transform: scale(1);
   }
 }
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.modal-box {
+  background: white;
+  padding: 25px 30px;
+  width: 300px;
+  border-radius: 15px;
+  text-align: center;
+  animation: popup 0.25s ease;
+  transition: all 0.2s ease;
+}
+
+.modal-box:hover {
+  transform: scale(1.03);
+}
+
+.success-icon {
+  width: 60px;
+  height: 60px;
+  color: #16a34a;
+  /* Tailwind green-600 */
+  margin: 0 auto 15px auto;
+}
