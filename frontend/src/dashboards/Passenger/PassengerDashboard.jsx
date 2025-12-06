@@ -27,7 +27,7 @@ import { useState, useEffect, useRef } from 'react';
 export default function DriverDashboard() {
     const [showBalance, setShowBalance] = useState(true);
     const walletId = '001123983';
-    const walletAmount = '₦10,000.00';
+    const walletAmount = '₳10,000.00';
 
     // small popup state + timer
     const [copied, setCopied] = useState(false);
