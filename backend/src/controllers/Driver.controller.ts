@@ -32,14 +32,49 @@ export const uploadDocs = async (req: Request, res: Response) => {
 };
 
 export const getCompliance = async (req: Request, res: Response) => {
-    const wallet = req.params.wallet;
-    const data = await ServiceDriver.getCompliance(wallet);
-    res.json(data);
+    try {
+        const walletPkh = req.params.wallet;
+        const data = await ServiceDriver.getCompliance(walletPkh);
+        res.json(data);
+    } catch (err: any) {
+        res.status(500).json({ message: "Failed to get compliance", error: err.message });
+    }
 };
 
 export const payInsurance = async (req: Request, res: Response) => {
-    const { wallet } = req.body;
+    try {
+        const { walletPkh, insuranceExpiryMs } = req.body;
 
-    const unsignedTx = await ServiceDriver.createInsuranceTx(wallet);
-    res.json({ unsignedTx });
+        // Default to 1 year from now if not provided
+        const expiryMs = insuranceExpiryMs || (Date.now() + 365 * 24 * 60 * 60 * 1000);
+
+        const result = await ServiceDriver.createInsuranceTx(walletPkh, expiryMs);
+
+        if (!result) {
+            return res.status(404).json({ message: "Vehicle not found on-chain" });
+        }
+
+        res.json({ unsignedTx: result.unsignedTx });
+    } catch (err: any) {
+        res.status(500).json({ message: "Failed to create insurance tx", error: err.message });
+    }
+};
+
+export const payRoadTax = async (req: Request, res: Response) => {
+    try {
+        const { walletPkh, taxExpiryMs } = req.body;
+
+        // Default to 1 year from now if not provided
+        const expiryMs = taxExpiryMs || (Date.now() + 365 * 24 * 60 * 60 * 1000);
+
+        const result = await ServiceDriver.createRoadTaxTx(walletPkh, expiryMs);
+
+        if (!result) {
+            return res.status(404).json({ message: "Vehicle not found on-chain" });
+        }
+
+        res.json({ unsignedTx: result.unsignedTx });
+    } catch (err: any) {
+        res.status(500).json({ message: "Failed to create road tax tx", error: err.message });
+    }
 };
