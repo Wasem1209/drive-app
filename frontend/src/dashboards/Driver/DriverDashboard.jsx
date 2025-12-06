@@ -1,5 +1,5 @@
 import { useNavigate, Outlet } from "react-router-dom";
-import { useState } from "react";
+import { useState } from 'react';
 
 import '../../styles/driverdashboard.css';
 
@@ -24,38 +24,16 @@ import scan_plate_img from '../../assets/scan plate img.png'
 import pay_insurance_history from '../../assets/pay_insurance_history_img.png'
 import transaction_history from '../../assets/transactionHst.png'
 
+import PayRoadTax from './features/PayRoadTax.jsx';
+import ScanPlateNo from './features/ScanPlateNo.jsx';
+import TransactionHistory from '../Passenger/features/TransactionHistory';
+
 export default function DriverDashboard() {
     const navigate = useNavigate();
-
-    // 🚀 WALLET STATE
-    const [walletConnected, setWalletConnected] = useState(false);
-    const [walletAddress, setWalletAddress] = useState("");
-    const [balance, setBalance] = useState(null);
-
-    // 🚀 CONNECT NAMI WALLET FUNCTION
-    const connectNamiWallet = async () => {
-        try {
-            if (!window.cardano || !window.cardano.nami) {
-                alert("Nami Wallet not found. Please install it.");
-                return;
-            }
-
-            const api = await window.cardano.nami.enable();
-            setWalletConnected(true);
-
-            const usedAddresses = await api.getUsedAddresses();
-            const raw = usedAddresses[0];
-
-            setWalletAddress(raw);
-
-            const balanceHex = await api.getBalance();
-            const lovelace = parseInt(balanceHex, 16);
-            setBalance((lovelace / 1_000_000).toFixed(2));
-
-        } catch (err) {
-            console.error("Wallet connection failed:", err);
-        }
-    };
+    const [showPayTax, setShowPayTax] = useState(false);
+    const [showScanPlate, setShowScanPlate] = useState(false);
+    const [showPayInsurance, setShowPayInsurance] = useState(false);
+    const [showHistory, setShowHistory] = useState(false);
 
     return (
         <PhoneFrame>
@@ -134,14 +112,69 @@ export default function DriverDashboard() {
                         )}
                     </div>
 
-                    {/* CONNECT WALLET BUTTON */}
+                    {/* OPEN WALLET MODAL BUTTON */}
                     <button
-                        onClick={connectNamiWallet}
+                        onClick={() => setWalletModalOpen(true)}
                         className="connect-btn"
                     >
                         {walletConnected ? "Wallet Connected ✔" : "Connect Wallet"}
                     </button>
                 </div>
+
+                {/* WALLET MODAL */}
+                {walletModalOpen && (
+                    <div style={modalOverlay}>
+                        <div style={modalBox}>
+
+                            <h2 style={{ marginBottom: "10px" }}>
+                                {walletConnected ? "Wallet Connected" : "Connect Wallet"}
+                            </h2>
+
+                            {!walletConnected ? (
+                                <>
+                                    <p style={{ marginBottom: "20px" }}>
+                                        Select wallet to connect
+                                    </p>
+
+                                    <button
+                                        style={modalBtn}
+                                        onClick={connectNamiWallet}
+                                    >
+                                        Connect Nami Wallet
+                                    </button>
+
+                                    <button
+                                        style={modalCancel}
+                                        onClick={() => setWalletModalOpen(false)}
+                                    >
+                                        Cancel
+                                    </button>
+                                </>
+                            ) : (
+                                <>
+                                    <p style={{ marginBottom: "20px" }}>
+                                        Connected as <br />
+                                        <b>{walletAddress.slice(0, 12)}...{walletAddress.slice(-6)}</b>
+                                    </p>
+
+                                    <button
+                                        style={modalBtnRed}
+                                        onClick={disconnectWallet}
+                                    >
+                                        Disconnect Wallet
+                                    </button>
+
+                                    <button
+                                        style={modalCancel}
+                                        onClick={() => setWalletModalOpen(false)}
+                                    >
+                                        Close
+                                    </button>
+                                </>
+                            )}
+                        </div>
+                    </div>
+                )}
 
                 {/* WEEKLY GOAL */}
                 <div
@@ -267,7 +300,7 @@ export default function DriverDashboard() {
                 <div className='cta-btn-container'>
                     <div
                         className="cta-btn cta-pay"
-                        onClick={() => navigate("/dashboard/driver/PayRoadTax")}
+                        onClick={() => setShowPayTax(true)}
                         style={{ backgroundColor: "#023e8a80", cursor: "pointer" }}
                     >
                         <p>Pay Road <br />Tax</p>
@@ -279,7 +312,7 @@ export default function DriverDashboard() {
 
                     <div
                         className="cta-btn cta-pay"
-                        onClick={() => navigate("/driver/scan-plate")}
+                        onClick={() => setShowScanPlate(true)}
                         style={{ backgroundColor: "#00c8b380", cursor: "pointer" }}
                     >
                         <p>Scan<br />Plate No.</p>
@@ -291,7 +324,7 @@ export default function DriverDashboard() {
 
                     <div
                         className="cta-btn cta-pay"
-                        onClick={() => navigate("/driver/pay-insurance")}
+                        onClick={() => setShowPayInsurance(true)}
                         style={{ backgroundColor: "#cb30e080", cursor: "pointer" }}
                     >
                         <p>Pay<br />Insurance</p>
@@ -303,7 +336,7 @@ export default function DriverDashboard() {
 
                     <div
                         className="cta-btn cta-pay"
-                        onClick={() => navigate("/driver/payment-history")}
+                        onClick={() => setShowHistory(true)}
                         style={{ backgroundColor: "rgba(0, 136, 255, 0.5)", cursor: "pointer" }}
                     >
                         <p>Payment<br />History</p>
@@ -317,7 +350,81 @@ export default function DriverDashboard() {
                 {/* Profile Pages Render Here */}
                 <Outlet />
 
+                {/* Modals / inline feature components (open instead of navigating) */}
+                {showPayTax && (
+                    <PayRoadTax onClose={() => setShowPayTax(false)} />
+                )}
+                {showScanPlate && (
+                    <ScanPlateNo onClose={() => setShowScanPlate(false)} />
+                )}
+                {showPayInsurance && (
+                    <PayRoadTax onClose={() => setShowPayInsurance(false)} mode="insurance" />
+                )}
+                {showHistory && (
+                    <TransactionHistory onClose={() => setShowHistory(false)} />
+                )}
+
             </div>
         </PhoneFrame>
     );
 }
+
+
+// ===== MODAL INLINE STYLES =====
+const modalOverlay = {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    background: "rgba(0,0,0,0.5)",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 999,
+};
+
+const modalBox = {
+    width: "85%",
+    maxWidth: "400px",
+    background: "#fff",
+    padding: "25px",
+    borderRadius: "12px",
+    textAlign: "center",
+    animation: "fadeIn 0.2s ease-in-out",
+};
+
+const modalBtn = {
+    width: "100%",
+    padding: "12px",
+    background: "#4caf50",
+    color: "white",
+    border: "none",
+    borderRadius: "8px",
+    fontSize: "1rem",
+    marginBottom: "10px",
+    cursor: "pointer"
+};
+
+const modalBtnRed = {
+    width: "100%",
+    padding: "12px",
+    background: "#d32f2f",
+    color: "white",
+    border: "none",
+    borderRadius: "8px",
+    fontSize: "1rem",
+    marginBottom: "10px",
+    cursor: "pointer"
+};
+
+const modalCancel = {
+    width: "100%",
+    padding: "10px",
+    background: "#e0e0e0",
+    color: "#333",
+    border: "none",
+    borderRadius: "8px",
+    fontSize: "0.9rem",
+    cursor: "pointer"
+};
