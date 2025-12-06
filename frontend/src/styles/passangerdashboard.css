@@ -1,0 +1,8 @@
+.connect-wallet-btn{
+    position: relative;   
+    background: #FFF3B0;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+}

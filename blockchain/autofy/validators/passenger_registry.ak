@@ -1,16 +1,21 @@
-use cardano/output.{OutputReference}
-use cardano/transaction.{Transaction}
+use aiken/collection/list
+use aiken/crypto.{VerificationKeyHash}
+use cardano/transaction.{OutputReference, Transaction}
 
 // Passenger registry (wallet linking / registration)
 
 pub type PassengerDatum {
-  wallet_pk: pubkey,
-  registered_at: int,
+  wallet_pkh: VerificationKeyHash,
+  registered_at: Int,
 }
 
 pub type PassengerRedeemer {
-  Register(pubkey)
+  Register { wallet: VerificationKeyHash }
   Unregister
+}
+
+fn signed_by(tx: Transaction, pkh: VerificationKeyHash) -> Bool {
+  list.has(tx.extra_signatories, pkh)
 }
 
 validator passenger_registry {
@@ -18,21 +23,13 @@ validator passenger_registry {
     datum: Option<PassengerDatum>,
     redeemer: PassengerRedeemer,
     _own_ref: OutputReference,
-    self: Transaction,
+    tx: Transaction,
   ) {
     when redeemer is {
-      Register(wallet) -> {
-        require
-        tx_signed_by(wallet)
-        "passenger signature required"
-      }
-
-      // off-chain: create datum with registered_at
+      Register { wallet } -> signed_by(tx, wallet)
       Unregister -> {
-        expect Some(PassengerDatum { wallet_pk }) = datum
-        require
-        tx_signed_by(wallet_pk)
-        "current passenger must sign"
+        expect Some(d) = datum
+        signed_by(tx, d.wallet_pkh)
       }
     }
   }

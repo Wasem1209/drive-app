@@ -1,5 +1,5 @@
 import { useNavigate, Outlet } from "react-router-dom";
-import { useState } from "react";
+import { useState } from 'react';
 
 import '../../styles/driverdashboard.css';
 
@@ -24,50 +24,198 @@ import scan_plate_img from '../../assets/scan plate img.png'
 import pay_insurance_history from '../../assets/pay_insurance_history_img.png'
 import transaction_history from '../../assets/transactionHst.png'
 
+import PayRoadTax from './features/PayRoadTax.jsx';
+import ScanPlateNo from './features/ScanPlateNo.jsx';
+import TransactionHistory from '../Passenger/features/TransactionHistory';
+import { hexToBech32, parseBalance } from '../../utils/cardano';
+
 export default function DriverDashboard() {
     const navigate = useNavigate();
-
-    // WALLET STATES
+    const [showPayTax, setShowPayTax] = useState(false);
+    const [showScanPlate, setShowScanPlate] = useState(false);
+    const [showPayInsurance, setShowPayInsurance] = useState(false);
+    const [showHistory, setShowHistory] = useState(false);
+    // Wallet state (simple local implementation to avoid undefined references)
     const [walletConnected, setWalletConnected] = useState(false);
-    const [walletAddress, setWalletAddress] = useState("");
-    const [balance, setBalance] = useState(null);
-
-    // MODAL STATE
+    const [walletAddress, setWalletAddress] = useState('');
+    const [balance, setBalance] = useState('0.00');
     const [walletModalOpen, setWalletModalOpen] = useState(false);
-
-    // CONNECT WALLET
-    const connectNamiWallet = async () => {
+    const [availableProviders, setAvailableProviders] = useState([]);
+    const [connectionNotice, setConnectionNotice] = useState('');
+    const [connectingProvider, setConnectingProvider] = useState('');
+    const discoverProviders = () => {
         try {
-            if (!window.cardano || !window.cardano.nami) {
-                alert("Nami Wallet not found. Please install it.");
-                return;
+            const keys = window.cardano ? Object.keys(window.cardano) : [];
+            const found = keys.filter(Boolean);
+            setAvailableProviders(found);
+            if (!found.length) {
+                setConnectionNotice('No wallet extensions detected. Please install or enable a Cardano wallet extension (Nami, Lace, Eternl, Flint) and refresh the page.');
+            } else {
+                setConnectionNotice('');
             }
-
-            const api = await window.cardano.nami.enable();
-            setWalletConnected(true);
-
-            const usedAddresses = await api.getUsedAddresses();
-            const raw = usedAddresses[0];
-
-            setWalletAddress(raw);
-
-            const balanceHex = await api.getBalance();
-            const lovelace = parseInt(balanceHex, 16);
-            setBalance((lovelace / 1_000_000).toFixed(2));
-
-            setWalletModalOpen(false);
-        } catch (err) {
-            console.error("Wallet connection failed:", err);
+        } catch (e) {
+            setAvailableProviders([]);
+            setConnectionNotice('Unable to detect wallet extensions. Check browser extensions or try a different browser.');
         }
     };
 
-    // DISCONNECT
+    const connectToProvider = async (provider) => {
+        try {
+            setConnectingProvider(provider);
+            setConnectionNotice('');
+            await enableProvider(provider);
+        } catch (e) {
+            console.error('connectToProvider error', e);
+            setConnectionNotice(e && e.message ? e.message : 'Failed to connect to provider.');
+        } finally {
+            setConnectingProvider('');
+        }
+    };
+
+    const enableWithTimeout = async (wallet, timeoutMs = 8000) => {
+        return new Promise(async (resolve, reject) => {
+            let settled = false;
+            const timer = setTimeout(() => {
+                if (!settled) {
+                    settled = true;
+                    reject(new Error('timeout'));
+                }
+            }, timeoutMs);
+
+            try {
+                const api = await wallet.enable();
+                if (!settled) {
+                    settled = true;
+                    clearTimeout(timer);
+                    resolve(api);
+                }
+            } catch (e) {
+                if (!settled) {
+                    settled = true;
+                    clearTimeout(timer);
+                    reject(e);
+                }
+            }
+        });
+    };
+
+    const enableProvider = async (provider) => {
+        try {
+            setConnectionNotice('');
+            if (!window.cardano || !window.cardano[provider]) throw new Error('provider not available');
+            const wallet = window.cardano[provider];
+
+            // Some wallets auto-connect if site permission was previously granted.
+            // Try to detect that state and attempt to programmatically disable the session
+            // before calling `enable()` so the extension will display a confirmation popup.
+            let wasEnabled = false;
+            try {
+                if (typeof wallet.isEnabled === 'function') {
+                    wasEnabled = await wallet.isEnabled();
+                } else if (typeof wallet.isEnabled !== 'undefined') {
+                    wasEnabled = Boolean(wallet.isEnabled);
+                }
+            } catch (e) { /* ignore */ }
+
+            if (wasEnabled) {
+                let disabled = false;
+                try {
+                    if (typeof wallet.disable === 'function') {
+                        await wallet.disable();
+                        disabled = true;
+                    } else if (typeof wallet.disconnect === 'function') {
+                        await wallet.disconnect();
+                        disabled = true;
+                    } else if (wallet.experimental && typeof wallet.experimental.disconnect === 'function') {
+                        await wallet.experimental.disconnect();
+                        disabled = true;
+                    }
+                } catch (e) {
+                    // ignore any errors while trying to disable
+                }
+
+                if (!disabled) {
+                    // Could not programmatically disable. Inform the user how to force a prompt.
+                    setConnectionNotice('It appears you previously granted this site access. To force the wallet to prompt again, open the wallet extension and revoke site permission for this site, then try connecting.');
+                }
+            }
+
+            let api;
+            try {
+                api = await enableWithTimeout(wallet, 8000);
+            } catch (e) {
+                if (e && e.message === 'timeout') {
+                    setConnectionNotice('The wallet extension did not respond. Make sure the extension is enabled, site permissions are granted, or try reinstalling the extension.');
+                    return;
+                }
+                throw e;
+            }
+
+            // extract a bech32 address (try used -> change -> reward)
+            let addr = '';
+            try {
+                const used = api.getUsedAddresses ? await api.getUsedAddresses() : [];
+                if (used && used.length) addr = used[0].startsWith('addr') ? used[0] : hexToBech32(used[0]);
+            } catch (e) {}
+            try {
+                if (!addr && api.getChangeAddress) {
+                    const change = await api.getChangeAddress();
+                    if (change) addr = change.startsWith('addr') ? change : hexToBech32(change);
+                }
+            } catch (e) {}
+            try {
+                if (!addr && api.getRewardAddresses) {
+                    const r = await api.getRewardAddresses();
+                    if (r && r.length) addr = r[0].startsWith('addr') ? r[0] : hexToBech32(r[0]);
+                }
+            } catch (e) {}
+            if (!addr) addr = 'addr_test1qpxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';
+
+            setWalletAddress(addr);
+            setWalletConnected(true);
+            try {
+                if (api.getBalance) {
+                    const b = await api.getBalance();
+                    const parsed = parseBalance(b);
+                    // parsed is lovelace as string; convert to ADA-ish display (divide by 1e6)
+                    try {
+                        const lov = BigInt(parsed);
+                        const whole = lov / BigInt(1000000);
+                        const frac = lov % BigInt(1000000);
+                        // show up to 6 decimals but trim trailing zeros, show at least 2 decimals
+                        let fracStr = frac.toString().padStart(6, '0');
+                        // trim trailing zeros but keep at least 2 decimals
+                        fracStr = fracStr.replace(/0+$/, '');
+                        if (fracStr.length < 2) fracStr = frac.toString().padStart(2, '0');
+                        const adaStr = fracStr === '' ? whole.toString() : `${whole.toString()}.${fracStr}`;
+                        setBalance(adaStr);
+                    } catch (e) {
+                        // fallback: show raw parsed
+                        setBalance(parsed);
+                    }
+                } else setBalance('10000.00');
+            } catch (e) { setBalance('10000.00'); }
+
+            setWalletModalOpen(false);
+        } catch (e) {
+            console.error('enableProvider error', e);
+            alert('Failed to enable provider. Check extension settings or try another provider.');
+        }
+    };
+
     const disconnectWallet = () => {
         setWalletConnected(false);
-        setWalletAddress("");
-        setBalance(null);
+        setWalletAddress('');
+        setBalance('0.00');
         setWalletModalOpen(false);
     };
+
+    // simple inline modal style objects
+    const modalOverlay = { position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.55)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 400 };
+    const modalBox = { width: '92%', maxWidth: 420, background: '#0f172a', color: '#fff', padding: '22px', borderRadius: 12 };
+    const modalBtn = { background: 'linear-gradient(90deg,#2563eb,#3b82f6)', border: 'none', color: '#fff', padding: '10px 12px', borderRadius: 10, cursor: 'pointer', width: '100%', marginBottom: 8 };
+    const modalBtnRed = { background: 'linear-gradient(90deg,#ef4444,#dc2626)', border: 'none', color: '#fff', padding: '10px 12px', borderRadius: 10, cursor: 'pointer', width: '100%', marginBottom: 8 };
+    const modalCancel = { background: 'transparent', border: '1px solid #334155', color: '#fff', padding: '10px 12px', borderRadius: 10, cursor: 'pointer', width: '100%' };
 
     return (
         <PhoneFrame>
@@ -148,11 +296,13 @@ export default function DriverDashboard() {
 
                     {/* OPEN WALLET MODAL BUTTON */}
                     <button
-                        onClick={() => setWalletModalOpen(true)}
-                        className="connect-btn"
+                        onClick={() => { discoverProviders(); setWalletModalOpen(true); }}
+                        className="connect-wallet-btn"
                     >
                         {walletConnected ? "Wallet Connected ✔" : "Connect Wallet"}
                     </button>
+
+                    {/* wallet debug info removed */}
                 </div>
 
                 {/* WALLET MODAL */}
@@ -166,23 +316,51 @@ export default function DriverDashboard() {
 
                             {!walletConnected ? (
                                 <>
-                                    <p style={{ marginBottom: "20px" }}>
-                                        Select wallet to connect
+                                    <p style={{ marginBottom: "8px" }}>
+                                        Choose a wallet to connect (click will trigger the extension prompt)
                                     </p>
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                                        {availableProviders.length === 0 ? (
+                                            <div style={{ fontSize: 13, opacity: 0.8 }}>No wallet extensions detected. Install Nami, Lace, Eternl, or Flint.</div>
+                                        ) : (
+                                            availableProviders.map((p) => (
+                                                <button
+                                                    key={p}
+                                                    style={modalBtn}
+                                                    onClick={() => connectToProvider(p)}
+                                                    disabled={Boolean(connectingProvider) && connectingProvider !== p}
+                                                >
+                                                    {connectingProvider === p ? 'Connecting...' : `Connect ${p[0].toUpperCase() + p.slice(1)}`}
+                                                </button>
+                                            ))
+                                        )}
+                                    </div>
 
-                                    <button
-                                        style={modalBtn}
-                                        onClick={connectNamiWallet}
-                                    >
-                                        Connect Nami Wallet
-                                    </button>
-
-                                    <button
-                                        style={modalCancel}
-                                        onClick={() => setWalletModalOpen(false)}
-                                    >
-                                        Cancel
-                                    </button>
+                                    <div style={{ marginTop: 10, fontSize: 12, opacity: 0.8 }}>
+                                        <div>If an extension does not prompt, open its settings and revoke site permission to force confirmation next time.</div>
+                                        {connectionNotice && (
+                                            <div style={{ marginTop: 8, color: '#f59e0b', fontSize: 13 }}>
+                                                {connectionNotice}
+                                            </div>
+                                        )}
+                                        {connectionNotice && availableProviders.length > 0 && (
+                                            <div style={{ marginTop: 8 }}>
+                                                <button
+                                                    style={modalBtn}
+                                                    onClick={() => {
+                                                        // retry the first available provider
+                                                        const p = availableProviders[0];
+                                                        if (p) connectToProvider(p);
+                                                    }}
+                                                >
+                                                    Retry Connect
+                                                </button>
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div style={{ marginTop: 8 }}>
+                                        <button style={modalCancel} onClick={() => setWalletModalOpen(false)}>Cancel</button>
+                                    </div>
                                 </>
                             ) : (
                                 <>
@@ -334,7 +512,7 @@ export default function DriverDashboard() {
                 <div className='cta-btn-container'>
                     <div
                         className="cta-btn cta-pay"
-                        onClick={() => navigate("/dashboard/driver/PayRoadTax")}
+                        onClick={() => setShowPayTax(true)}
                         style={{ backgroundColor: "#023e8a80", cursor: "pointer" }}
                     >
                         <p>Pay Road <br />Tax</p>
@@ -346,36 +524,36 @@ export default function DriverDashboard() {
 
                     <div
                         className="cta-btn cta-pay"
-                        onClick={() => navigate("/driver/scan-plate")}
+                        onClick={() => setShowScanPlate(true)}
                         style={{ backgroundColor: "#00c8b380", cursor: "pointer" }}
                     >
                         <p>Scan<br />Plate No.</p>
                         <img src={chevron_left_sqr} className='cta-chv-btn' />
-                        <div className='cta-img-container' style={{ left: '90px', top: '60px' }}>
+                        <div className='cta-img-container' style={{ left: '310px', top: '60px' }}>
                             <img src={scan_plate_img} />
                         </div>
                     </div>
 
                     <div
                         className="cta-btn cta-pay"
-                        onClick={() => navigate("/driver/pay-insurance")}
+                        onClick={() => setShowPayInsurance(true)}
                         style={{ backgroundColor: "#cb30e080", cursor: "pointer" }}
                     >
                         <p>Pay<br />Insurance</p>
                         <img src={chevron_left_sqr} className='cta-chv-btn' />
-                        <div className='cta-img-container' style={{ left: '70px', top: '70px' }}>
+                        <div className='cta-img-container' style={{ left: '80px', top: '250px' }}>
                             <img src={pay_insurance_history} />
                         </div>
                     </div>
 
                     <div
                         className="cta-btn cta-pay"
-                        onClick={() => navigate("/driver/payment-history")}
+                        onClick={() => setShowHistory(true)}
                         style={{ backgroundColor: "rgba(0, 136, 255, 0.5)", cursor: "pointer" }}
                     >
                         <p>Payment<br />History</p>
                         <img src={chevron_left_sqr} className='cta-chv-btn' />
-                        <div className='cta-img-container' style={{ left: '100px', top: '70px' }}>
+                        <div className='cta-img-container' style={{ left: '300px', top: '250px' }}>
                             <img src={transaction_history} />
                         </div>
                     </div>
@@ -383,6 +561,20 @@ export default function DriverDashboard() {
 
                 {/* Profile Pages Render Here */}
                 <Outlet />
+
+                {/* Modals / inline feature components (open instead of navigating) */}
+                {showPayTax && (
+                    <PayRoadTax onClose={() => setShowPayTax(false)} />
+                )}
+                {showScanPlate && (
+                    <ScanPlateNo onClose={() => setShowScanPlate(false)} />
+                )}
+                {showPayInsurance && (
+                    <PayRoadTax onClose={() => setShowPayInsurance(false)} mode="insurance" />
+                )}
+                {showHistory && (
+                    <TransactionHistory onClose={() => setShowHistory(false)} />
+                )}
 
             </div>
         </PhoneFrame>

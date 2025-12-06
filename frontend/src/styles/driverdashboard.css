@@ -291,6 +291,7 @@
     margin-top: var(--space-40);
     gap: var(--space-16);
     padding-inline: 20px; /* add horizontal padding */
+    position: relative;
 }
 
 .cta-btn{
