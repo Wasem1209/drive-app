@@ -4,6 +4,21 @@ import PhoneFrame from "../../../components/PhoneFrame";
 
 const API = "https://autofy-ys5x.onrender.com/api/profile";
 
+/* =======================
+   SUCCESS MODAL COMPONENT
+==========================*/
+const SuccessModal = ({ message, onClose }) => {
+    return (
+        <div className="modal-overlay">
+            <div className="modal-box">
+                <h3>Success 🎉</h3>
+                <p>{message}</p>
+                <button onClick={onClose}>Okay</button>
+            </div>
+        </div>
+    );
+};
+
 const Profile = () => {
     const [personal, setPersonal] = useState({ name: "", email: "" });
 
@@ -21,7 +36,6 @@ const Profile = () => {
 
     const [agreementAccepted, setAgreementAccepted] = useState(false);
 
-    // Vehicle Images
     const [images, setImages] = useState({
         front: null,
         back: null,
@@ -30,15 +44,14 @@ const Profile = () => {
         chassis: null,
     });
 
-    // Preview images
     const [preview, setPreview] = useState({});
-
-    // IPFS URLs returned from backend
     const [ipfsUrls, setIpfsUrls] = useState(null);
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
+    /* Modal state */
+    const [modalMessage, setModalMessage] = useState("");
     const token = localStorage.getItem("token");
 
     // Fetch personal info
@@ -54,7 +67,7 @@ const Profile = () => {
             .finally(() => setLoading(false));
     }, [token]);
 
-    // Fetch Car Info (your existing)
+    // Fetch Car Info
     const submitCar = async () => {
         if (!plateNumber) return setError("Please enter a plate number");
         setLoading(true);
@@ -80,7 +93,7 @@ const Profile = () => {
         }
     };
 
-    // NIN Verification (existing)
+    // NIN Verification
     const submitNin = async () => {
         if (!nin) return setError("Please enter your NIN");
         setLoading(true);
@@ -106,7 +119,7 @@ const Profile = () => {
         }
     };
 
-    // Agreement (existing)
+    // Accept Agreement
     const acceptAgreement = async () => {
         setLoading(true);
         setError("");
@@ -127,9 +140,7 @@ const Profile = () => {
         }
     };
 
-
-    // NEW: Handle Image Upload & Preview
-    // ================================
+    // Handle image selection
     const handleImageChange = (e, type) => {
         const file = e.target.files[0];
         if (!file) return;
@@ -138,9 +149,7 @@ const Profile = () => {
         setPreview((prev) => ({ ...prev, [type]: URL.createObjectURL(file) }));
     };
 
-    // ================================
-    // NEW: Upload images to backend → IPFS
-    // ================================
+    // Upload images → IPFS
     const uploadImagesToIPFS = async () => {
         setLoading(true);
         setError("");
@@ -158,9 +167,10 @@ const Profile = () => {
             });
 
             if (!res.ok) throw new Error("Failed to upload images");
-
             const data = await res.json();
-            setIpfsUrls(data.ipfs); // backend returns {ipfs: {...}}
+            setIpfsUrls(data.ipfs);
+
+            setModalMessage("Vehicle images successfully uploaded to IPFS!");
         } catch (err) {
             setError(err.message);
         } finally {
@@ -168,11 +178,29 @@ const Profile = () => {
         }
     };
 
+    /* ==========================
+        NFT Mint Button (Frontend trigger only)
+       ==========================*/
+    const mintNFT = async () => {
+        if (!ipfsUrls) {
+            return setError("Upload vehicle images first");
+        }
+
+        setModalMessage("Your vehicle NFT will be minted on-chain soon ✔");
+    };
+
     return (
         <PhoneFrame>
             <div className="profile-container">
                 {loading && <div className="loading">Loading...</div>}
                 {error && <div className="error">{error}</div>}
+
+                {modalMessage && (
+                    <SuccessModal
+                        message={modalMessage}
+                        onClose={() => setModalMessage("")}
+                    />
+                )}
 
                 {/* PERSONAL INFO */}
                 <section className="card">
@@ -214,7 +242,7 @@ const Profile = () => {
                     )}
                 </section>
 
-                {/* VEHICLE IMAGES */}
+                {/* UPLOAD VEHICLE IMAGES */}
                 <section className="card">
                     <h2>Upload Vehicle Images</h2>
 
@@ -272,6 +300,15 @@ const Profile = () => {
                         <p className="success">✔ Agreement Accepted</p>
                     )}
                 </section>
+
+                {/* NFT Mint Button */}
+                <section className="card">
+                    <h2>Mint Vehicle NFT</h2>
+                    <button onClick={mintNFT}>
+                        Mint Vehicle Identity NFT
+                    </button>
+                </section>
+
             </div>
         </PhoneFrame>
     );
