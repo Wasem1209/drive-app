@@ -118,16 +118,20 @@ export default function Login() {
       </div>
 
       {/* Success Modal */}
-      {showSuccessModal && (
+   {showSuccessModal && (
         <div className="modal-overlay">
-          <div
-            className="modal-box cursor-pointer"
-            onClick={handleRedirect}   // Clicking the card redirects
-          >
-            <CheckCircle className="success-icon" />
-
+          <div className="modal-box">
             <h2>Login Successful 🎉</h2>
             <p>Welcome back! Redirecting to your dashboard...</p>
+            <button className="modal-btn" onClick={handleRedirect}>
+              Go to Dashboard Now
+            </button>
+            <button
+              className="modal-close"
+              onClick={() => setShowSuccessModal(false)}
+            >
+              Close
+            </button>
           </div>
         </div>
       )}
