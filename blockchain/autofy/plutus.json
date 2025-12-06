@@ -6,96 +6,407 @@
     "plutusVersion": "v3",
     "compiler": {
       "name": "Aiken",
-      "version": "v1.1.19+unknown"
+      "version": "v1.1.19+e525483"
     },
     "license": "Apache-2.0"
   },
   "validators": [
     {
-      "title": "placeholder.placeholder.mint",
-      "redeemer": {
-        "title": "_redeemer",
-        "schema": {
-          "$ref": "#/definitions/Data"
-        }
-      },
-      "compiledCode": "58d001010029800aba2aba1aab9eaab9dab9a48888966002646465300130053754003300700398038012444b30013370e9000001c4c98dd7180518049baa0048acc004cdc3a400400713233226300b001300b300c0013009375400915980099b874801000e264c601460126ea80122b30013370e9003001c4c8cc898dd698058009805980600098049baa0048acc004cdc3a40100071326300a3009375400913233226375a60160026016601800260126ea8011007200e401c80390070c018c01c004c018004c00cdd5003452689b2b20021",
-      "hash": "f2388d136606a27c4a531d0040c3e12e07eb95cd5011793c160707dc"
-    },
-    {
-      "title": "placeholder.placeholder.spend",
+      "title": "admin_governance.admin_governance.spend",
       "datum": {
         "title": "_datum",
         "schema": {
-          "$ref": "#/definitions/Data"
+          "$ref": "#/definitions/admin_governance~1AdminDatum"
         }
       },
       "redeemer": {
         "title": "_redeemer",
         "schema": {
-          "$ref": "#/definitions/Data"
+          "$ref": "#/definitions/admin_governance~1AdminRedeemer"
         }
       },
-      "compiledCode": "58d001010029800aba2aba1aab9eaab9dab9a48888966002646465300130053754003300700398038012444b30013370e9000001c4c98dd7180518049baa0048acc004cdc3a400400713233226300b001300b300c0013009375400915980099b874801000e264c601460126ea80122b30013370e9003001c4c8cc898dd698058009805980600098049baa0048acc004cdc3a40100071326300a3009375400913233226375a60160026016601800260126ea8011007200e401c80390070c018c01c004c018004c00cdd5003452689b2b20021",
-      "hash": "f2388d136606a27c4a531d0040c3e12e07eb95cd5011793c160707dc"
+      "compiledCode": "59013501010029800aba2aba1aab9faab9eaab9dab9a48888896600264653001300700198039804000cc01c0092225980099b8748008c01cdd500144ca60026016003300b300c00198041baa004899198008009bac300c300d300d300d300d300d300d300d300d300a375400644b30010018a508acc004cdc79bae300d0014891814ed029a5d871f49cd81c378181a40820f135c487571e6fa008a518998010011807000a012403091112cc004cdc3a400000513232332259800980a001c0162c8090dd718088009bae30110023011001300d375401115980099b874800800a26464b30013012002801c590101bae3010001300d375401115980099b874801000a26464b30013012002801c590101bae3010001300d375401116402c805900b0c020dd50014590060c01c004c00cdd5003c52689b2b20021",
+      "hash": "070a5577c476239dae0dce8ce43bf8090523e2f8a6224c72eb3ea003"
     },
     {
-      "title": "placeholder.placeholder.withdraw",
-      "redeemer": {
-        "title": "_redeemer",
-        "schema": {
-          "$ref": "#/definitions/Data"
-        }
-      },
-      "compiledCode": "58d001010029800aba2aba1aab9eaab9dab9a48888966002646465300130053754003300700398038012444b30013370e9000001c4c98dd7180518049baa0048acc004cdc3a400400713233226300b001300b300c0013009375400915980099b874801000e264c601460126ea80122b30013370e9003001c4c8cc898dd698058009805980600098049baa0048acc004cdc3a40100071326300a3009375400913233226375a60160026016601800260126ea8011007200e401c80390070c018c01c004c018004c00cdd5003452689b2b20021",
-      "hash": "f2388d136606a27c4a531d0040c3e12e07eb95cd5011793c160707dc"
-    },
-    {
-      "title": "placeholder.placeholder.publish",
-      "redeemer": {
-        "title": "_redeemer",
-        "schema": {
-          "$ref": "#/definitions/Data"
-        }
-      },
-      "compiledCode": "58d001010029800aba2aba1aab9eaab9dab9a48888966002646465300130053754003300700398038012444b30013370e9000001c4c98dd7180518049baa0048acc004cdc3a400400713233226300b001300b300c0013009375400915980099b874801000e264c601460126ea80122b30013370e9003001c4c8cc898dd698058009805980600098049baa0048acc004cdc3a40100071326300a3009375400913233226375a60160026016601800260126ea8011007200e401c80390070c018c01c004c018004c00cdd5003452689b2b20021",
-      "hash": "f2388d136606a27c4a531d0040c3e12e07eb95cd5011793c160707dc"
-    },
-    {
-      "title": "placeholder.placeholder.vote",
-      "redeemer": {
-        "title": "_redeemer",
-        "schema": {
-          "$ref": "#/definitions/Data"
-        }
-      },
-      "compiledCode": "58d001010029800aba2aba1aab9eaab9dab9a48888966002646465300130053754003300700398038012444b30013370e9000001c4c98dd7180518049baa0048acc004cdc3a400400713233226300b001300b300c0013009375400915980099b874801000e264c601460126ea80122b30013370e9003001c4c8cc898dd698058009805980600098049baa0048acc004cdc3a40100071326300a3009375400913233226375a60160026016601800260126ea8011007200e401c80390070c018c01c004c018004c00cdd5003452689b2b20021",
-      "hash": "f2388d136606a27c4a531d0040c3e12e07eb95cd5011793c160707dc"
-    },
-    {
-      "title": "placeholder.placeholder.propose",
-      "redeemer": {
-        "title": "_redeemer",
-        "schema": {
-          "$ref": "#/definitions/Data"
-        }
-      },
-      "compiledCode": "58d001010029800aba2aba1aab9eaab9dab9a48888966002646465300130053754003300700398038012444b30013370e9000001c4c98dd7180518049baa0048acc004cdc3a400400713233226300b001300b300c0013009375400915980099b874801000e264c601460126ea80122b30013370e9003001c4c8cc898dd698058009805980600098049baa0048acc004cdc3a40100071326300a3009375400913233226375a60160026016601800260126ea8011007200e401c80390070c018c01c004c018004c00cdd5003452689b2b20021",
-      "hash": "f2388d136606a27c4a531d0040c3e12e07eb95cd5011793c160707dc"
-    },
-    {
-      "title": "placeholder.placeholder.else",
+      "title": "admin_governance.admin_governance.else",
       "redeemer": {
         "schema": {}
       },
-      "compiledCode": "58d001010029800aba2aba1aab9eaab9dab9a48888966002646465300130053754003300700398038012444b30013370e9000001c4c98dd7180518049baa0048acc004cdc3a400400713233226300b001300b300c0013009375400915980099b874801000e264c601460126ea80122b30013370e9003001c4c8cc898dd698058009805980600098049baa0048acc004cdc3a40100071326300a3009375400913233226375a60160026016601800260126ea8011007200e401c80390070c018c01c004c018004c00cdd5003452689b2b20021",
-      "hash": "f2388d136606a27c4a531d0040c3e12e07eb95cd5011793c160707dc"
+      "compiledCode": "59013501010029800aba2aba1aab9faab9eaab9dab9a48888896600264653001300700198039804000cc01c0092225980099b8748008c01cdd500144ca60026016003300b300c00198041baa004899198008009bac300c300d300d300d300d300d300d300d300d300a375400644b30010018a508acc004cdc79bae300d0014891814ed029a5d871f49cd81c378181a40820f135c487571e6fa008a518998010011807000a012403091112cc004cdc3a400000513232332259800980a001c0162c8090dd718088009bae30110023011001300d375401115980099b874800800a26464b30013012002801c590101bae3010001300d375401115980099b874801000a26464b30013012002801c590101bae3010001300d375401116402c805900b0c020dd50014590060c01c004c00cdd5003c52689b2b20021",
+      "hash": "070a5577c476239dae0dce8ce43bf8090523e2f8a6224c72eb3ea003"
+    },
+    {
+      "title": "driver_registry.driver_registry.spend",
+      "datum": {
+        "title": "datum",
+        "schema": {
+          "$ref": "#/definitions/driver_registry~1VehicleDatum"
+        }
+      },
+      "redeemer": {
+        "title": "redeemer",
+        "schema": {
+          "$ref": "#/definitions/driver_registry~1VehicleRedeemer"
+        }
+      },
+      "compiledCode": "59017a01010029800aba2aba1aab9faab9eaab9dab9a48888896600264653001300700198039804000cdc3a400530070024888966002600460106ea800e2646645300113322598009801800c5660026006601a6ea801226600400c6eb8c040c038dd5180818071baa0048b20188acc004c01c0062b30013003300d3754009133002006375c6020601c6ea8c040c038dd500245900c44cc00801922011814ed029a5d871f49cd81c378181a40820f135c487571e6fa004030806088c8cc004004dd618089809180918091809180918091809180918079baa0032259800800c528456600266e3cdd71809000801c528c4cc008008c04c00500e2022300b375400f300b375400f300e003488966002600800515980098079baa00a801c59010456600260100051323259800980a00140162c8090dd7180900098079baa00a8acc004cdc3a400800515980098079baa00a801c5901045900d201a4034300c300d001370e900018049baa0038b200e180380098019baa0078a4d13656400401",
+      "hash": "8c54a04cdf64e66ae1d5ff9a82c448013085b846bd537854e23eee86"
+    },
+    {
+      "title": "driver_registry.driver_registry.else",
+      "redeemer": {
+        "schema": {}
+      },
+      "compiledCode": "59017a01010029800aba2aba1aab9faab9eaab9dab9a48888896600264653001300700198039804000cdc3a400530070024888966002600460106ea800e2646645300113322598009801800c5660026006601a6ea801226600400c6eb8c040c038dd5180818071baa0048b20188acc004c01c0062b30013003300d3754009133002006375c6020601c6ea8c040c038dd500245900c44cc00801922011814ed029a5d871f49cd81c378181a40820f135c487571e6fa004030806088c8cc004004dd618089809180918091809180918091809180918079baa0032259800800c528456600266e3cdd71809000801c528c4cc008008c04c00500e2022300b375400f300b375400f300e003488966002600800515980098079baa00a801c59010456600260100051323259800980a00140162c8090dd7180900098079baa00a8acc004cdc3a400800515980098079baa00a801c5901045900d201a4034300c300d001370e900018049baa0038b200e180380098019baa0078a4d13656400401",
+      "hash": "8c54a04cdf64e66ae1d5ff9a82c448013085b846bd537854e23eee86"
+    },
+    {
+      "title": "passenger_registry.passenger_registry.spend",
+      "datum": {
+        "title": "datum",
+        "schema": {
+          "$ref": "#/definitions/passenger_registry~1PassengerDatum"
+        }
+      },
+      "redeemer": {
+        "title": "redeemer",
+        "schema": {
+          "$ref": "#/definitions/passenger_registry~1PassengerRedeemer"
+        }
+      },
+      "compiledCode": "59012201010029800aba2aba1aab9faab9eaab9dab9a48888896600264653001300700198039804000cc01c0092225980099b8748008c01cdd500144c8cc8a6002264b30013002300b375400f133001005375c601c60186ea801e2b30013002300b3754007133001005375c601c60186ea8c038c030dd5001c5900a20142232330010013758602060226022602260226022602260226022601c6ea800c896600200314a115980099b8f375c602200200714a313300200230120014034808260146ea801a601a0069112cc004c01000a26464b30013013002802c590111bae3011001300e375401315980099b874800800a2b3001300e37540130038b201e8b20184030300b300c001370e900018041baa0028b200c180380098019baa0078a4d1365640041",
+      "hash": "ba41bf53ae86c48a07b660944732b922b0005e8a5af61a7cfb020558"
+    },
+    {
+      "title": "passenger_registry.passenger_registry.else",
+      "redeemer": {
+        "schema": {}
+      },
+      "compiledCode": "59012201010029800aba2aba1aab9faab9eaab9dab9a48888896600264653001300700198039804000cc01c0092225980099b8748008c01cdd500144c8cc8a6002264b30013002300b375400f133001005375c601c60186ea801e2b30013002300b3754007133001005375c601c60186ea8c038c030dd5001c5900a20142232330010013758602060226022602260226022602260226022601c6ea800c896600200314a115980099b8f375c602200200714a313300200230120014034808260146ea801a601a0069112cc004c01000a26464b30013013002802c590111bae3011001300e375401315980099b874800800a2b3001300e37540130038b201e8b20184030300b300c001370e900018041baa0028b200c180380098019baa0078a4d1365640041",
+      "hash": "ba41bf53ae86c48a07b660944732b922b0005e8a5af61a7cfb020558"
+    },
+    {
+      "title": "rewards_policy.rewards_policy.mint",
+      "redeemer": {
+        "title": "_redeemer",
+        "schema": {
+          "$ref": "#/definitions/Data"
+        }
+      },
+      "compiledCode": "58ad01010029800aba2aba1aab9faab9eaab9dab9a48888896600264646644b30013370e900018031baa00189991198008009bac300b300c300c300c300c300c300c300c300c30093754601600c6eb8c024c01cdd5000912cc00400629422b30013371e6eb8c02c00522011814ed029a5d871f49cd81c378181a40820f135c487571e6fa008a518998010011806000a00e4029164014600e002600e6010002600e00260066ea801e29344d95900101",
+      "hash": "4b3db6d4d9a07d7d689172f1bf62bbf95821d08d099d19e25e4757e7"
+    },
+    {
+      "title": "rewards_policy.rewards_policy.else",
+      "redeemer": {
+        "schema": {}
+      },
+      "compiledCode": "58ad01010029800aba2aba1aab9faab9eaab9dab9a48888896600264646644b30013370e900018031baa00189991198008009bac300b300c300c300c300c300c300c300c300c30093754601600c6eb8c024c01cdd5000912cc00400629422b30013371e6eb8c02c00522011814ed029a5d871f49cd81c378181a40820f135c487571e6fa008a518998010011806000a00e4029164014600e002600e6010002600e00260066ea801e29344d95900101",
+      "hash": "4b3db6d4d9a07d7d689172f1bf62bbf95821d08d099d19e25e4757e7"
+    },
+    {
+      "title": "violation_manager.violation_manager.spend",
+      "datum": {
+        "title": "_datum",
+        "schema": {
+          "$ref": "#/definitions/violation_manager~1ViolationDatum"
+        }
+      },
+      "redeemer": {
+        "title": "redeemer",
+        "schema": {
+          "$ref": "#/definitions/violation_manager~1ViolationRedeemer"
+        }
+      },
+      "compiledCode": "59015d01010029800aba2aba1aab9faab9eaab9dab9a48888896600264653001300700198039804000cdc3a400530070024888966002600460106ea800e2653001300c00198061806800cc024dd5002c4cc896600266e1d20000018998010021bae300e300c375400f1598009802800c4cc008010dd7180718061baa00789980100224411814ed029a5d871f49cd81c378181a40820f135c487571e6fa004028805088c8cc004004dd618079808180818081808180818081808180818069baa0032259800800c528456600266e3cdd71808000801c528c4cc008008c04400500c201e3009375400a91112cc004cdc3a400000513232598009809801400e2c8088dd7180880098071baa0098acc004c01c00a26464b30013013002801c590111bae3011001300e375401315980099b874801000a2b3001300e37540130018b201e8b20184030806060126ea800e2c8038600e00260066ea801e29344d95900101",
+      "hash": "cdc5b1180784c16dc7d4faa49ad59167f6c5352568eccdb8ef737367"
+    },
+    {
+      "title": "violation_manager.violation_manager.else",
+      "redeemer": {
+        "schema": {}
+      },
+      "compiledCode": "59015d01010029800aba2aba1aab9faab9eaab9dab9a48888896600264653001300700198039804000cdc3a400530070024888966002600460106ea800e2653001300c00198061806800cc024dd5002c4cc896600266e1d20000018998010021bae300e300c375400f1598009802800c4cc008010dd7180718061baa00789980100224411814ed029a5d871f49cd81c378181a40820f135c487571e6fa004028805088c8cc004004dd618079808180818081808180818081808180818069baa0032259800800c528456600266e3cdd71808000801c528c4cc008008c04400500c201e3009375400a91112cc004cdc3a400000513232598009809801400e2c8088dd7180880098071baa0098acc004c01c00a26464b30013013002801c590111bae3011001300e375401315980099b874801000a2b3001300e37540130018b201e8b20184030806060126ea800e2c8038600e00260066ea801e29344d95900101",
+      "hash": "cdc5b1180784c16dc7d4faa49ad59167f6c5352568eccdb8ef737367"
     }
   ],
   "definitions": {
+    "Bool": {
+      "title": "Bool",
+      "anyOf": [
+        {
+          "title": "False",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": []
+        },
+        {
+          "title": "True",
+          "dataType": "constructor",
+          "index": 1,
+          "fields": []
+        }
+      ]
+    },
+    "ByteArray": {
+      "dataType": "bytes"
+    },
     "Data": {
       "title": "Data",
       "description": "Any Plutus data."
+    },
+    "Int": {
+      "dataType": "integer"
+    },
+    "admin_governance/AdminDatum": {
+      "title": "AdminDatum",
+      "anyOf": [
+        {
+          "title": "AdminDatum",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "title": "key",
+              "$ref": "#/definitions/ByteArray"
+            },
+            {
+              "title": "value",
+              "$ref": "#/definitions/ByteArray"
+            },
+            {
+              "title": "updated_at",
+              "$ref": "#/definitions/Int"
+            }
+          ]
+        }
+      ]
+    },
+    "admin_governance/AdminRedeemer": {
+      "title": "AdminRedeemer",
+      "anyOf": [
+        {
+          "title": "Update",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "title": "key",
+              "$ref": "#/definitions/ByteArray"
+            },
+            {
+              "title": "value",
+              "$ref": "#/definitions/ByteArray"
+            }
+          ]
+        },
+        {
+          "title": "ApproveOfficer",
+          "dataType": "constructor",
+          "index": 1,
+          "fields": [
+            {
+              "title": "officer",
+              "$ref": "#/definitions/aiken~1crypto~1VerificationKeyHash"
+            }
+          ]
+        },
+        {
+          "title": "RevokeOfficer",
+          "dataType": "constructor",
+          "index": 2,
+          "fields": [
+            {
+              "title": "officer",
+              "$ref": "#/definitions/aiken~1crypto~1VerificationKeyHash"
+            }
+          ]
+        }
+      ]
+    },
+    "aiken/crypto/VerificationKeyHash": {
+      "title": "VerificationKeyHash",
+      "dataType": "bytes"
+    },
+    "driver_registry/VehicleDatum": {
+      "title": "VehicleDatum",
+      "anyOf": [
+        {
+          "title": "VehicleDatum",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "title": "owner_pkh",
+              "$ref": "#/definitions/aiken~1crypto~1VerificationKeyHash"
+            },
+            {
+              "title": "token_name",
+              "$ref": "#/definitions/ByteArray"
+            },
+            {
+              "title": "roadworthy",
+              "$ref": "#/definitions/Bool"
+            },
+            {
+              "title": "insurance_expiry",
+              "$ref": "#/definitions/Int"
+            },
+            {
+              "title": "tax_expiry",
+              "$ref": "#/definitions/Int"
+            }
+          ]
+        }
+      ]
+    },
+    "driver_registry/VehicleRedeemer": {
+      "title": "VehicleRedeemer",
+      "anyOf": [
+        {
+          "title": "Update",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": []
+        },
+        {
+          "title": "Transfer",
+          "dataType": "constructor",
+          "index": 1,
+          "fields": [
+            {
+              "title": "new_owner",
+              "$ref": "#/definitions/aiken~1crypto~1VerificationKeyHash"
+            }
+          ]
+        },
+        {
+          "title": "FlagUnsafe",
+          "dataType": "constructor",
+          "index": 2,
+          "fields": []
+        }
+      ]
+    },
+    "passenger_registry/PassengerDatum": {
+      "title": "PassengerDatum",
+      "anyOf": [
+        {
+          "title": "PassengerDatum",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "title": "wallet_pkh",
+              "$ref": "#/definitions/aiken~1crypto~1VerificationKeyHash"
+            },
+            {
+              "title": "registered_at",
+              "$ref": "#/definitions/Int"
+            }
+          ]
+        }
+      ]
+    },
+    "passenger_registry/PassengerRedeemer": {
+      "title": "PassengerRedeemer",
+      "anyOf": [
+        {
+          "title": "Register",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "title": "wallet",
+              "$ref": "#/definitions/aiken~1crypto~1VerificationKeyHash"
+            }
+          ]
+        },
+        {
+          "title": "Unregister",
+          "dataType": "constructor",
+          "index": 1,
+          "fields": []
+        }
+      ]
+    },
+    "violation_manager/ViolationDatum": {
+      "title": "ViolationDatum",
+      "anyOf": [
+        {
+          "title": "ViolationDatum",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "title": "fine_id",
+              "$ref": "#/definitions/ByteArray"
+            },
+            {
+              "title": "vehicle_policy",
+              "$ref": "#/definitions/ByteArray"
+            },
+            {
+              "title": "vehicle_token",
+              "$ref": "#/definitions/ByteArray"
+            },
+            {
+              "title": "amount",
+              "$ref": "#/definitions/Int"
+            },
+            {
+              "title": "evidence_cid",
+              "$ref": "#/definitions/ByteArray"
+            },
+            {
+              "title": "officer_pkh",
+              "$ref": "#/definitions/aiken~1crypto~1VerificationKeyHash"
+            },
+            {
+              "title": "issued_at",
+              "$ref": "#/definitions/Int"
+            },
+            {
+              "title": "status",
+              "$ref": "#/definitions/ByteArray"
+            }
+          ]
+        }
+      ]
+    },
+    "violation_manager/ViolationRedeemer": {
+      "title": "ViolationRedeemer",
+      "anyOf": [
+        {
+          "title": "Issue",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "title": "officer",
+              "$ref": "#/definitions/aiken~1crypto~1VerificationKeyHash"
+            }
+          ]
+        },
+        {
+          "title": "Pay",
+          "dataType": "constructor",
+          "index": 1,
+          "fields": [
+            {
+              "title": "driver",
+              "$ref": "#/definitions/aiken~1crypto~1VerificationKeyHash"
+            }
+          ]
+        },
+        {
+          "title": "Revoke",
+          "dataType": "constructor",
+          "index": 2,
+          "fields": []
+        }
+      ]
     }
   }
 }

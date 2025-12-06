@@ -1,33 +1,38 @@
-use cardano/output.{OutputReference}
-use cardano/transaction.{Transaction}
+use aiken/collection/list
+use aiken/crypto.{VerificationKeyHash}
+use cardano/transaction.{OutputReference, Transaction}
 
 // Admin governance (update params, approve/revoke officers). Single-admin MVP.
 
+// Admin pubkey hash (28 bytes)
+const admin_pkh: VerificationKeyHash =
+  #"14ed029a5d871f49cd81c378181a40820f135c487571e6fa"
+
 pub type AdminDatum {
-  key: text,
-  value: text,
-  updated_at: int,
+  key: ByteArray,
+  value: ByteArray,
+  updated_at: Int,
 }
 
 pub type AdminRedeemer {
-  Update(text, text)
-  ApproveOfficer(pubkey)
-  RevokeOfficer(pubkey)
+  Update { key: ByteArray, value: ByteArray }
+  ApproveOfficer { officer: VerificationKeyHash }
+  RevokeOfficer { officer: VerificationKeyHash }
+}
+
+fn signed_by(tx: Transaction, pkh: VerificationKeyHash) -> Bool {
+  list.has(tx.extra_signatories, pkh)
 }
 
 validator admin_governance {
   spend(
-    datum: Option<AdminDatum>,
-    redeemer: AdminRedeemer,
+    _datum: Option<AdminDatum>,
+    _redeemer: AdminRedeemer,
     _own_ref: OutputReference,
-    self: Transaction,
+    tx: Transaction,
   ) {
-    require
-    tx_signed_by(
-      #"14ed029a5d871f49cd81c378181a40820f135c487571e6fab6c8da084a5f845d58259585010b9fe238146184f2910d330f6d5004336954b5f19bbd0699659bd6",
-    )
-    "admin signature required"
-    // off-chain: process redeemer and update on-chain datum as needed
+    // All governance actions require admin signature
+    signed_by(tx, admin_pkh)
   }
 
   else(_) {
