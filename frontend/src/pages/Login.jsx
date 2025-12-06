@@ -64,7 +64,7 @@ export default function Login() {
     if (showSuccessModal) {
       const timer = setTimeout(() => {
         handleRedirect();
-      }, 3000);
+      }, 1000);
       return () => clearTimeout(timer);
     }
   }, [showSuccessModal, handleRedirect]);
@@ -120,21 +120,18 @@ export default function Login() {
       {/* Success Modal */}
       {showSuccessModal && (
         <div className="modal-overlay">
-          <div className="modal-box">
+          <div
+            className="modal-box cursor-pointer"
+            onClick={handleRedirect}   // Clicking the card redirects
+          >
+            <CheckCircle className="success-icon" />
+
             <h2>Login Successful 🎉</h2>
             <p>Welcome back! Redirecting to your dashboard...</p>
-            <button className="modal-btn" onClick={handleRedirect}>
-              Go to Dashboard Now
-            </button>
-            <button
-              className="modal-close"
-              onClick={() => setShowSuccessModal(false)}
-            >
-              Close
-            </button>
           </div>
         </div>
       )}
+
     </div>
   );
 }

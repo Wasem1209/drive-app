@@ -127,7 +127,7 @@ const Profile = () => {
         }
     };
 
-    // ================================
+
     // NEW: Handle Image Upload & Preview
     // ================================
     const handleImageChange = (e, type) => {
@@ -171,7 +171,7 @@ const Profile = () => {
     return (
         <PhoneFrame>
             <div className="profile-container">
-                {loading && <div className="loading">⏳ Loading...</div>}
+                {loading && <div className="loading">Loading...</div>}
                 {error && <div className="error">{error}</div>}
 
                 {/* PERSONAL INFO */}
