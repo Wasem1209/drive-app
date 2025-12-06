@@ -53,7 +53,6 @@ export default function DriverDashboard() {
             } else {
                 setConnectionNotice('');
             }
-            // eslint-disable-next-line no-unused-vars
         } catch (e) {
             setAvailableProviders([]);
             setConnectionNotice('Unable to detect wallet extensions. Check browser extensions or try a different browser.');
@@ -74,7 +73,6 @@ export default function DriverDashboard() {
     };
 
     const enableWithTimeout = async (wallet, timeoutMs = 8000) => {
-        // eslint-disable-next-line no-async-promise-executor
         return new Promise(async (resolve, reject) => {
             let settled = false;
             const timer = setTimeout(() => {
@@ -109,7 +107,7 @@ export default function DriverDashboard() {
 
             // Some wallets auto-connect if site permission was previously granted.
             // Try to detect that state and attempt to programmatically disable the session
-            // before calling `enable()` so the extension will display a confirmation popup.
+            // before calling enable() so the extension will display a confirmation popup.
             let wasEnabled = false;
             try {
                 if (typeof wallet.isEnabled === 'function') {
@@ -117,7 +115,6 @@ export default function DriverDashboard() {
                 } else if (typeof wallet.isEnabled !== 'undefined') {
                     wasEnabled = Boolean(wallet.isEnabled);
                 }
-                // eslint-disable-next-line no-unused-vars
             } catch (e) { /* ignore */ }
 
             if (wasEnabled) {
@@ -133,7 +130,6 @@ export default function DriverDashboard() {
                         await wallet.experimental.disconnect();
                         disabled = true;
                     }
-                    // eslint-disable-next-line no-unused-vars
                 } catch (e) {
                     // ignore any errors while trying to disable
                 }
@@ -160,22 +156,19 @@ export default function DriverDashboard() {
             try {
                 const used = api.getUsedAddresses ? await api.getUsedAddresses() : [];
                 if (used && used.length) addr = used[0].startsWith('addr') ? used[0] : hexToBech32(used[0]);
-                // eslint-disable-next-line no-unused-vars
-            } catch (e) { /* empty */ }
+            } catch (e) {}
             try {
                 if (!addr && api.getChangeAddress) {
                     const change = await api.getChangeAddress();
                     if (change) addr = change.startsWith('addr') ? change : hexToBech32(change);
                 }
-                // eslint-disable-next-line no-unused-vars
-            } catch (e) { /* empty */ }
+            } catch (e) {}
             try {
                 if (!addr && api.getRewardAddresses) {
                     const r = await api.getRewardAddresses();
                     if (r && r.length) addr = r[0].startsWith('addr') ? r[0] : hexToBech32(r[0]);
                 }
-                // eslint-disable-next-line no-unused-vars
-            } catch (e) { /* empty */ }
+            } catch (e) {}
             if (!addr) addr = 'addr_test1qpxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';
 
             setWalletAddress(addr);
@@ -194,15 +187,13 @@ export default function DriverDashboard() {
                         // trim trailing zeros but keep at least 2 decimals
                         fracStr = fracStr.replace(/0+$/, '');
                         if (fracStr.length < 2) fracStr = frac.toString().padStart(2, '0');
-                        const adaStr = fracStr === '' ? whole.toString() : `${whole.toString()}.${fracStr}`;
+                        const adaStr = fracStr === '' ? whole.toString() : ${whole.toString()}.${fracStr};
                         setBalance(adaStr);
-                        // eslint-disable-next-line no-unused-vars
                     } catch (e) {
                         // fallback: show raw parsed
                         setBalance(parsed);
                     }
                 } else setBalance('10000.00');
-                // eslint-disable-next-line no-unused-vars
             } catch (e) { setBalance('10000.00'); }
 
             setWalletModalOpen(false);
@@ -283,7 +274,7 @@ export default function DriverDashboard() {
                         </div>
 
                         <h2 className="wallet-amount">
-                            {walletConnected ? `₳${balance}` : "₳0.00"}
+                            {walletConnected ? ₳${balance} : "₳0.00"}
                         </h2>
 
                         {walletConnected && (
@@ -339,7 +330,7 @@ export default function DriverDashboard() {
                                                     onClick={() => connectToProvider(p)}
                                                     disabled={Boolean(connectingProvider) && connectingProvider !== p}
                                                 >
-                                                    {connectingProvider === p ? 'Connecting...' : `Connect ${p[0].toUpperCase() + p.slice(1)}`}
+                                                    {connectingProvider === p ? 'Connecting...' : Connect ${p[0].toUpperCase() + p.slice(1)}}
                                                 </button>
                                             ))
                                         )}
@@ -592,8 +583,60 @@ export default function DriverDashboard() {
 
 
 // ===== MODAL INLINE STYLES =====
+const modalOverlay = {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    background: "rgba(0,0,0,0.5)",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 999,
+};
 
+const modalBox = {
+    width: "85%",
+    maxWidth: "400px",
+    background: "#fff",
+    padding: "25px",
+    borderRadius: "12px",
+    textAlign: "center",
+    animation: "fadeIn 0.2s ease-in-out",
+};
 
+const modalBtn = {
+    width: "100%",
+    padding: "12px",
+    background: "#4caf50",
+    color: "white",
+    border: "none",
+    borderRadius: "8px",
+    fontSize: "1rem",
+    marginBottom: "10px",
+    cursor: "pointer"
+};
 
+const modalBtnRed = {
+    width: "100%",
+    padding: "12px",
+    background: "#d32f2f",
+    color: "white",
+    border: "none",
+    borderRadius: "8px",
+    fontSize: "1rem",
+    marginBottom: "10px",
+    cursor: "pointer"
+};
 
-
+const modalCancel = {
+    width: "100%",
+    padding: "10px",
+    background: "#e0e0e0",
+    color: "#333",
+    border: "none",
+    borderRadius: "8px",
+    fontSize: "0.9rem",
+    cursor: "pointer"
+};
