@@ -1,4 +1,5 @@
 import { useNavigate, Outlet } from "react-router-dom";
+import { useState } from "react";
 
 import '../../styles/driverdashboard.css';
 
@@ -26,15 +27,43 @@ import transaction_history from '../../assets/transactionHst.png'
 export default function DriverDashboard() {
     const navigate = useNavigate();
 
+    // 🚀 WALLET STATE
+    const [walletConnected, setWalletConnected] = useState(false);
+    const [walletAddress, setWalletAddress] = useState("");
+    const [balance, setBalance] = useState(null);
+
+    // 🚀 CONNECT NAMI WALLET FUNCTION
+    const connectNamiWallet = async () => {
+        try {
+            if (!window.cardano || !window.cardano.nami) {
+                alert("Nami Wallet not found. Please install it.");
+                return;
+            }
+
+            const api = await window.cardano.nami.enable();
+            setWalletConnected(true);
+
+            const usedAddresses = await api.getUsedAddresses();
+            const raw = usedAddresses[0];
+
+            setWalletAddress(raw);
+
+            const balanceHex = await api.getBalance();
+            const lovelace = parseInt(balanceHex, 16);
+            setBalance((lovelace / 1_000_000).toFixed(2));
+
+        } catch (err) {
+            console.error("Wallet connection failed:", err);
+        }
+    };
+
     return (
         <PhoneFrame>
             <div style={{ position: 'relative', width: "100%", overflowX: "hidden" }}>
 
                 {/* HEADER */}
                 <div className='header-bar'>
-
                     <div className='header-left'>
-                        {/* PROFILE IMAGE (CLICKABLE) */}
                         <div>
                             <img
                                 src={profilePic}
@@ -61,13 +90,11 @@ export default function DriverDashboard() {
                     >
                         <img src={notificationBell} alt="Notifications" />
                     </button>
-
                 </div>
 
                 <img src={rectangle} alt="Rectangle" style={{ width: '100%', height: 'auto' }} />
 
-
-
+                {/* WALLET SECTION */}
                 <div className="wallet">
                     <div>
                         <div className="small-txt">
@@ -86,31 +113,34 @@ export default function DriverDashboard() {
                             />
                         </div>
 
-                        <h2 className="wallet-amount">₳10,000.00</h2>
+                        <h2 className="wallet-amount">
+                            {walletConnected ? `₳${balance}` : "₳0.00"}
+                        </h2>
 
-                        <div
-                            style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: "8px",
-                                cursor: "pointer",
-                            }}
-                        >
-                            <img src={copy_icon} alt="Copy Icon" />
-                            <h3 className="wallet-id small-txt">Wallet Id: 001123983</h3>
-                        </div>
+                        {walletConnected && (
+                            <div
+                                style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: "8px",
+                                    cursor: "pointer",
+                                }}
+                            >
+                                <img src={copy_icon} alt="Copy Icon" />
+                                <h3 className="wallet-id small-txt">
+                                    {walletAddress.slice(0, 12)}...{walletAddress.slice(-6)}
+                                </h3>
+                            </div>
+                        )}
                     </div>
 
-                    {/*Add your button here */}
+                    {/* CONNECT WALLET BUTTON */}
                     <button
-                        onClick={() => navigate("/wallet")}
+                        onClick={connectNamiWallet}
                         className="connect-btn"
                     >
-                        Connect Wallet
+                        {walletConnected ? "Wallet Connected ✔" : "Connect Wallet"}
                     </button>
-
-                    {/* If you want to render the component directly instead of navigating */}
-                    {/* <ConnectWallet /> */}
                 </div>
 
                 {/* WEEKLY GOAL */}
@@ -155,12 +185,11 @@ export default function DriverDashboard() {
                     <DueNotification />
                 </div>
 
-                {/* VEHICLE DETAILS (CLICKABLE CARDS) */}
+                {/* VEHICLE DETAILS */}
                 <div className='vehicle-details-section'>
-
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
 
-                        {/* Safe Driving Card */}
+                        {/* Safe Driving */}
                         <div
                             className='safe-driving-card vehicle-detail-card'
                             onClick={() => navigate("/driver/safe-driving")}
@@ -174,7 +203,7 @@ export default function DriverDashboard() {
                             </div>
                         </div>
 
-                        {/* Insurance Card */}
+                        {/* Insurance */}
                         <div
                             className='insurance-card vehicle-detail-card'
                             onClick={() => navigate("/driver/insurance")}
@@ -204,7 +233,7 @@ export default function DriverDashboard() {
                         </div>
                     </div>
 
-                    {/* Roadworthiness Card */}
+                    {/* Roadworthiness */}
                     <div
                         className='roadworthiness-card vehicle-detail-card'
                         onClick={() => navigate("/driver/roadworthiness")}
@@ -234,9 +263,8 @@ export default function DriverDashboard() {
                     </div>
                 </div>
 
-                {/* CTA BUTTONS — Clickable */}
+                {/* CTA BUTTONS */}
                 <div className='cta-btn-container'>
-
                     <div
                         className="cta-btn cta-pay"
                         onClick={() => navigate("/dashboard/driver/PayRoadTax")}
@@ -284,10 +312,9 @@ export default function DriverDashboard() {
                             <img src={transaction_history} />
                         </div>
                     </div>
-
                 </div>
 
-                {/* This is where Profile.jsx will appear */}
+                {/* Profile Pages Render Here */}
                 <Outlet />
 
             </div>
