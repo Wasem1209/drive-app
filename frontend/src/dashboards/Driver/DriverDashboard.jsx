@@ -27,12 +27,15 @@ import transaction_history from '../../assets/transactionHst.png'
 export default function DriverDashboard() {
     const navigate = useNavigate();
 
-    // 🚀 WALLET STATE
+    // WALLET STATES
     const [walletConnected, setWalletConnected] = useState(false);
     const [walletAddress, setWalletAddress] = useState("");
     const [balance, setBalance] = useState(null);
 
-    // 🚀 CONNECT NAMI WALLET FUNCTION
+    // MODAL STATE
+    const [walletModalOpen, setWalletModalOpen] = useState(false);
+
+    // CONNECT WALLET
     const connectNamiWallet = async () => {
         try {
             if (!window.cardano || !window.cardano.nami) {
@@ -52,9 +55,18 @@ export default function DriverDashboard() {
             const lovelace = parseInt(balanceHex, 16);
             setBalance((lovelace / 1_000_000).toFixed(2));
 
+            setWalletModalOpen(false);
         } catch (err) {
             console.error("Wallet connection failed:", err);
         }
+    };
+
+    // DISCONNECT
+    const disconnectWallet = () => {
+        setWalletConnected(false);
+        setWalletAddress("");
+        setBalance(null);
+        setWalletModalOpen(false);
     };
 
     return (
@@ -134,14 +146,69 @@ export default function DriverDashboard() {
                         )}
                     </div>
 
-                    {/* CONNECT WALLET BUTTON */}
+                    {/* OPEN WALLET MODAL BUTTON */}
                     <button
-                        onClick={connectNamiWallet}
+                        onClick={() => setWalletModalOpen(true)}
                         className="connect-btn"
                     >
                         {walletConnected ? "Wallet Connected ✔" : "Connect Wallet"}
                     </button>
                 </div>
+
+                {/* WALLET MODAL */}
+                {walletModalOpen && (
+                    <div style={modalOverlay}>
+                        <div style={modalBox}>
+
+                            <h2 style={{ marginBottom: "10px" }}>
+                                {walletConnected ? "Wallet Connected" : "Connect Wallet"}
+                            </h2>
+
+                            {!walletConnected ? (
+                                <>
+                                    <p style={{ marginBottom: "20px" }}>
+                                        Select wallet to connect
+                                    </p>
+
+                                    <button
+                                        style={modalBtn}
+                                        onClick={connectNamiWallet}
+                                    >
+                                        Connect Nami Wallet
+                                    </button>
+
+                                    <button
+                                        style={modalCancel}
+                                        onClick={() => setWalletModalOpen(false)}
+                                    >
+                                        Cancel
+                                    </button>
+                                </>
+                            ) : (
+                                <>
+                                    <p style={{ marginBottom: "20px" }}>
+                                        Connected as <br />
+                                        <b>{walletAddress.slice(0, 12)}...{walletAddress.slice(-6)}</b>
+                                    </p>
+
+                                    <button
+                                        style={modalBtnRed}
+                                        onClick={disconnectWallet}
+                                    >
+                                        Disconnect Wallet
+                                    </button>
+
+                                    <button
+                                        style={modalCancel}
+                                        onClick={() => setWalletModalOpen(false)}
+                                    >
+                                        Close
+                                    </button>
+                                </>
+                            )}
+                        </div>
+                    </div>
+                )}
 
                 {/* WEEKLY GOAL */}
                 <div
@@ -321,3 +388,63 @@ export default function DriverDashboard() {
         </PhoneFrame>
     );
 }
+
+
+// ===== MODAL INLINE STYLES =====
+const modalOverlay = {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    background: "rgba(0,0,0,0.5)",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 999,
+};
+
+const modalBox = {
+    width: "85%",
+    maxWidth: "400px",
+    background: "#fff",
+    padding: "25px",
+    borderRadius: "12px",
+    textAlign: "center",
+    animation: "fadeIn 0.2s ease-in-out",
+};
+
+const modalBtn = {
+    width: "100%",
+    padding: "12px",
+    background: "#4caf50",
+    color: "white",
+    border: "none",
+    borderRadius: "8px",
+    fontSize: "1rem",
+    marginBottom: "10px",
+    cursor: "pointer"
+};
+
+const modalBtnRed = {
+    width: "100%",
+    padding: "12px",
+    background: "#d32f2f",
+    color: "white",
+    border: "none",
+    borderRadius: "8px",
+    fontSize: "1rem",
+    marginBottom: "10px",
+    cursor: "pointer"
+};
+
+const modalCancel = {
+    width: "100%",
+    padding: "10px",
+    background: "#e0e0e0",
+    color: "#333",
+    border: "none",
+    borderRadius: "8px",
+    fontSize: "0.9rem",
+    cursor: "pointer"
+};
