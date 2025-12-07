@@ -1,3 +1,4 @@
+Annoor:
 import { useNavigate, Outlet } from "react-router-dom";
 import { useState } from 'react';
 
@@ -82,7 +83,7 @@ export default function DriverDashboard() {
                 }
             }, timeoutMs);
 
-            try {
+try {
                 const api = await wallet.enable();
                 if (!settled) {
                     settled = true;
@@ -171,7 +172,7 @@ export default function DriverDashboard() {
             } catch (e) {}
             if (!addr) addr = 'addr_test1qpxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';
 
-            setWalletAddress(addr);
+setWalletAddress(addr);
             setWalletConnected(true);
             try {
                 if (api.getBalance) {
@@ -252,7 +253,7 @@ export default function DriverDashboard() {
                     </button>
                 </div>
 
-                <img src={rectangle} alt="Rectangle" style={{ width: '100%', height: 'auto' }} />
+<img src={rectangle} alt="Rectangle" style={{ width: '100%', height: 'auto' }} />
 
                 {/* WALLET SECTION */}
                 <div className="wallet">
@@ -314,7 +315,7 @@ export default function DriverDashboard() {
                                 {walletConnected ? "Wallet Connected" : "Connect Wallet"}
                             </h2>
 
-                            {!walletConnected ? (
+{!walletConnected ? (
                                 <>
                                     <p style={{ marginBottom: "8px" }}>
                                         Choose a wallet to connect (click will trigger the extension prompt)
@@ -376,7 +377,7 @@ export default function DriverDashboard() {
                                         Disconnect Wallet
                                     </button>
 
-                                    <button
+<button
                                         style={modalCancel}
                                         onClick={() => setWalletModalOpen(false)}
                                     >
@@ -457,7 +458,7 @@ export default function DriverDashboard() {
                             <p className="sd-title">Insurance</p>
                             <p className="sd-subtitle">Your Vehicle’s insurance <br />is Due</p>
 
-                            <div
+<div
                                 style={{
                                     display: "flex",
                                     alignItems: "end",
@@ -534,7 +535,7 @@ export default function DriverDashboard() {
                         </div>
                     </div>
 
-                    <div
+<div
                         className="cta-btn cta-pay"
                         onClick={() => setShowPayInsurance(true)}
                         style={{ backgroundColor: "#cb30e080", cursor: "pointer" }}
