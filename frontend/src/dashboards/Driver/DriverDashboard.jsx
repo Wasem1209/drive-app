@@ -1,4 +1,4 @@
-Annoor:
+
 import { useNavigate, Outlet } from "react-router-dom";
 import { useState } from 'react';
 
