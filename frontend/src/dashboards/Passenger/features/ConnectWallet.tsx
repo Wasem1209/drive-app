@@ -45,7 +45,18 @@ export default function ConnectWallet({ onConnected }: Props) {
 	};
 
 	const renderChooser = () => (
-		<div style={{ position: 'absolute', top: '100%', left: 0, marginTop: 8, background: '#0f172a', padding: '10px 12px', borderRadius: 12, width: 220, boxShadow: '0 6px 16px rgba(0,0,0,0.35)', zIndex: 20 }}>
+		<div style={{
+				position: 'absolute',
+				top: '100%',
+				left: 0,
+				marginTop: 8,
+				background: '#0f172a',
+				padding: '10px 12px',
+				borderRadius: 12,
+				width: 100,
+				boxShadow: '0 6px 16px rgba(0,0,0,0.35)',
+				zIndex: 20 
+			}}>
 			<p style={{ color: '#fff', fontSize: 12, margin: '0 0 8px' }}>Select Cardano Wallet</p>
 			{available.map(w => (
 				<button
@@ -73,7 +84,7 @@ export default function ConnectWallet({ onConnected }: Props) {
 				</button>
 			))}
 			{!available.length && (
-				<div style={{ color: '#fff', fontSize: 12, maxWidth: '200px' }}>
+				<div style={{ color: '#fff', fontSize: 12 }}>
 					No Cardano wallet detected.<br /> Install Nami / Eternl / Lace.
 				</div>
 			)}

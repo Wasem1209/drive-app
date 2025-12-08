@@ -87,15 +87,6 @@ export default function ConnectWallet({ onConnected }: Props) {
 					className="connect-wallet-btn"
 					disabled={connecting}
 					onClick={() => setChooserOpen(v => !v)}
-					style={{
-							position: 'relative',
-							background: '#FFF3B0',
-							border: 'none',
-							padding: '10px 20px',
-							borderRadius: '6px',
-							cursor: 'pointer',
-
-					}}
 				>
 					{connecting ? 'Connecting...' : 'Connect Wallet'}
 				</button>

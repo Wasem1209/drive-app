@@ -257,7 +257,7 @@ export default function DriverDashboard() {
                     </div>
 
 
-                    {/* <ConnectWallet /> */}
+                    <ConnectWallet />
                 </div>
 
                 {/* Weekly goal(streak) section */}
