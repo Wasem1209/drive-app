@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import axios from "axios";
 import "./Profile.css";
 
-
 const Profile = () => {
     const [profile, setProfile] = useState({
         fullName: "",
@@ -24,7 +23,7 @@ const Profile = () => {
     };
 
     // -----------------------------
-    // VERIFY NIN
+    // 1. VERIFY NIN
     // -----------------------------
     const verifyNIN = async () => {
         if (!profile.nin) return setError("Enter your NIN first.");
@@ -49,7 +48,7 @@ const Profile = () => {
     };
 
     // -----------------------------
-    // REGISTER VEHICLE
+    // 2. REGISTER VEHICLE
     // -----------------------------
     const registerVehicle = async () => {
         if (!profile.plateNumber || !profile.vehicleType || !profile.color) {
@@ -80,7 +79,7 @@ const Profile = () => {
     };
 
     // -----------------------------
-    // MINT DRIVER IDENTITY NFT
+    // 3. MINT DRIVER IDENTITY NFT
     // -----------------------------
     const mintProfileNFT = async () => {
         if (!profile.fullName || !profile.nin) {
@@ -110,133 +109,104 @@ const Profile = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-100 p-6 flex justify-center">
-            <div className="max-w-4xl w-full">
+        <div className="profile-container">
+            {/* ERROR */}
+            {error && <div className="error">{error}</div>}
 
-                <h1 className="text-3xl font-bold text-gray-800 mb-6">
-                    Driver Identity & Vehicle Registration
-                </h1>
+            {/* LOADING */}
+            {loading && <div className="loading">Processing... Please wait</div>}
 
-                {/* ERROR */}
-                {error && (
-                    <div className="bg-red-200 text-red-700 p-3 rounded mb-4">
-                        {error}
+            {/* =======================
+          DRIVER PROFILE
+      ======================== */}
+            <div className="card">
+                <h2>Driver Profile</h2>
+
+                <input
+                    name="fullName"
+                    placeholder="Full Name"
+                    value={profile.fullName}
+                    onChange={handleChange}
+                />
+
+                <input
+                    name="nin"
+                    placeholder="Enter NIN"
+                    value={profile.nin}
+                    onChange={handleChange}
+                />
+
+                <button className="agree-btn" onClick={verifyNIN}>
+                    Verify NIN
+                </button>
+
+                {ninData && (
+                    <div className="result-box">
+                        <p><strong>Name:</strong> {ninData.fullName}</p>
+                        <p><strong>Gender:</strong> {ninData.gender}</p>
+                        <p><strong>DOB:</strong> {ninData.dob}</p>
                     </div>
                 )}
 
-                {/* LOADING */}
-                {loading && (
-                    <div className="bg-blue-100 text-blue-700 p-3 rounded mb-4">
-                        Processing... Please wait
-                    </div>
-                )}
+                <button onClick={mintProfileNFT}>Mint Identity NFT</button>
 
-                <div className="grid md:grid-cols-2 gap-6">
-
-                    {/* DRIVER PROFILE */}
-                    <div className="bg-white shadow-md rounded-xl p-6">
-                        <h2 className="text-xl font-semibold mb-4">Driver Profile</h2>
-
-                        <input
-                            name="fullName"
-                            placeholder="Full Name"
-                            className="input-box"
-                            value={profile.fullName}
-                            onChange={handleChange}
-                        />
-
-                        <input
-                            name="nin"
-                            placeholder="Enter NIN"
-                            className="input-box"
-                            value={profile.nin}
-                            onChange={handleChange}
-                        />
-
-                        <button className="btn-primary mt-2" onClick={verifyNIN}>
-                            Verify NIN
-                        </button>
-
-                        {ninData && (
-                            <div className="bg-green-100 p-3 rounded mt-4">
-                                <p><strong>Name:</strong> {ninData.fullName}</p>
-                                <p><strong>Gender:</strong> {ninData.gender}</p>
-                                <p><strong>DOB:</strong> {ninData.dob}</p>
-                            </div>
-                        )}
-
-                        <button className="btn-secondary mt-4" onClick={mintProfileNFT}>
-                            Mint Identity NFT
-                        </button>
-
-                        {mintStatus && (
-                            <div className="bg-green-100 p-3 rounded mt-4">
-                                <p className="font-bold text-green-700">NFT Minted!</p>
-                                <p>TX Hash: {mintStatus.txHash}</p>
-                            </div>
-                        )}
-                    </div>
-
-                    {/* VEHICLE REGISTRATION */}
-                    <div className="bg-white shadow-md rounded-xl p-6">
-                        <h2 className="text-xl font-semibold mb-4">Vehicle Registration</h2>
-
-                        <input
-                            name="plateNumber"
-                            placeholder="Plate Number"
-                            className="input-box"
-                            value={profile.plateNumber}
-                            onChange={handleChange}
-                        />
-
-                        <input
-                            name="vehicleType"
-                            placeholder="Vehicle Type"
-                            className="input-box"
-                            value={profile.vehicleType}
-                            onChange={handleChange}
-                        />
-
-                        <input
-                            name="color"
-                            placeholder="Vehicle Color"
-                            className="input-box"
-                            value={profile.color}
-                            onChange={handleChange}
-                        />
-
-                        <button className="btn-primary mt-2" onClick={registerVehicle}>
-                            Register Vehicle
-                        </button>
-
-                        {vehicleStatus && (
-                            <div className="bg-green-100 p-3 rounded mt-4">
-                                <p className="font-bold text-green-700">
-                                    Vehicle stored on blockchain.
-                                </p>
-                                <p>TX Hash: {vehicleStatus.txHash}</p>
-                            </div>
-                        )}
-                    </div>
-                </div>
-
-                {/* MODAL */}
-                {modal.open && (
-                    <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50">
-                        <div className="bg-white p-6 rounded-lg shadow-lg text-center w-80">
-                            <h3 className="text-xl font-bold mb-2">Success</h3>
-                            <p>{modal.message}</p>
-
-                            <button
-                                onClick={() => setModal({ open: false, message: "" })}
-                                className="btn-primary mt-4"
-                            >
-                                OK
-                            </button>
-                        </div>
+                {mintStatus && (
+                    <div className="result-box">
+                        <p className="success">Identity NFT minted!</p>
+                        <p>TX Hash: {mintStatus.txHash}</p>
                     </div>
                 )}
             </div>
+
+            {/* =======================
+          VEHICLE REGISTRATION
+      ======================== */}
+            <div className="card">
+                <h2>Vehicle Registration</h2>
+
+                <input
+                    name="plateNumber"
+                    placeholder="Plate Number"
+                    value={profile.plateNumber}
+                    onChange={handleChange}
+                />
+                <input
+                    name="vehicleType"
+                    placeholder="Vehicle Type"
+                    value={profile.vehicleType}
+                    onChange={handleChange}
+                />
+                <input
+                    name="color"
+                    placeholder="Vehicle Color"
+                    value={profile.color}
+                    onChange={handleChange}
+                />
+
+                <button onClick={registerVehicle}>Register Vehicle</button>
+
+                {vehicleStatus && (
+                    <div className="result-box">
+                        <p className="success">Vehicle identity stored on blockchain.</p>
+                        <p>TX Hash: {vehicleStatus.txHash}</p>
+                    </div>
+                )}
+            </div>
+
+            {/* =======================
+          MODAL
+      ======================== */}
+            {modal.open && (
+                <div className="modal-overlay">
+                    <div className="modal-box">
+                        <h3>Success</h3>
+                        <p>{modal.message}</p>
+                        <button onClick={() => setModal({ open: false, message: "" })}>
+                            OK
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
