@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, Outlet } from "react-router-dom";
 
 import "../../styles/driverdashboard.css";
@@ -290,6 +290,126 @@ export default function DriverDashboard() {
     width: "100%",
   };
 
+  // Weekly reward state (similar to Passenger daily reward logic)
+  const allDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  // Number of weekly rewards claimed (weeks completed)
+  const [weeksCompleted, setWeeksCompleted] = useState(0);
+  // daily progression pointer: 0..6 => Mon..Sun
+  const [progressIndex, setProgressIndex] = useState(0);
+  // When the current day's gift unlocks (ms)
+  const [unlockAt, setUnlockAt] = useState(Date.now());
+  const [isActive, setIsActive] = useState(true);
+  const [showClaimModal, setShowClaimModal] = useState(false);
+  const [earlyHint, setEarlyHint] = useState("");
+  const earlyHintTimerRef = useRef(null);
+
+  useEffect(() => {
+    const id = "weekly-reward-shake-keyframes";
+    if (!document.getElementById(id)) {
+      const style = document.createElement("style");
+      style.id = id;
+      style.innerHTML = `@keyframes giftShake { 0%,100% { transform: rotate(0deg) translateY(0); } 20% { transform: rotate(7deg) translateY(-2px); } 40% { transform: rotate(-6deg) translateY(1px); } 60% { transform: rotate(5deg) translateY(-1px); } 80% { transform: rotate(-4deg) translateY(0); } }`;
+      document.head.appendChild(style);
+    }
+  }, []);
+
+  const getNextLocalMidnight = () => {
+    const d = new Date();
+    d.setHours(24, 0, 0, 0);
+    return d.getTime();
+  };
+
+  const getNextSundayMidnight = (from = new Date()) => {
+    const now = new Date(from);
+    // JS: 0 = Sunday
+    const today = now.getDay();
+    // days until next Sunday (if today is Sunday, return next week's Sunday)
+    const daysUntil = ((7 - today) % 7) || 7;
+    const next = new Date(now);
+    next.setDate(now.getDate() + daysUntil);
+    next.setHours(0, 0, 0, 0);
+    return next.getTime();
+  };
+
+  // load persisted progression (weeks completed, progressIndex, unlockAt)
+  useEffect(() => {
+    try {
+      const w = localStorage.getItem("driver.weekly.weeksCompleted");
+      const p = localStorage.getItem("driver.weekly.progressIndex");
+      const savedUnlock = localStorage.getItem("driver.weekly.unlockAt");
+      if (w !== null) setWeeksCompleted(parseInt(w, 10));
+      if (p !== null) setProgressIndex(parseInt(p, 10));
+      if (savedUnlock !== null) setUnlockAt(parseInt(savedUnlock, 10));
+      else {
+        // initialize unlockAt to next local midnight
+        setUnlockAt(getNextLocalMidnight());
+      }
+    } catch (e) {
+      setUnlockAt(getNextLocalMidnight());
+    }
+  }, []);
+
+  // sync isActive with unlockAt
+  useEffect(() => {
+    const now = Date.now();
+    if (now >= unlockAt) {
+      setIsActive(true);
+      return;
+    }
+    setIsActive(false);
+    const t = setTimeout(() => setIsActive(true), Math.max(0, unlockAt - now) + 50);
+    return () => clearTimeout(t);
+  }, [unlockAt]);
+
+  // persist changes
+  useEffect(() => { try { localStorage.setItem("driver.weekly.weeksCompleted", String(weeksCompleted)); } catch {} }, [weeksCompleted]);
+  useEffect(() => { try { localStorage.setItem("driver.weekly.progressIndex", String(progressIndex)); } catch {} }, [progressIndex]);
+  useEffect(() => { try { localStorage.setItem("driver.weekly.unlockAt", String(unlockAt)); } catch {} }, [unlockAt]);
+
+
+  const handleGiftClick = (idx) => {
+    // only allow clicking the current day's gift
+    if (idx !== progressIndex) return;
+    if (!isActive) {
+      const nextDayName = allDays[progressIndex];
+      setEarlyHint(`Available on ${nextDayName}`);
+      if (earlyHintTimerRef.current) clearTimeout(earlyHintTimerRef.current);
+      earlyHintTimerRef.current = setTimeout(() => setEarlyHint(""), 1500);
+      return;
+    }
+    setShowClaimModal(true);
+  };
+
+  const confirmClaim = () => {
+    // If it's Sunday (index 6) completing it finishes the weekly streak
+    if (progressIndex === 6) {
+      setWeeksCompleted((w) => w + 1);
+      // reset for next week
+      setProgressIndex(0);
+    } else {
+      setProgressIndex((p) => (p + 1) % allDays.length);
+    }
+    // Next claim unlocks at next local midnight
+    setUnlockAt(getNextLocalMidnight());
+    setIsActive(false);
+    setShowClaimModal(false);
+    window.dispatchEvent(new CustomEvent('weeklyReward:claimed', { detail: { dayIndex: progressIndex, day: allDays[progressIndex] } }));
+  };
+
+  const closeClaimModal = () => setShowClaimModal(false);
+
+  // Test helper: simulate next day (useful during local development)
+  const simulateNextDay = () => {
+    try {
+      // make the current progressIndex active immediately
+      setUnlockAt(Date.now());
+      setIsActive(true);
+      setEarlyHint("");
+    } catch (e) {
+      /* ignore */
+    }
+  };
+
   return (
     <PhoneFrame>
       <div style={{ position: "relative", width: "100%", overflowX: "hidden" }}>
@@ -436,10 +556,10 @@ export default function DriverDashboard() {
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '10px', marginTop: '62px', paddingInline: '20px' }}>
           <div className='streak-card'>
             <div>
-              <div style={{ display: "flex", alignItems: "end", paddingTop: "20px" }}>
-                <p className="streak-weeks-num">3</p>
-                <p className="streak-weeks">Weeks</p>
-              </div>
+                <div style={{ display: "flex", alignItems: "end", paddingTop: "20px" }}>
+                  <p className="streak-weeks-num">{weeksCompleted}</p>
+                  <p className="streak-weeks">Weeks</p>
+                </div>
               <p className="streak-label">Safe <br />Driving</p>
             </div>
 
@@ -450,13 +570,63 @@ export default function DriverDashboard() {
             <p className="weekly-title" style={{ textAlign: 'left' }}>Weekly Reward</p>
 
             <div className="week-dots">
-              {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day, index) => (
-                <div className="day-item" key={day}>
-                  <img src={index === 6 ? gift_icon : check_icon} />
-                  <span>{day}</span>
-                </div>
-              ))}
+              {allDays.map((day, idx) => {
+                const isCompleted = idx < progressIndex;
+                const isCurrent = idx === progressIndex;
+                let iconNode;
+                if (isCurrent) {
+                  iconNode = (
+                    <img
+                      src={gift_icon}
+                      onClick={() => handleGiftClick(idx)}
+                      style={{ cursor: 'pointer', animation: isActive ? 'giftShake 1.2s ease-in-out infinite' : 'none', opacity: isActive ? 1 : 0.85 }}
+                      alt={isActive ? 'Daily Reward (Active)' : 'Daily Reward (Available soon)'}
+                    />
+                  );
+                } else if (isCompleted) {
+                  iconNode = <img src={check_icon} alt="Completed" />;
+                } else {
+                  iconNode = <img src={check_icon} alt="Pending" style={{ opacity: 0.25 }} />;
+                }
+
+                return (
+                  <div className="day-item" key={day} style={{ position: 'relative' }}>
+                    {iconNode}
+                    <span>{day}</span>
+                    {isCurrent && earlyHint && (
+                      <div style={{ position: 'absolute', top: '-26px', left: '50%', transform: 'translateX(-50%)', background: '#111827', color: '#fff', padding: '4px 8px', borderRadius: 8, fontSize: 11, whiteSpace: 'nowrap', boxShadow: '0 6px 12px rgba(0,0,0,0.15)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                        {earlyHint}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
+
+            {earlyHint && (
+              <div style={{ marginTop: 8, color: '#f59e0b', fontSize: 13, textAlign: 'left' }}>{earlyHint}</div>
+            )}
+
+            {/* Local development helper: simulate next day to make the current day active immediately */}
+            {typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && (
+              <div style={{ marginTop: 8, textAlign: 'left' }}>
+                <button onClick={simulateNextDay} style={{ background: 'transparent', border: '1px dashed #94a3b8', color: '#94a3b8', padding: '6px 10px', borderRadius: 8, cursor: 'pointer', fontSize: 12 }}>Simulate Next Day (dev)</button>
+              </div>
+            )}
+
+            {/* Claim modal for weekly reward */}
+            {showClaimModal && (
+              <div style={modalOverlay}>
+                <div style={modalBox}>
+                  <h3>Claim Weekly Reward</h3>
+                  <p style={{ marginTop: 10 }}>Confirm claim for <b>{allDays[progressIndex]}</b>?</p>
+                  <div style={{ marginTop: 16, display: 'flex', gap: 8 }}>
+                    <button style={modalBtn} onClick={confirmClaim}>Claim</button>
+                    <button style={modalCancel} onClick={closeClaimModal}>Cancel</button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
@@ -562,60 +732,4 @@ export default function DriverDashboard() {
 
 
 // ===== MODAL INLINE STYLES =====
-const modalOverlay = {
-  position: "fixed",
-  top: 0,
-  left: 0,
-  width: "100%",
-  height: "100%",
-  background: "rgba(0,0,0,0.5)",
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  zIndex: 999,
-};
 
-const modalBox = {
-  width: "85%",
-  maxWidth: "400px",
-  background: "#fff",
-  padding: "25px",
-  borderRadius: "12px",
-  textAlign: "center",
-  animation: "fadeIn 0.2s ease-in-out",
-};
-
-const modalBtn = {
-  width: "100%",
-  padding: "12px",
-  background: "#4caf50",
-  color: "white",
-  border: "none",
-  borderRadius: "8px",
-  fontSize: "1rem",
-  marginBottom: "10px",
-  cursor: "pointer",
-};
-
-const modalBtnRed = {
-  width: "100%",
-  padding: "12px",
-  background: "#d32f2f",
-  color: "white",
-  border: "none",
-  borderRadius: "8px",
-  fontSize: "1rem",
-  marginBottom: "10px",
-  cursor: "pointer",
-};
-
-const modalCancel = {
-  width: "100%",
-  padding: "10px",
-  background: "#e0e0e0",
-  color: "#333",
-  border: "none",
-  borderRadius: "8px",
-  fontSize: "0.9rem",
-  cursor: "pointer",
-};
