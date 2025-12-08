@@ -42,6 +42,8 @@ export default function DriverDashboard() {
   const [walletConnected, setWalletConnected] = useState(false);
   const [walletAddress, setWalletAddress] = useState("");
   const [balance, setBalance] = useState("0.00");
+  const [showBalance, setShowBalance] = useState(true);
+  const toggleBalance = () => setShowBalance(v => !v);
   const [walletModalOpen, setWalletModalOpen] = useState(false);
   const [availableProviders, setAvailableProviders] = useState([]);
   const [connectionNotice, setConnectionNotice] = useState("");
@@ -325,25 +327,27 @@ export default function DriverDashboard() {
         <img src={rectangle} alt="Rectangle" style={{ width: "100%", height: "auto" }} />
 
         {/* WALLET SECTION */}
-        <div className="wallet">
+            <div className="wallet">
           <div>
             <div className="small-txt">
               <p style={{ margin: "0px" }}>Available Balance</p>
               <img
                 src={eye_icon}
-                alt="Eye Icon"
-                style={{
-                  width: "12px",
-                  height: "12px",
-                  paddingTop: "15px",
-                  paddingLeft: "8px",
-                  paddingBottom: "12px",
-                  cursor: "pointer",
-                }}
+                    alt={showBalance ? "Hide balance" : "Show balance"}
+                    title={showBalance ? "Hide balance" : "Show balance"}
+                    style={{
+                      width: "12px",
+                      height: "12px",
+                      paddingTop: "15px",
+                      paddingLeft: "8px",
+                      paddingBottom: "12px",
+                      cursor: "pointer",
+                    }}
+                    onClick={toggleBalance}
               />
             </div>
 
-            <h2 className="wallet-amount">{walletConnected ? `₳${balance}` : "₳0.00"}</h2>
+            <h2 className="wallet-amount">{showBalance ? (walletConnected ? `₳${balance}` : '₳0.00') : '••••••••'}</h2>
 
             {walletConnected && (
               <div style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer" }}>
