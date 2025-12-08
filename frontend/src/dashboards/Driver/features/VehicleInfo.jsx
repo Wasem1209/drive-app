@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "../../styles/profile.css"; // optional shared styles
-import PhoneFrame from "../../components/PhoneFrame";
+import PhoneFrame from "../../../components/PhoneFrame";
 
 function VehicleInfo() {
     const [vehicleData, setVehicleData] = useState({
