@@ -1,0 +1,84 @@
+/* Admin dashboard styles refined to match Officer design language */
+:root{
+  --page-bg: #020617;
+  --panel-gradient-start: rgba(30,64,175,0.45);
+  --panel-gradient-end: rgba(15,23,42,0.85);
+  --muted: #94a3b8;
+  --accent: #2563eb;
+  --success: #34d399;
+  --danger: #ef4444;
+}
+
+.admin-shell{
+  min-height:100%;
+  background: radial-gradient(circle at top, rgba(37,99,235,0.12), transparent 55%), radial-gradient(circle at bottom right, rgba(236,72,153,0.08), transparent 45%), var(--page-bg);
+  color: #e6eef8;
+  padding: 28px 18px 56px;
+  font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+}
+
+.admin-hero{
+  background: linear-gradient(135deg, var(--panel-gradient-start), var(--panel-gradient-end));
+  border: 1px solid rgba(148,163,184,0.12);
+  border-radius: 20px;
+  padding: 18px 16px;
+  box-shadow: 0 20px 40px rgba(15,23,42,0.45);
+  position: relative;
+  overflow: hidden;
+}
+.admin-hero::after{
+  content: '';
+  position: absolute;
+  inset: -60% 40% auto -20%;
+  height: 160px;
+  border-radius: 50%;
+  background: rgba(59,130,246,0.18);
+  filter: blur(60px);
+  pointer-events: none;
+}
+
+.admin-hero h2{margin:0}
+.admin-small{font-size:13px;opacity:0.78;margin-top:6px}
+
+.admin-panel{
+  background: rgba(15,23,42,0.7);
+  border: 1px solid rgba(148,163,184,0.12);
+  border-radius: 18px;
+  padding: 14px 12px;
+  box-shadow: 0 16px 32px rgba(8,47,73,0.45);
+}
+
+.admin-row{display:flex;gap:10px;align-items:center}
+.admin-badge{padding:6px 10px;border-radius:10px;background: rgba(7,19,34,0.8);border:1px solid rgba(30,41,59,0.6);font-size:12px}
+.admin-input{padding:10px;border-radius:10px;border:1px solid rgba(38,50,69,0.6);background:rgba(7,17,38,0.6);color:#e6eef8}
+.admin-btn{padding:8px 12px;border-radius:12px;border:none;background:var(--accent);color:#fff;cursor:pointer;box-shadow:0 8px 18px rgba(2,6,23,0.45)}
+.admin-btn-muted{background:transparent;border:1px solid rgba(38,50,69,0.6);color:var(--muted);padding:8px 10px;border-radius:10px}
+
+.admin-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-top:10px}
+.admin-card{background: rgba(15,23,42,0.65);border:1px solid rgba(148,163,184,0.12);padding:14px;border-radius:14px}
+
+.officer-list{display:flex;flex-direction:column;gap:12px;margin-top:8px}
+.officer-item{display:flex;align-items:center;gap:12px;padding:12px;background:rgba(2,6,23,0.6);border-radius:14px;border:1px solid rgba(59,130,246,0.08)}
+.officer-actions button{margin-left:6px}
+
+.audit-list{max-height:260px;overflow:auto;margin-top:10px}
+.audit-item{padding:12px;border-radius:12px;background:rgba(2,6,23,0.5);margin-bottom:8px;border:1px solid rgba(14,46,73,0.12);font-size:13px}
+.audit-item time{display:block;color:var(--muted);font-size:12px}
+
+/* Buttons behavior */
+.admin-btn:hover{transform:translateY(-2px)}
+.admin-btn:active{transform:translateY(0)}
+
+/* Modal */
+.admin-modal-backdrop{position:fixed;inset:0;background:linear-gradient(180deg, rgba(2,6,23,0.6), rgba(2,6,23,0.75));display:flex;align-items:center;justify-content:center;z-index:900}
+.admin-modal{width:92%;max-width:460px;background:linear-gradient(135deg, rgba(11,18,32,0.95), rgba(7,13,25,0.95));padding:18px;border-radius:14px;border:1px solid rgba(20,32,43,0.6);box-shadow:0 30px 60px rgba(2,6,23,0.6)}
+.admin-modal h3{margin:0}
+.admin-modal .actions{display:flex;gap:12px;margin-top:14px}
+
+@media (max-width:520px){
+  .admin-shell{padding:18px}
+  .admin-grid{grid-template-columns:1fr}
+}
+
+/* responsive */
+@media (max-width:520px){.admin-grid{grid-template-columns:1fr}}

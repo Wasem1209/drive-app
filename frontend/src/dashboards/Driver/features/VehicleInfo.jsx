@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "../../styles/profile.css"; // optional shared styles
 
+
 function VehicleInfo() {
     const [vehicleData, setVehicleData] = useState({
         plateNumber: "",
