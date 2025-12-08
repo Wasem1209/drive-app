@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "./Profile.css";
+import PhoneFrame from "../../../components/PhoneFrame";
 
 const Profile = () => {
     const [profile, setProfile] = useState({
