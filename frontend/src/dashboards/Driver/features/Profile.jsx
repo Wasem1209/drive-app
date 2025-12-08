@@ -109,6 +109,7 @@ const Profile = () => {
     };
 
     return (
+        <PhoneFrame>
         <div className="profile-container">
             {/* ERROR */}
             {error && <div className="error">{error}</div>}
@@ -208,6 +209,7 @@ const Profile = () => {
                 </div>
             )}
         </div>
+            </PhoneFrame>
     );
 };
 
