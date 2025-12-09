@@ -6,7 +6,7 @@ import { mintDriverIdentity, mintVehicleIdentity } from "../controllers/cardano.
 
 const router = Router();
 
-// NIN verification
+// NIN verification box
 router.post("/nin/verify", verifyNIN);
 
 // Upload driver / vehicle image → IPFS
