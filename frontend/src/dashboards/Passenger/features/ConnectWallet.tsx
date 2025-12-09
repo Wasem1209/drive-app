@@ -49,53 +49,6 @@ export default function ConnectWallet({ onConnected }: Props) {
 		}
 	};
 
-<<<<<<< HEAD
-	const renderChooser = () => (
-		<div style={{
-				position: 'absolute',
-				top: '100%',
-				left: 0,
-				marginTop: 8,
-				background: '#0f172a',
-				padding: '10px 12px',
-				borderRadius: 12,
-				width: 100,
-				boxShadow: '0 6px 16px rgba(0,0,0,0.35)',
-				zIndex: 20 
-			}}>
-			<p style={{ color: '#fff', fontSize: 12, margin: '0 0 8px' }}>Select Cardano Wallet</p>
-			{available.map(w => (
-				<button
-					key={w.key}
-					disabled={connecting}
-					onClick={
-						() => attemptConnect(w.key)
-					}
-					style={{
-						display: 'flex',
-						width: '100%',
-						alignItems: 'center',
-						gap: 8,
-						background: '#1e293b',
-						color: '#fff',
-						border: '1px solid #334155',
-						borderRadius: 8,
-						padding: '6px 8px',
-						marginBottom: 6,
-						cursor: 'pointer'
-					}}>
-						{w.icon && <img src={w.icon} alt={w.label} style={{ width: 20, height: 20 }} />}
-						<span style={{ flex: 1, textAlign: 'left', fontSize: 12 }}>{w.label}</span>
-						<span style={{ fontSize: 10, opacity: 0.6 }}>{w.version || ''}</span>
-				</button>
-			))}
-			{!available.length && (
-				<div style={{ color: '#fff', fontSize: 12 }}>
-					No Cardano wallet detected.<br /> Install Nami / Eternl / Lace.
-				</div>
-			)}
-		</div>
-=======
 	const enableWithTimeout = async (wallet: any, timeoutMs = 8000) => {
 		return new Promise(async (resolve, reject) => {
 			let settled = false;
@@ -353,7 +306,6 @@ export default function ConnectWallet({ onConnected }: Props) {
 			</div>
 		</div>,
 		document.body
->>>>>>> 993b6db23f45bad76087871123ed694352753687
 	);
 
 	useEffect(() => {

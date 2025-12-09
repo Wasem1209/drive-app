@@ -261,9 +261,6 @@ export default function DriverDashboard() {
                     </div>
 
 
-<<<<<<< HEAD
-                    <ConnectWallet />
-=======
                     <ConnectWallet onConnected={(w) => {
                         try {
                             if (w && w.address) {
@@ -275,7 +272,6 @@ export default function DriverDashboard() {
                             else setWalletAmount('₳0.00');
                         } catch (e) { /* ignore */ }
                     }} />
->>>>>>> 993b6db23f45bad76087871123ed694352753687
                 </div>
 
                 {/* Weekly goal(streak) section */}

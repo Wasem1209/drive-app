@@ -166,139 +166,255 @@ export default function AdminDashboard() {
         return () => { window.removeEventListener('keydown', onKey); if (!confirmState && prevActiveRef.current) try { prevActiveRef.current.focus(); } catch {} };
     }, [confirmState]);
 
-    // --- Simple UI ---
+    const navItems = [
+        { key: 'dashboard', label: 'Dashboard', icon: DashboardIcon },
+        { key: 'transactions', label: 'Transactions', icon: WalletIcon },
+    ];
+
     return (
-        <PhoneFrame>
+        // <PhoneFrame>
             <div className="admin-shell">
-                <div className="admin-hero">
-                    <h2>Admin Console</h2>
-                    <div className="admin-small">High-security control center </div>
+                <div className="admin-layout">
+                    <aside className="admin-nav">
+                        <div className="nav-brand">
+                            <div className="brand-mark">DA</div>
+                            <div>
+                                <div className="brand-title">Drive Admin</div>
+                                <div className="brand-sub">Control Center</div>
+                            </div>
+                        </div>
+                        <nav>
+                            <ul className="nav-list">
+                                {navItems.map(item => {
+                                    const Icon = item.icon;
+                                    return (
+                                        <li key={item.key} className="nav-item">
+                                            <button className="nav-link" type="button">
+                                                <Icon />
+                                                <span>{item.label}</span>
+                                            </button>
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                        </nav>
+                        <div className="nav-foot">
+                            <div className="nav-foot-title">Secure by design</div>
+                            <div className="nav-foot-sub">Role-based access</div>
+                        </div>
+                    </aside>
+
+                    <main className="admin-main">
+                        <header className="admin-hero">
+                            <div>
+                                <p className="eyebrow">Admin Console</p>
+                                <h1 className="page-title">High-security control</h1>
+                                <p className="muted">Multisig approvals, officer actions, and token controls in one place.</p>
+                            </div>
+                            <div className="hero-meta">
+                                <div className="pill pill-success">Operational</div>
+                                <div className="pill">Last sync {new Date().toLocaleTimeString()}</div>
+                            </div>
+                        </header>
+
+                        <div className="content-grid">
+                            <section className="panel">
+                                <div className="panel-head">
+                                    <div>
+                                        <p className="eyebrow">Access</p>
+                                        <h2 className="panel-title">Multi-Sig Admin Authentication</h2>
+                                        <p className="muted">Onboard admins and simulate multisig approvals.</p>
+                                    </div>
+                                </div>
+                                <div className="chip-row">
+                                    {adminAddresses.map(a => (
+                                        <div key={a} className="chip">{a}</div>
+                                    ))}
+                                </div>
+                                <div className="form-row">
+                                    <input placeholder='admin address' id='admin-sig-input' className="input" />
+                                    <button onClick={() => { const v = document.getElementById('admin-sig-input').value; addSignature(v); }} className="btn primary">Add Signature</button>
+                                    <button onClick={clearSignatures} className="btn ghost">Clear</button>
+                                </div>
+                                <div className="form-row align-center">
+                                    <label className="muted">Threshold</label>
+                                    <input type='number' min={1} max={adminAddresses.length} value={threshold} onChange={(e) => setThreshold(Number(e.target.value))} className="input input-sm" />
+                                    <div className={`status ${authenticated ? 'success' : 'warn'}`}>{authenticated ? 'Authenticated' : 'Not authenticated'}</div>
+                                    <div className="muted ml-auto">Signatures: {signatures.length}</div>
+                                </div>
+                            </section>
+
+                            <section className="panel">
+                                <div className="panel-head">
+                                    <div>
+                                        <p className="eyebrow">Pulse</p>
+                                        <h2 className="panel-title">Global Transport Analytics</h2>
+                                    </div>
+                                </div>
+                                <div className="card-grid">
+                                    {analyticsCards.map(c => (
+                                        <div key={c.key} className="card compact">
+                                            <div className="card-meta">
+                                                <span className="card-icon" aria-hidden>●</span>
+                                                <span className="card-label">{c.label}</span>
+                                            </div>
+                                            <div className="card-value">{c.value}</div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </section>
+
+                            <section className="panel">
+                                <div className="panel-head">
+                                    <div>
+                                        <p className="eyebrow">Team</p>
+                                        <h2 className="panel-title">Officer Management</h2>
+                                    </div>
+                                    <div className="panel-actions">
+                                        <button className="btn ghost">Export</button>
+                                    </div>
+                                </div>
+                                <div className="form-row stack">
+                                    <input id='new-officer-name' placeholder='New officer name' className="input" />
+                                    <button onClick={() => { const v = document.getElementById('new-officer-name').value; if (v) { addOfficer(v); document.getElementById('new-officer-name').value = ''; } }} className="btn primary">Add Officer</button>
+                                </div>
+                                <div className="list">
+                                    {officers.map(o => (
+                                        <div key={o.id} className="list-item">
+                                            <div className={`dot ${o.status}`}></div>
+                                            <div className="list-content">
+                                                <div className="list-title">{o.name}</div>
+                                                <div className="muted">{o.id}</div>
+                                            </div>
+                                            <div className="badge">{o.status}</div>
+                                            <div className="list-actions">
+                                                <button onClick={() => approveOfficer(o.id)} className="btn success">Approve</button>
+                                                <button onClick={() => suspendOfficer(o.id)} className="btn danger">Suspend</button>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </section>
+
+                            <section className="panel">
+                                <div className="panel-head">
+                                    <div>
+                                        <p className="eyebrow">Economy</p>
+                                        <h2 className="panel-title">Tokenomics Management</h2>
+                                    </div>
+                                </div>
+                                <div className="summary-row">
+                                    <div>
+                                        <p className="muted">Reward reserve</p>
+                                        <p className="summary-value">₳{tokenomics.rewardReserve}</p>
+                                    </div>
+                                    <div className="pill">Weekly batch {tokenomics.weeklyBatchSize}</div>
+                                </div>
+                                <div className="form-row stack">
+                                    <input id='mint-amount' placeholder='Amount to mint' className="input" />
+                                    <button onClick={() => { const v = document.getElementById('mint-amount').value; if (v) { mintRewards(Number(v)); document.getElementById('mint-amount').value = ''; } }} className="btn primary">Mint</button>
+                                </div>
+                                <div className="form-row">
+                                    <label className="muted">Weekly batch size</label>
+                                    <input type='number' value={tokenomics.weeklyBatchSize} onChange={(e) => setTokenomics((t) => ({ ...t, weeklyBatchSize: Number(e.target.value) }))} className="input input-sm" />
+                                </div>
+                            </section>
+
+                            <section className="panel">
+                                <div className="panel-head">
+                                    <div>
+                                        <p className="eyebrow">Policy</p>
+                                        <h2 className="panel-title">Governance Controls</h2>
+                                    </div>
+                                </div>
+                                <div className="card-grid split">
+                                    <div className="card">
+                                        <label className="muted">Roadworthiness threshold</label>
+                                        <input type='number' value={governance.roadworthyThreshold} onChange={(e) => saveGovernance({ roadworthyThreshold: Number(e.target.value) })} className="input" />
+                                    </div>
+                                    <div className="card">
+                                        <label className="muted">Base fine (₳)</label>
+                                        <input type='number' value={governance.fineBase} onChange={(e) => saveGovernance({ fineBase: Number(e.target.value) })} className="input" />
+                                    </div>
+                                    <div className="card">
+                                        <label className="muted">Tax rate (%)</label>
+                                        <input type='number' value={governance.taxRatePct} onChange={(e) => saveGovernance({ taxRatePct: Number(e.target.value) })} className="input" />
+                                    </div>
+                                    <div className="card">
+                                        <label className="muted">Safety thresholds (notes)</label>
+                                        <input value={governance.safetyNotes || ''} onChange={(e) => saveGovernance({ safetyNotes: e.target.value })} placeholder='Notes' className="input" />
+                                    </div>
+                                </div>
+                            </section>
+
+                            <section className="panel video-panel">
+                                <div className="panel-head">
+                                    <div>
+                                        <p className="eyebrow">Briefing</p>
+                                        <h2 className="panel-title">Latest Incident Review</h2>
+                                        <p className="muted">Keep primary footage visible for quick decision-making.</p>
+                                    </div>
+                                </div>
+                                <div className="video-thumb">
+                                    <div className="video-overlay">Play</div>
+                                </div>
+                            </section>
+
+                            <section className="panel">
+                                <div className="panel-head">
+                                    <div>
+                                        <p className="eyebrow">History</p>
+                                        <h2 className="panel-title">Audit Log</h2>
+                                    </div>
+                                </div>
+                                <div className="audit-list">
+                                    {auditLogs.map(a => (
+                                        <div className="audit-item" key={a.id}>
+                                            <div className="list-title">{a.action}</div>
+                                            <time>{new Date(a.ts).toLocaleString()}</time>
+                                            <div className="muted">{JSON.stringify(a.detail)}</div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </section>
+                        </div>
+                    </main>
                 </div>
 
-                {/* Multisig */}
-                <section className="admin-panel">
-                    <h3 style={{ margin: 0, fontSize: 14 }}>Multi-Sig Admin Authentication</h3>
-                    <div className="admin-small">Onboard admins and simulate multisig approvals.</div>
-                    <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 10 }}>
-                        {adminAddresses.map(a => (
-                            <div key={a} className="admin-badge">{a}</div>
-                        ))}
-                    </div>
-                    <div style={{ marginTop: 10 }} className="admin-row">
-                        <input placeholder='admin address' id='admin-sig-input' className="admin-input" />
-                        <button onClick={() => { const v = document.getElementById('admin-sig-input').value; addSignature(v); }} className="admin-btn">Add Signature</button>
-                        <button onClick={clearSignatures} className="admin-btn-muted">Clear</button>
-                    </div>
-                    <div style={{ marginTop: 10 }} className="admin-row">
-                        <div className="admin-small">Threshold:</div>
-                        <input type='number' min={1} max={adminAddresses.length} value={threshold} onChange={(e) => setThreshold(Number(e.target.value))} className="admin-input" style={{ width: 80 }} />
-                        <div style={{ color: authenticated ? 'var(--success)' : '#f97316', marginLeft: 8 }}>{authenticated ? 'Authenticated' : 'Not authenticated'}</div>
-                        <div style={{ marginLeft: 'auto' }} className="admin-small">Signatures: {signatures.length}</div>
-                    </div>
-                </section>
-
-                {/* Analytics */}
-                <section>
-                    <h3 style={{ marginTop: 16 }}>Global Transport Analytics</h3>
-                    <div className="admin-grid">
-                        {analyticsCards.map(c => (
-                            <div key={c.key} className="admin-card">
-                                <div className="admin-small">{c.label}</div>
-                                <div style={{ fontSize: 20, fontWeight: 700, marginTop: 8 }}>{c.value}</div>
-                            </div>
-                        ))}
-                    </div>
-                </section>
-
-                {/* Officer management */}
-                <section>
-                    <h3 style={{ marginTop: 16 }}>Officer Management</h3>
-                    <div style={{ display: 'flex', gap: 8, marginBottom: 8 }}>
-                        <input id='new-officer-name' placeholder='New officer name' className="admin-input" style={{ flex: 1 }} />
-                        <button onClick={() => { const v = document.getElementById('new-officer-name').value; if (v) { addOfficer(v); document.getElementById('new-officer-name').value = ''; } }} className="admin-btn">Add</button>
-                    </div>
-                    <div className="officer-list">
-                        {officers.map(o => (
-                            <div key={o.id} className="officer-item">
-                                <div style={{ width: 10, height: 10, borderRadius: 6, background: o.status === 'approved' ? 'var(--success)' : o.status === 'suspended' ? 'var(--danger)' : '#f59e0b' }} />
-                                <div style={{ fontSize: 14, flex: 1 }}>{o.name} <div className="admin-small">{o.id}</div></div>
-                                <div className="officer-actions">
-                                    <button onClick={() => approveOfficer(o.id)} className="admin-btn" style={{ background: '#10b981' }}>Approve</button>
-                                    <button onClick={() => suspendOfficer(o.id)} className="admin-btn" style={{ background: 'var(--danger)' }}>Suspend</button>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </section>
-
-                {/* Tokenomics */}
-                <section>
-                    <h3 style={{ marginTop: 16 }}>Tokenomics Management</h3>
-                    <div className="admin-row" style={{ marginTop: 8 }}>
-                        <div className="admin-small">Reward reserve:</div>
-                        <div style={{ fontWeight: 700 }}>₳{tokenomics.rewardReserve}</div>
-                    </div>
-                    <div style={{ display: 'flex', gap: 8, marginTop: 10 }}>
-                        <input id='mint-amount' placeholder='Amount to mint' className="admin-input" />
-                        <button onClick={() => { const v = document.getElementById('mint-amount').value; if (v) { mintRewards(Number(v)); document.getElementById('mint-amount').value = ''; } }} className="admin-btn">Mint</button>
-                    </div>
-                    <div style={{ marginTop: 10 }}>
-                        <label className="admin-small">Weekly batch size</label>
-                        <input type='number' value={tokenomics.weeklyBatchSize} onChange={(e) => setTokenomics((t) => ({ ...t, weeklyBatchSize: Number(e.target.value) }))} className="admin-input" style={{ width: 120 }} />
-                    </div>
-                </section>
-
-                {/* Governance Controls */}
-                <section style={{ marginBottom: 40 }}>
-                    <h3 style={{ marginTop: 16 }}>Governance Controls</h3>
-                    <div className="admin-grid" style={{ marginTop: 8 }}>
-                        <div className="admin-card">
-                            <label className="admin-small">Roadworthiness threshold</label>
-                            <input type='number' value={governance.roadworthyThreshold} onChange={(e) => saveGovernance({ roadworthyThreshold: Number(e.target.value) })} className="admin-input" />
-                        </div>
-                        <div className="admin-card">
-                            <label className="admin-small">Base fine (₳)</label>
-                            <input type='number' value={governance.fineBase} onChange={(e) => saveGovernance({ fineBase: Number(e.target.value) })} className="admin-input" />
-                        </div>
-                        <div className="admin-card">
-                            <label className="admin-small">Tax rate (%)</label>
-                            <input type='number' value={governance.taxRatePct} onChange={(e) => saveGovernance({ taxRatePct: Number(e.target.value) })} className="admin-input" />
-                        </div>
-                        <div className="admin-card">
-                            <label className="admin-small">Safety thresholds (notes)</label>
-                            <input value={governance.safetyNotes || ''} onChange={(e) => saveGovernance({ safetyNotes: e.target.value })} placeholder='Notes' className="admin-input" />
-                        </div>
-                    </div>
-
-                    {/* Audit logs */}
-                    <div style={{ marginTop: 14 }}>
-                        <h4 style={{ margin: 0 }}>Audit Log</h4>
-                        <div className="audit-list">
-                            {auditLogs.map(a => (
-                                <div className="audit-item" key={a.id}>
-                                    <div style={{ fontWeight: 700 }}>{a.action}</div>
-                                    <time>{new Date(a.ts).toLocaleString()}</time>
-                                    <div style={{ opacity: 0.9, marginTop: 6 }}>{JSON.stringify(a.detail)}</div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </section>
-
-                {/* Confirmation modal */}
                 {confirmState && (
                     <div className="admin-modal-backdrop" role="presentation" onClick={() => setConfirmState(null)}>
                         <div className="admin-modal" role="dialog" aria-modal="true" aria-labelledby="confirm-title" aria-describedby="confirm-desc" onClick={(e) => e.stopPropagation()}>
                             <h3 id="confirm-title">{confirmState.title}</h3>
-                            <div id="confirm-desc" style={{ marginTop: 8 }}>{confirmState.message}</div>
+                            <div id="confirm-desc" className="muted">{confirmState.message}</div>
                             <div className="actions">
-                                <button ref={confirmBtnRef} aria-label="Confirm action" onClick={async () => { await confirmState.onConfirm(); }} className="admin-btn">Confirm</button>
-                                <button ref={cancelBtnRef} aria-label="Cancel" onClick={() => setConfirmState(null)} className="admin-btn-muted">Cancel</button>
+                                <button ref={confirmBtnRef} aria-label="Confirm action" onClick={async () => { await confirmState.onConfirm(); }} className="btn primary">Confirm</button>
+                                <button ref={cancelBtnRef} aria-label="Cancel" onClick={() => setConfirmState(null)} className="btn ghost">Cancel</button>
                             </div>
                         </div>
                     </div>
                 )}
             </div>
-        </PhoneFrame>
+        // </PhoneFrame>
+    );
+}
+
+function DashboardIcon() {
+    return (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+            <rect x="3" y="3" width="7" height="7" rx="1.5" />
+            <rect x="14" y="3" width="7" height="7" rx="1.5" />
+            <rect x="14" y="14" width="7" height="7" rx="1.5" />
+            <rect x="3" y="14" width="7" height="7" rx="1.5" />
+        </svg>
+    );
+}
+
+function WalletIcon() {
+    return (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+            <path d="M20 6H4a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2z" />
+            <path d="M16 12h4" />
+            <circle cx="16" cy="12" r="1.5" />
+        </svg>
     );
 }
