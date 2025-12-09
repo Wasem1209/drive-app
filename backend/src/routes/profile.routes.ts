@@ -1,12 +1,12 @@
 import { Router } from "express";
 import { verifyNIN } from "../controllers/nin.controller";
 import { uploadImage } from "../controllers/upload.controller";
-import { registerDriver } from "../controllers/p.controller";
+import { registerDriver } from "../controllers/Driver.controller";
 import { mintDriverIdentity, mintVehicleIdentity } from "../controllers/cardano.controller";
 
 const router = Router();
 
-// NIN verification
+// NIN verification box
 router.post("/nin/verify", verifyNIN);
 
 // Upload driver / vehicle image → IPFS

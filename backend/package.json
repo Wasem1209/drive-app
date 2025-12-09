@@ -26,6 +26,7 @@
     "emailjs-com": "^3.2.0",
     "express": "^5.2.1",
     "helmet": "^8.1.0",
+    "iconv-lite": "^0.6.3",
     "jsonwebtoken": "^9.0.2",
     "lucid-cardano": "^0.10.11",
     "mongoose": "^8.19.3",
