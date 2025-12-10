@@ -133,9 +133,20 @@ const Profile = () => {
 
                 <div className="grid md:grid-cols-2 gap-6">
 
-                    {/* DRIVER PROFILE */}
-                    <div className="bg-white shadow-md rounded-xl p-6">
-                        <h2 className="text-xl font-semibold mb-4">Driver Profile</h2>
+    return (
+            <div className="min-h-screen bg-gray-100 p-6 flex justify-center">
+                <div className="max-w-4xl w-full">
+
+                    <h1 className="text-3xl font-bold text-gray-800 mb-6">
+                        Driver Identity & Vehicle Registration
+                    </h1>
+
+                    {/* ERROR */}
+                    {error && (
+                        <div className="bg-red-200 text-red-700 p-3 rounded mb-4">
+                            {error}
+                        </div>
+                    )}
 
                         <input
                             name="fullName"
@@ -237,7 +248,6 @@ const Profile = () => {
                     </div>
                 )}
             </div>
-        </div>
     );
 };
 
