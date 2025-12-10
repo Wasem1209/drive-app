@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import "./Profile.css";
 
+const BASE_URL = "https://drive-app-2-r58o.onrender.com/api/v1";
+
 const Profile = () => {
     const [profile, setProfile] = useState({
         fullName: "",
@@ -21,14 +23,15 @@ const Profile = () => {
     // Image upload state
     const [imageFiles, setImageFiles] = useState([]);
     const [previewUrls, setPreviewUrls] = useState([]);
+    const [uploadedCIDs, setUploadedCIDs] = useState([]);
 
     const handleChange = (e) => {
         setProfile({ ...profile, [e.target.name]: e.target.value });
     };
 
-    // ==========================
+    // =============================================================
     //  VERIFY NIN
-    // ==========================
+    // =============================================================
     const verifyNIN = async () => {
         if (!profile.nin) return setError("Enter your NIN first.");
 
@@ -36,7 +39,7 @@ const Profile = () => {
         setLoading(true);
 
         try {
-            const res = await axios.post("/api/profile/nin/verify", {
+            const res = await axios.post(`${BASE_URL}/nin/verify`, {
                 nin: profile.nin,
             });
 
@@ -54,9 +57,9 @@ const Profile = () => {
         }
     };
 
-    // ==========================
+    // =============================================================
     //  REGISTER VEHICLE
-    // ==========================
+    // =============================================================
     const registerVehicle = async () => {
         if (!profile.plateNumber || !profile.vehicleType || !profile.color) {
             return setError("All vehicle fields are required.");
@@ -66,7 +69,7 @@ const Profile = () => {
         setLoading(true);
 
         try {
-            const res = await axios.post("/api/profile/driver/register", {
+            const res = await axios.post(`${BASE_URL}/driver/register`, {
                 plateNumber: profile.plateNumber,
                 vehicleType: profile.vehicleType,
                 color: profile.color,
@@ -86,9 +89,9 @@ const Profile = () => {
         }
     };
 
-    // ==========================
-    //  MINT DRIVER NFT
-    // ==========================
+    // =============================================================
+    //  MINT DRIVER IDENTITY NFT
+    // =============================================================
     const mintProfileNFT = async () => {
         if (!profile.fullName || !profile.nin) {
             return setError("Full name & NIN are required.");
@@ -98,7 +101,7 @@ const Profile = () => {
         setLoading(true);
 
         try {
-            const res = await axios.post("/api/profile/cardano/driver-identity", {
+            const res = await axios.post(`${BASE_URL}/cardano/driver-identity`, {
                 fullName: profile.fullName,
                 nin: profile.nin,
             });
@@ -117,42 +120,48 @@ const Profile = () => {
         }
     };
 
-    // ==========================
+    // =============================================================
     //  HANDLE IMAGE SELECTION
-    // ==========================
+    // =============================================================
     const handleImageUpload = (e) => {
         const files = Array.from(e.target.files);
         setImageFiles(files);
 
-        // Create preview URLs
         const previews = files.map((file) => URL.createObjectURL(file));
         setPreviewUrls(previews);
     };
 
-    // ==========================
-    //  UPLOAD IMAGES → BACKEND
-    // ==========================
+    // =============================================================
+    //  UPLOAD IMAGES TO BACKEND → IPFS
+    // =============================================================
     const uploadImages = async () => {
         if (imageFiles.length === 0)
             return setError("Select at least one image first.");
 
         setError("");
         setLoading(true);
+        const cids = [];
 
         try {
-            const formData = new FormData();
-            imageFiles.forEach((file) => {
-                formData.append("images", file);
-            });
+            for (let file of imageFiles) {
+                const formData = new FormData();
+                formData.append("file", file);
 
+                const res = await axios.post(`${BASE_URL}/upload/image`, formData, {
+                    headers: { "Content-Type": "multipart/form-data" },
+                });
 
+                cids.push(res.data.cid);
+            }
+
+            setUploadedCIDs(cids);
             setModal({
                 open: true,
-                message: "Images uploaded successfully!",
+                message: "Images uploaded successfully to IPFS!",
             });
 
-            // eslint-disable-next-line no-unused-vars
         } catch (err) {
+            console.error(err);
             setError("Image upload failed.");
         } finally {
             setLoading(false);
@@ -282,7 +291,7 @@ const Profile = () => {
                         onChange={handleImageUpload}
                     />
 
-                    {/* Preview Images */}
+                    {/* PREVIEW */}
                     {previewUrls.length > 0 && (
                         <div className="grid grid-cols-3 gap-3 mt-4">
                             {previewUrls.map((src, i) => (
@@ -299,6 +308,16 @@ const Profile = () => {
                     <button className="btn-primary mt-4" onClick={uploadImages}>
                         Upload Images
                     </button>
+
+                    {/* Show uploaded CIDs */}
+                    {uploadedCIDs.length > 0 && (
+                        <div className="mt-4 p-3 bg-green-100 rounded">
+                            <p className="font-bold text-green-700">Uploaded CIDs:</p>
+                            {uploadedCIDs.map((cid, i) => (
+                                <p key={i} className="text-sm break-all">{cid}</p>
+                            ))}
+                        </div>
+                    )}
                 </div>
 
                 {/* MODAL */}
