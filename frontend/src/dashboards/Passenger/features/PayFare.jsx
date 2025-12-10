@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { initiateFarePayment } from '../../../api/payments';
 import { addPassengerTransaction } from '../../../api/transactions';
+import { detectWallets, enableWallet, getUsedAddresses, shorten } from '../../../blockchain/cardanoWallet';
+import { parseBalance } from '../../../utils/cardano';
 import '../../../styles/verify-modal.css';
 
 export default function PayFare({ onClose, onPaymentSuccess }) {
@@ -14,20 +16,85 @@ export default function PayFare({ onClose, onPaymentSuccess }) {
 	const [receipt, setReceipt] = useState(null);
 
 	const canProceed = walletId.trim() && route.trim() && Number(amount) > 0;
+	const [connectedProvider, setConnectedProvider] = useState(null);
+	const [connectedAddress, setConnectedAddress] = useState('');
+	const [connectedBalance, setConnectedBalance] = useState('0');
 
 	const handleNext = () => {
+		// If user selected Cardano wallet, attempt to detect/connect first
+		if (wallet === 'cardano') {
+			setStep('confirm');
+			// connection will occur when user confirms Pay, or they can connect beforehand
+			return;
+		}
 		setStep('confirm');
+	};
+
+	const connectCardanoWallet = async () => {
+		setError('');
+		try {
+			const wallets = detectWallets();
+			if (!wallets || wallets.length === 0) throw new Error('No Cardano wallet detected.');
+			const providerKey = wallets[0].key;
+			const api = await enableWallet(providerKey);
+			setConnectedProvider(providerKey);
+			const addrs = await getUsedAddresses(api);
+			const fromAddress = (addrs && addrs.length > 0) ? addrs[0] : '';
+			setConnectedAddress(fromAddress);
+			try {
+				if (typeof api.getBalance === 'function') {
+					setConnectedBalance(parseBalance(await api.getBalance()));
+				}
+			} catch (e) { }
+		} catch (e) {
+			setError(e?.message || 'Failed to connect wallet');
+		}
 	};
 
 	const handlePay = async () => {
 		setLoading(true); setError('');
 		try {
-			const res = await initiateFarePayment({
-				walletId: walletId.trim(),
-				route: route.trim(),
-				amount: Number(amount),
-				wallet,
-			});
+			let res = null;
+			let providerKey = null;
+			let fromAddress = '';
+			let balance = '0';
+			if (wallet === 'cardano') {
+				// Try to detect and enable a browser wallet (CIP-30). This will only work in-browser with an injected wallet.
+				const wallets = detectWallets();
+				if (!wallets || wallets.length === 0) throw new Error('No Cardano wallet detected. Please install Nami, Eternl, Lace, etc.');
+				providerKey = wallets[0].key;
+				const api = await enableWallet(providerKey);
+				setConnectedProvider(providerKey);
+				// attempt to read addresses and balance
+				const addrs = await getUsedAddresses(api);
+				fromAddress = (addrs && addrs.length > 0) ? addrs[0] : '';
+				try {
+					// Some wallets expose getBalance; parse it if present.
+					if (typeof api.getBalance === 'function') {
+						balance = parseBalance(await api.getBalance());
+						setConnectedBalance(balance);
+					}
+				} catch (e) {
+					// ignore balance parse errors
+				}
+				setConnectedAddress(fromAddress);
+				// For MVP we pass wallet info to backend/mock which can orchestrate the on-chain send or return instructions.
+				res = await initiateFarePayment({
+					walletId: walletId.trim(),
+					route: route.trim(),
+					amount: Number(amount),
+					wallet,
+					fromAddress,
+					provider: providerKey,
+				});
+			} else {
+				res = await initiateFarePayment({
+					walletId: walletId.trim(),
+					route: route.trim(),
+					amount: Number(amount),
+					wallet,
+				});
+			}
 			setReceipt(res);
 			// Persist transaction to local history
 			addPassengerTransaction({
@@ -37,6 +104,8 @@ export default function PayFare({ onClose, onPaymentSuccess }) {
 				amountAda: Number(amount),
 				split: res.split,
 				txHash: res.txHash,
+				fromAddress,
+				provider: providerKey,
 				timestamp: Date.now()
 			});
 			setStep('success');
@@ -103,6 +172,18 @@ export default function PayFare({ onClose, onPaymentSuccess }) {
 							<div style={{ fontSize: 12 }}>Route: {route}</div>
 							<div style={{ fontSize: 12 }}>Amount: {amount}</div>
 							<div style={{ fontSize: 12 }}>Wallet: {wallet}</div>
+							{wallet === 'cardano' && (
+								<div style={{ marginTop: 8, fontSize: 12 }}>
+									{connectedAddress ? (
+										<div>Connected: {shorten(connectedAddress)}</div>
+									) : (
+										<div style={{ display: 'flex', gap: 8 }}>
+											<button onClick={connectCardanoWallet} style={{ background: '#2563eb', border: 'none', color: '#fff', padding: '6px 10px', borderRadius: 8, cursor: 'pointer', fontSize: 12 }}>Connect Wallet</button>
+											<span style={{ opacity: 0.85 }}>Not connected</span>
+										</div>
+									)}
+								</div>
+							)}
 						</div>
 						{error && <div style={{ fontSize: 13, color: '#f87171' }}>{error}</div>}
 						<div style={{ display: 'flex', gap: 8 }}>

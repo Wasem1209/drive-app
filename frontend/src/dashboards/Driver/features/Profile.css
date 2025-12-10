@@ -1,204 +1,175 @@
-/* ===============================
-   CONTAINER
-================================*/
+/* Container */
 .profile-container {
-    max-width: 900px;
-    margin: 30px auto;
+    max-width: 800px;
+    margin: 40px auto;
     padding: 20px;
-    font-family: Arial, sans-serif;
-    color: #1a1a1a;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
 }
 
-/* Error + Loading */
-.error {
-    background: #ffcccc;
-    padding: 12px;
-    border-left: 5px solid #cc0000;
-    margin-bottom: 15px;
-    border-radius: 6px;
-}
-
-.loading {
-    background: #dfeaff;
-    padding: 12px;
-    border-left: 5px solid #0055ff;
-    margin-bottom: 15px;
-    border-radius: 6px;
-    font-weight: bold;
-}
-
-/* ===============================
-   CARD STYLING
-================================*/
+/* Card Sections */
 .card {
-    background: #ffffff;
-    padding: 20px;
-    margin-bottom: 25px;
-    border-radius: 14px;
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);
-    animation: fadeIn 0.4s ease;
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    transition: transform 0.2s ease;
 }
 
+.card:hover {
+    transform: translateY(-3px);
+}
+
+/* Section Headings */
 .card h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #222;
-    font-size: 22px;
-    font-weight: 700;
-}
-
-/* ===============================
-   INPUTS
-================================*/
-input {
-    width: 100%;
-    padding: 12px;
     margin-bottom: 12px;
-    border: 1px solid #cccccc;
-    border-radius: 8px;
-    font-size: 15px;
-    transition: 0.2s;
+    font-size: 1.4rem;
+    color: #333;
+    border-bottom: 2px solid #4caf50;
+    display: inline-block;
+    padding-bottom: 4px;
 }
 
-input:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 4px rgba(0, 123, 255, 0.6);
+/* Inputs */
+.card input {
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    width: 100%;
+    font-size: 1rem;
     outline: none;
+    transition: border-color 0.2s ease;
 }
 
-/* ===============================
-   BUTTONS
-================================*/
-button {
-    width: 100%;
-    padding: 12px;
-    border-radius: 8px;
+.card input:focus {
+    border-color: #4caf50;
+}
+
+/* Buttons */
+.card button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #4caf50;
+    color: #fff;
     border: none;
+    border-radius: 8px;
+    font-size: 1rem;
     cursor: pointer;
-    font-size: 16px;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.card button:hover {
+    background-color: #43a047;
+    transform: translateY(-2px);
+}
+
+.card button:active {
+    transform: translateY(1px);
+}
+
+/* Result Boxes */
+.result-box {
+    margin-top: 15px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    border-left: 4px solid #4caf50;
+}
+
+.result-box p {
+    margin: 5px 0;
+}
+
+/* Success & Error Messages */
+.success {
+    color: #2e7d32;
     font-weight: bold;
-    margin-bottom: 12px;
-    transition: 0.2s ease;
 }
 
-/* Primary Button */
-.btn-primary,
-button.btn-primary {
-    background: #0066ff;
-    color: white;
+.error {
+    background-color: #ffebee;
+    color: #c62828;
+    padding: 12px 15px;
+    border-radius: 8px;
+    font-weight: 500;
+    margin-bottom: 10px;
+    text-align: center;
 }
 
-.btn-primary:hover {
-    background: #004ccc;
+/* Loading Spinner */
+.loading {
+    background-color: #e3f2fd;
+    color: #1565c0;
+    padding: 12px 15px;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 500;
 }
 
-/* Secondary Button */
-.btn-secondary {
-    background: #222;
-    color: white;
-}
-
-.btn-secondary:hover {
-    background: #000;
-}
-
-/* Agree Button */
+/* Agreement Button */
 .agree-btn {
-    background: #27ae60;
-    color: white;
+    background-color: #1976d2;
 }
 
 .agree-btn:hover {
-    background: #1e874b;
+    background-color: #1565c0;
 }
 
-/* ===============================
-   RESULT BOX
-================================*/
-.result-box {
-    background: #f6f6f6;
-    padding: 12px;
-    border-radius: 8px;
-    margin-top: 10px;
-    border-left: 5px solid #007bff;
+/* Responsive */
+@media (max-width: 600px) {
+    .profile-container {
+        padding: 15px;
+    }
+
+    .card {
+        padding: 20px;
+    }
+
+    .card h2 {
+        font-size: 1.2rem;
+    }
+
+    .card button {
+        font-size: 0.95rem;
+        padding: 8px 16px;
+    }
 }
 
-.success {
-    color: #1e7e34;
-    font-weight: bold;
-}
-
-/* ===============================
-   MODAL
-================================*/
+/* MODAL */
 .modal-overlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    inset: 0;
     background: rgba(0, 0, 0, 0.5);
     display: flex;
-    justify-content: center;
     align-items: center;
-    animation: fadeIn 0.3s ease;
+    justify-content: center;
     z-index: 999;
 }
 
 .modal-box {
-    background: #fff;
-    padding: 30px 25px;
-    max-width: 400px;
-    width: 90%;
+    background: white;
+    padding: 25px;
+    width: 85%;
+    max-width: 350px;
     border-radius: 12px;
     text-align: center;
-    animation: popIn 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .modal-box h3 {
     margin-bottom: 10px;
-    color: #0066ff;
-}
-
-.modal-box p {
-    margin-bottom: 20px;
-    font-size: 16px;
 }
 
 .modal-box button {
-    background: #0066ff;
+    margin-top: 15px;
+    padding: 10px 20px;
+    background: #4caf50;
     color: white;
-    padding: 12px;
+    border: none;
     border-radius: 8px;
-    width: 100%;
-    font-weight: bold;
-}
-
-.modal-box button:hover {
-    background: #0050cc;
-}
-
-/* ===============================
-   ANIMATIONS
-================================*/
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
-}
-
-@keyframes popIn {
-    from {
-        opacity: 0;
-        transform: scale(0.85);
-    }
-
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
 }
