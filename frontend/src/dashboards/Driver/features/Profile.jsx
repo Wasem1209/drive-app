@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "./Profile.css";
+import PhoneFrame from "../../../../components/PhoneFrame/PhoneFrame";
 
-const BASE_URL = "https://drive-app-2-r58o.onrender.com/api/v1";
+const BASE_URL = "https://drive-app-2-r58o.onrender.com";
 
 const Profile = () => {
     const [profile, setProfile] = useState({
@@ -169,177 +170,179 @@ const Profile = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-100 p-6 flex justify-center">
-            <div className="max-w-4xl w-full">
+        <PhoneFrame>
+            <div className="min-h-screen bg-gray-100 p-6 flex justify-center">
+                <div className="max-w-4xl w-full">
 
-                <h1 className="text-3xl font-bold text-gray-800 mb-6">
-                    Driver Identity & Vehicle Registration
-                </h1>
+                    <h1 className="text-3xl font-bold text-gray-800 mb-6">
+                        Driver Identity & Vehicle Registration
+                    </h1>
 
-                {/* ERROR */}
-                {error && (
-                    <div className="bg-red-200 text-red-700 p-3 rounded mb-4">
-                        {error}
-                    </div>
-                )}
-
-                {/* LOADING */}
-                {loading && (
-                    <div className="bg-blue-100 text-blue-700 p-3 rounded mb-4">
-                        Processing... Please wait
-                    </div>
-                )}
-
-                <div className="grid md:grid-cols-2 gap-6">
-
-                    {/* DRIVER PROFILE */}
-                    <div className="bg-white shadow-md rounded-xl p-6">
-                        <h2 className="text-xl font-semibold mb-4">Driver Profile</h2>
-
-                        <input
-                            name="fullName"
-                            placeholder="Full Name"
-                            className="input-box"
-                            value={profile.fullName}
-                            onChange={handleChange}
-                        />
-
-                        <input
-                            name="nin"
-                            placeholder="Enter NIN"
-                            className="input-box"
-                            value={profile.nin}
-                            onChange={handleChange}
-                        />
-
-                        <button className="btn-primary mt-2" onClick={verifyNIN}>
-                            Verify NIN
-                        </button>
-
-                        {ninData && (
-                            <div className="bg-green-100 p-3 rounded mt-4">
-                                <p><strong>Name:</strong> {ninData.fullName}</p>
-                                <p><strong>Gender:</strong> {ninData.gender}</p>
-                                <p><strong>DOB:</strong> {ninData.dob}</p>
-                            </div>
-                        )}
-
-                        <button className="btn-secondary mt-4" onClick={mintProfileNFT}>
-                            Mint Identity NFT
-                        </button>
-
-                        {mintStatus && (
-                            <div className="bg-green-100 p-3 rounded mt-4">
-                                <p className="font-bold text-green-700">NFT Minted!</p>
-                                <p>TX Hash: {mintStatus.txHash}</p>
-                            </div>
-                        )}
-                    </div>
-
-                    {/* VEHICLE REGISTRATION */}
-                    <div className="bg-white shadow-md rounded-xl p-6">
-                        <h2 className="text-xl font-semibold mb-4">Vehicle Registration</h2>
-
-                        <input
-                            name="plateNumber"
-                            placeholder="Plate Number"
-                            className="input-box"
-                            value={profile.plateNumber}
-                            onChange={handleChange}
-                        />
-
-                        <input
-                            name="vehicleType"
-                            placeholder="Vehicle Type"
-                            className="input-box"
-                            value={profile.vehicleType}
-                            onChange={handleChange}
-                        />
-
-                        <input
-                            name="color"
-                            placeholder="Vehicle Color"
-                            className="input-box"
-                            value={profile.color}
-                            onChange={handleChange}
-                        />
-
-                        <button className="btn-primary mt-2" onClick={registerVehicle}>
-                            Register Vehicle
-                        </button>
-
-                        {vehicleStatus && (
-                            <div className="bg-green-100 p-3 rounded mt-4">
-                                <p className="font-bold text-green-700">
-                                    Vehicle stored on blockchain.
-                                </p>
-                                <p>TX Hash: {vehicleStatus.txHash}</p>
-                            </div>
-                        )}
-                    </div>
-                </div>
-
-                {/* IMAGE UPLOAD SECTION */}
-                <div className="bg-white shadow-md rounded-xl p-6 mt-6">
-                    <h2 className="text-xl font-semibold mb-4">Upload Driver / Vehicle Images</h2>
-
-                    <input
-                        type="file"
-                        multiple
-                        accept="image/*"
-                        className="input-box"
-                        onChange={handleImageUpload}
-                    />
-
-                    {/* PREVIEW */}
-                    {previewUrls.length > 0 && (
-                        <div className="grid grid-cols-3 gap-3 mt-4">
-                            {previewUrls.map((src, i) => (
-                                <img
-                                    key={i}
-                                    src={src}
-                                    alt="Preview"
-                                    className="w-full h-28 object-cover rounded"
-                                />
-                            ))}
+                    {/* ERROR */}
+                    {error && (
+                        <div className="bg-red-200 text-red-700 p-3 rounded mb-4">
+                            {error}
                         </div>
                     )}
 
-                    <button className="btn-primary mt-4" onClick={uploadImages}>
-                        Upload Images
-                    </button>
-
-                    {/* Show uploaded CIDs */}
-                    {uploadedCIDs.length > 0 && (
-                        <div className="mt-4 p-3 bg-green-100 rounded">
-                            <p className="font-bold text-green-700">Uploaded CIDs:</p>
-                            {uploadedCIDs.map((cid, i) => (
-                                <p key={i} className="text-sm break-all">{cid}</p>
-                            ))}
+                    {/* LOADING */}
+                    {loading && (
+                        <div className="bg-blue-100 text-blue-700 p-3 rounded mb-4">
+                            Processing... Please wait
                         </div>
                     )}
-                </div>
 
-                {/* MODAL */}
-                {modal.open && (
-                    <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50">
-                        <div className="bg-white p-6 rounded-lg shadow-lg text-center w-80">
-                            <h3 className="text-xl font-bold mb-2">Success</h3>
-                            <p>{modal.message}</p>
+                    <div className="grid md:grid-cols-2 gap-6">
 
-                            <button
-                                onClick={() =>
-                                    setModal({ open: false, message: "" })
-                                }
-                                className="btn-primary mt-4"
-                            >
-                                OK
+                        {/* DRIVER PROFILE */}
+                        <div className="bg-white shadow-md rounded-xl p-6">
+                            <h2 className="text-xl font-semibold mb-4">Driver Profile</h2>
+
+                            <input
+                                name="fullName"
+                                placeholder="Full Name"
+                                className="input-box"
+                                value={profile.fullName}
+                                onChange={handleChange}
+                            />
+
+                            <input
+                                name="nin"
+                                placeholder="Enter NIN"
+                                className="input-box"
+                                value={profile.nin}
+                                onChange={handleChange}
+                            />
+
+                            <button className="btn-primary mt-2" onClick={verifyNIN}>
+                                Verify NIN
                             </button>
+
+                            {ninData && (
+                                <div className="bg-green-100 p-3 rounded mt-4">
+                                    <p><strong>Name:</strong> {ninData.fullName}</p>
+                                    <p><strong>Gender:</strong> {ninData.gender}</p>
+                                    <p><strong>DOB:</strong> {ninData.dob}</p>
+                                </div>
+                            )}
+
+                            <button className="btn-secondary mt-4" onClick={mintProfileNFT}>
+                                Mint Identity NFT
+                            </button>
+
+                            {mintStatus && (
+                                <div className="bg-green-100 p-3 rounded mt-4">
+                                    <p className="font-bold text-green-700">NFT Minted!</p>
+                                    <p>TX Hash: {mintStatus.txHash}</p>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* VEHICLE REGISTRATION */}
+                        <div className="bg-white shadow-md rounded-xl p-6">
+                            <h2 className="text-xl font-semibold mb-4">Vehicle Registration</h2>
+
+                            <input
+                                name="plateNumber"
+                                placeholder="Plate Number"
+                                className="input-box"
+                                value={profile.plateNumber}
+                                onChange={handleChange}
+                            />
+
+                            <input
+                                name="vehicleType"
+                                placeholder="Vehicle Type"
+                                className="input-box"
+                                value={profile.vehicleType}
+                                onChange={handleChange}
+                            />
+
+                            <input
+                                name="color"
+                                placeholder="Vehicle Color"
+                                className="input-box"
+                                value={profile.color}
+                                onChange={handleChange}
+                            />
+
+                            <button className="btn-primary mt-2" onClick={registerVehicle}>
+                                Register Vehicle
+                            </button>
+
+                            {vehicleStatus && (
+                                <div className="bg-green-100 p-3 rounded mt-4">
+                                    <p className="font-bold text-green-700">
+                                        Vehicle stored on blockchain.
+                                    </p>
+                                    <p>TX Hash: {vehicleStatus.txHash}</p>
+                                </div>
+                            )}
                         </div>
                     </div>
-                )}
+
+                    {/* IMAGE UPLOAD SECTION */}
+                    <div className="bg-white shadow-md rounded-xl p-6 mt-6">
+                        <h2 className="text-xl font-semibold mb-4">Upload Driver / Vehicle Images</h2>
+
+                        <input
+                            type="file"
+                            multiple
+                            accept="image/*"
+                            className="input-box"
+                            onChange={handleImageUpload}
+                        />
+
+                        {/* PREVIEW */}
+                        {previewUrls.length > 0 && (
+                            <div className="grid grid-cols-3 gap-3 mt-4">
+                                {previewUrls.map((src, i) => (
+                                    <img
+                                        key={i}
+                                        src={src}
+                                        alt="Preview"
+                                        className="w-full h-28 object-cover rounded"
+                                    />
+                                ))}
+                            </div>
+                        )}
+
+                        <button className="btn-primary mt-4" onClick={uploadImages}>
+                            Upload Images
+                        </button>
+
+                        {/* Show uploaded CIDs */}
+                        {uploadedCIDs.length > 0 && (
+                            <div className="mt-4 p-3 bg-green-100 rounded">
+                                <p className="font-bold text-green-700">Uploaded CIDs:</p>
+                                {uploadedCIDs.map((cid, i) => (
+                                    <p key={i} className="text-sm break-all">{cid}</p>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+
+                    {/* MODAL */}
+                    {modal.open && (
+                        <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50">
+                            <div className="bg-white p-6 rounded-lg shadow-lg text-center w-80">
+                                <h3 className="text-xl font-bold mb-2">Success</h3>
+                                <p>{modal.message}</p>
+
+                                <button
+                                    onClick={() =>
+                                        setModal({ open: false, message: "" })
+                                    }
+                                    className="btn-primary mt-4"
+                                >
+                                    OK
+                                </button>
+                            </div>
+                        </div>
+                    )}
+                </div>
             </div>
-        </div>
+        </PhoneFrame>
     );
 };
 

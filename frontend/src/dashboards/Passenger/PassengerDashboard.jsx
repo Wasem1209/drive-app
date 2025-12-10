@@ -15,6 +15,7 @@ import payTpFareIcon from '../../assets/payTpIcon.png'
 import reportDriverIcon from '../../assets/ReportDriverIcon.png'
 import transaction_history from '../../assets/transactionHst.png'
 import ConnectWallet from './features/ConnectWallet';
+import { shorten } from '../../blockchain/cardanoWallet';
 import VehicleVerifyModal from './features/VehicleVerifyModal';
 import PayFare from './features/PayFare';
 import DriverReview from './features/DriverReview';
@@ -26,8 +27,8 @@ import { useState, useEffect, useRef } from 'react';
 
 export default function DriverDashboard() {
     const [showBalance, setShowBalance] = useState(true);
-    const walletId = '001123983';
-    const walletAmount = '₳10,000.00';
+    const [walletId, setWalletId] = useState('');
+    const [walletAmount, setWalletAmount] = useState('₳0.00');
 
     // small popup state + timer
     const [copied, setCopied] = useState(false);
@@ -36,6 +37,7 @@ export default function DriverDashboard() {
     const toggleBalance = () => setShowBalance((v) => !v);
 
     const copyWalletId = async () => {
+        if (!walletId) return;
         try {
             await navigator.clipboard.writeText(walletId);
         } catch {
@@ -213,51 +215,63 @@ export default function DriverDashboard() {
                             {showBalance ? walletAmount : '••••••••'}
                         </h2>
 
-                        <div
-                            style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: "8px",
-                                cursor: 'pointer',
-                                position: 'relative' /* anchor popup */,
-                            }}
-                            onClick={copyWalletId}
-                        >
-                            <img
-                                src={copy_icon}
-                                alt="Copy Wallet ID"
+                        {walletId ? (
+                            <div
+                                style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: "8px",
+                                    cursor: 'pointer',
+                                    position: 'relative' /* anchor popup */,
+                                }}
                                 onClick={copyWalletId}
-                                style={{ cursor: 'pointer' }}
-                            />
-                            <h3 className="wallet-id small-txt" title="Click to copy">
-                                Wallet Id: {walletId}
-                            </h3>
+                            >
+                                <img
+                                    src={copy_icon}
+                                    alt="Copy Wallet ID"
+                                    onClick={copyWalletId}
+                                    style={{ cursor: 'pointer' }}
+                                />
+                                <h3 className="wallet-id small-txt" title="Click to copy">
+                                    Wallet Id: {shorten(walletId)}
+                                </h3>
 
-                            {/* small popup below when copied */}
-                            {copied && (
-                                <div
-                                    style={{
-                                        position: 'absolute',
-                                        left: 0,
-                                        top: '100%',
-                                        marginTop: '6px',
-                                        background: '#111827',
-                                        color: '#ffffff',
-                                        borderRadius: '8px',
-                                        padding: '6px 10px',
-                                        fontSize: '12px',
-                                        boxShadow: '0 6px 12px rgba(0,0,0,0.15)',
-                                        border: '1px solid rgba(255,255,255,0.1)',
-                                    }}
-                                >
-                                    Copied to clipboard
-                                </div>
-                            )}
-                        </div>
+                                {/* small popup below when copied */}
+                                {copied && (
+                                    <div
+                                        style={{
+                                            position: 'absolute',
+                                            left: 0,
+                                            top: '100%',
+                                            marginTop: '6px',
+                                            background: '#111827',
+                                            color: '#ffffff',
+                                            borderRadius: '8px',
+                                            padding: '6px 10px',
+                                            fontSize: '12px',
+                                            boxShadow: '0 6px 12px rgba(0,0,0,0.15)',
+                                            border: '1px solid rgba(255,255,255,0.1)',
+                                        }}
+                                    >
+                                        Copied to clipboard
+                                    </div>
+                                )}
+                            </div>
+                        ) : null}
                     </div>
 
 
-                    <ConnectWallet />
+                    <ConnectWallet onConnected={(w) => {
+                        try {
+                            if (w && w.address) {
+                                setWalletId(w.address);
+                            } else {
+                                setWalletId('');
+                            }
+                            if (w && w.balance) setWalletAmount(`₳${w.balance}`);
+                            else setWalletAmount('₳0.00');
+                        } catch (e) { /* ignore */ }
+                    }} />
                 </div>
 
                 {/* Weekly goal(streak) section */}
