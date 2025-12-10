@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "./Profile.css";
-import PhoneFrame from "../../../../components/PhoneFrame/";
+
 
 const BASE_URL = "https://drive-app-2-r58o.onrender.com";
 
