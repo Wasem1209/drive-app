@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import "./Profile.css";
 import PhoneFrame from "../../../components/PhoneFrame";
 
-const API = "https://autofy-ys5x.onrender.com/api/profile";
+const API = "https://drive-app-2-r58o.onrender.com/api/profile";
 
 const SuccessModal = ({ title, message, onClose, link }) => (
   <div className="modal-overlay">
