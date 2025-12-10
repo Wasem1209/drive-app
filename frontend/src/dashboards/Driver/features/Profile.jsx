@@ -170,7 +170,6 @@ const Profile = () => {
     };
 
     return (
-        <PhoneFrame>
             <div className="min-h-screen bg-gray-100 p-6 flex justify-center">
                 <div className="max-w-4xl w-full">
 
@@ -342,7 +341,6 @@ const Profile = () => {
                     )}
                 </div>
             </div>
-        </PhoneFrame>
     );
 };
 
