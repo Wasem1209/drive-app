@@ -93,6 +93,7 @@ export default function Profile() {
         setLoading(true);
 
         try {
+            // eslint-disable-next-line no-undef
             const res = await fetch(`${VEHICLE_URL}/register`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -150,6 +151,7 @@ export default function Profile() {
         setLoading(true);
 
         try {
+            // eslint-disable-next-line no-undef
             const res = await fetch(`${VEHICLE_URL}/cardano/vehicle-identity`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
