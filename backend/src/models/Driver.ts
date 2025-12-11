@@ -2,13 +2,12 @@ import mongoose, { Schema, Document } from "mongoose";
 
 export interface IDriver extends Document {
     nin: string;
-    fullName: string;        // Changed from name → fullName
+    fullName: string;
     dob: string;
     gender: string;
     email?: string;
     phone?: string;
-    walletAddress: string;
-    vehicleId?: string;      // NEW: link to vehicle
+    vehicleId?: string;
     cardanoIdentity?: {
         tokenName: string;
         tokenId: string;
@@ -22,14 +21,9 @@ const DriverSchema = new Schema<IDriver>(
         fullName: { type: String, required: true },
         dob: { type: String, required: true },
         gender: { type: String, required: true },
-
         email: { type: String, required: false },
         phone: { type: String, required: false },
-
-        walletAddress: { type: String, required: true },
-
-        vehicleId: { type: String, default: null }, // NEW FIELD
-
+        vehicleId: { type: String, default: null },
         cardanoIdentity: {
             tokenName: String,
             tokenId: String,
