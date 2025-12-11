@@ -37,7 +37,7 @@ export const mintDriverIdentity = async (req: Request, res: Response) => {
         const { driverId } = req.body;
 
         const driver = await Driver.findById(driverId);
-        if (!driver) return res.status(404).json({ message: "Driver not found" });
+        if (!driver) return res.status(404).json({ success: false, message: "Driver not found" });
 
         const tokenName = generateTokenName();
         const tokenHex = Buffer.from(tokenName).toString("hex");
@@ -59,7 +59,6 @@ export const mintDriverIdentity = async (req: Request, res: Response) => {
             },
         };
 
-
         const metadataPath = path.join("tmp", `meta-${tokenName}.json`);
         fs.writeFileSync(metadataPath, JSON.stringify(metadata));
 
@@ -74,47 +73,51 @@ export const mintDriverIdentity = async (req: Request, res: Response) => {
 
         cli(
             `cardano-cli transaction build \
-        ${NETWORK} \
-        --tx-in ${txIn} \
-        --tx-out "${driver.walletAddress}+1500000 + 1 ${POLICY_ID}.${tokenHex}" \
-        --mint="1 ${POLICY_ID}.${tokenHex}" \
-        --minting-script-file ${POLICY_SCRIPT} \
-        --metadata-json-file ${metadataPath} \
-        --out-file ${txFile}`
+            ${NETWORK} \
+            --tx-in ${txIn} \
+            --tx-out "${driver.walletAddress}+1500000 + 1 ${POLICY_ID}.${tokenHex}" \
+            --mint="1 ${POLICY_ID}.${tokenHex}" \
+            --minting-script-file ${POLICY_SCRIPT} \
+            --metadata-json-file ${metadataPath} \
+            --out-file ${txFile}`
         );
 
         cli(
             `cardano-cli transaction sign \
-        --tx-body-file ${txFile} \
-        --signing-key-file ${SKEY_PATH} \
-        ${NETWORK} \
-        --out-file ${signedTxFile}`
+            --tx-body-file ${txFile} \
+            --signing-key-file ${SKEY_PATH} \
+            ${NETWORK} \
+            --out-file ${signedTxFile}`
         );
 
         const txHash = cli(
             `cardano-cli transaction submit \
-        ${NETWORK} \
-        --tx-file ${signedTxFile}`
+            ${NETWORK} \
+            --tx-file ${signedTxFile}`
         );
 
+        // Save NFT info to driver
         driver.cardanoIdentity = {
             tokenName,
             tokenId: `${POLICY_ID}.${tokenHex}`,
             txHash: txHash.trim(),
         };
-
         await driver.save();
 
+        // ✅ Return tokenId as well
         return res.status(201).json({
+            success: true,
             message: "Driver identity minted successfully",
-            txHash,
             tokenName,
+            tokenId: driver.cardanoIdentity.tokenId,
+            txHash: driver.cardanoIdentity.txHash,
         });
     } catch (error: any) {
         console.error(error);
-        res.status(500).json({ message: "Minting failed", error: error.message });
+        res.status(500).json({ success: false, message: "Minting failed", error: error.message });
     }
 };
+
 
 /**
  * MINT VEHICLE IDENTITY
@@ -125,7 +128,7 @@ export const mintVehicleIdentity = async (req: Request, res: Response) => {
 
         const vehicle = await Vehicle.findById(vehicleId);
         if (!vehicle)
-            return res.status(404).json({ message: "Vehicle not found" });
+            return res.status(404).json({ success: false, message: "Vehicle not found" });
 
         const tokenName = generateTokenName();
         const tokenHex = Buffer.from(tokenName).toString("hex");
@@ -160,47 +163,51 @@ export const mintVehicleIdentity = async (req: Request, res: Response) => {
 
         cli(
             `cardano-cli transaction build \
-        ${NETWORK} \
-        --tx-in ${txIn} \
-        --tx-out "${vehicle.walletAddress}+1500000 + 1 ${POLICY_ID}.${tokenHex}" \
-        --mint="1 ${POLICY_ID}.${tokenHex}" \
-        --minting-script-file ${POLICY_SCRIPT} \
-        --metadata-json-file ${metadataPath} \
-        --out-file ${txFile}`
+            ${NETWORK} \
+            --tx-in ${txIn} \
+            --tx-out "${vehicle.walletAddress}+1500000 + 1 ${POLICY_ID}.${tokenHex}" \
+            --mint="1 ${POLICY_ID}.${tokenHex}" \
+            --minting-script-file ${POLICY_SCRIPT} \
+            --metadata-json-file ${metadataPath} \
+            --out-file ${txFile}`
         );
 
         cli(
             `cardano-cli transaction sign \
-        --tx-body-file ${txFile} \
-        --signing-key-file ${SKEY_PATH} \
-        ${NETWORK} \
-        --out-file ${signedTxFile}`
+            --tx-body-file ${txFile} \
+            --signing-key-file ${SKEY_PATH} \
+            ${NETWORK} \
+            --out-file ${signedTxFile}`
         );
 
         const txHash = cli(
             `cardano-cli transaction submit \
-        ${NETWORK} \
-        --tx-file ${signedTxFile}`
+            ${NETWORK} \
+            --tx-file ${signedTxFile}`
         );
 
+        // Save NFT info to vehicle
         vehicle.cardanoIdentity = {
             tokenName,
             tokenId: `${POLICY_ID}.${tokenHex}`,
             txHash: txHash.trim(),
         };
-
         await vehicle.save();
 
+        // ✅ Return tokenId as well
         return res.status(201).json({
+            success: true,
             message: "Vehicle identity minted successfully",
-            txHash,
             tokenName,
+            tokenId: vehicle.cardanoIdentity.tokenId,
+            txHash: vehicle.cardanoIdentity.txHash,
         });
     } catch (error: any) {
         console.error(error);
-        res.status(500).json({ message: "Minting failed", error: error.message });
+        res.status(500).json({ success: false, message: "Minting failed", error: error.message });
     }
 };
+
 
 /**
  * GET DRIVER IDENTITY
