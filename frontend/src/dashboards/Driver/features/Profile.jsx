@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./Profile.css";
 
 // BASE URL
-const BASE_URL = "https://drive-app-2-r58o.onrender.com/api/profile";
+const BASE_URL = "https://drive-app-2-r58o.onrender.com";
 
 export default function Profile() {
     const [nin, setNin] = useState("");
