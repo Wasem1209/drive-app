@@ -21,9 +21,12 @@ const DriverSchema = new Schema<IDriver>(
         fullName: { type: String, required: true },
         dob: { type: String, required: true },
         gender: { type: String, required: true },
+
         email: { type: String, required: false },
         phone: { type: String, required: false },
+
         vehicleId: { type: String, default: null },
+
         cardanoIdentity: {
             tokenName: String,
             tokenId: String,
