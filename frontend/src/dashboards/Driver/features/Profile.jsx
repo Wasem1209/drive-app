@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import "./Profile.css";
 
-// BASE URL
-const BASE_URL = "https://drive-app-2-r58o.onrender.com";
+const BASE_URL = "https://drive-app-2-r58o.onrender.com/api/profile";
+const VEHICLE_URL = "https://drive-app-2-r58o.onrender.com/api/vehicle";
+
+
 
 export default function Profile() {
     // --- Driver states ---
@@ -12,7 +14,6 @@ export default function Profile() {
 
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
-    const [walletAddress, setWalletAddress] = useState("");
 
     const [driverMintResult, setDriverMintResult] = useState(null);
 
@@ -21,7 +22,6 @@ export default function Profile() {
     const [vin, setVin] = useState("");
     const [model, setModel] = useState("");
     const [color, setColor] = useState("");
-    const [vehicleWallet, setVehicleWallet] = useState("");
 
     const [vehicleId, setVehicleId] = useState(null);
     const [vehicleMintResult, setVehicleMintResult] = useState(null);
@@ -69,7 +69,6 @@ export default function Profile() {
                     gender: ninData.gender,
                     email,
                     phone,
-                    walletAddress,
                 }),
             });
 
@@ -101,7 +100,6 @@ export default function Profile() {
                     vin,
                     model,
                     color,
-                    walletAddress: vehicleWallet,
                 }),
             });
 
@@ -210,12 +208,6 @@ export default function Profile() {
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                 />
-                <input
-                    type="text"
-                    placeholder="Wallet Address"
-                    value={walletAddress}
-                    onChange={(e) => setWalletAddress(e.target.value)}
-                />
                 <button onClick={registerDriver}>Register Driver</button>
             </div>
 
@@ -258,12 +250,6 @@ export default function Profile() {
                     placeholder="Color"
                     value={color}
                     onChange={(e) => setColor(e.target.value)}
-                />
-                <input
-                    type="text"
-                    placeholder="Wallet Address"
-                    value={vehicleWallet}
-                    onChange={(e) => setVehicleWallet(e.target.value)}
                 />
                 <button onClick={registerVehicle}>Register Vehicle</button>
             </div>
