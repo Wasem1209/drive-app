@@ -9,8 +9,6 @@ const router = Router();
 // NIN verification box
 router.post("/nin/verify", verifyNIN);
 
-// Upload driver / vehicle image → IPFS
-router.post("/upload/image", uploadImage);
 
 // Register driver + vehicle into MongoDB
 router.post("/driver/register", registerDriver);
