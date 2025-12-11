@@ -1,6 +1,5 @@
 import { Router } from "express";
 import { verifyNIN } from "../controllers/nin.controller";
-import { uploadImage } from "../controllers/upload.controller";
 import { registerDriver } from "../controllers/Driver.controller";
 import { mintDriverIdentity, mintVehicleIdentity } from "../controllers/cardano.controller";
 
