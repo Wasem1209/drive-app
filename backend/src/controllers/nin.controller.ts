@@ -9,18 +9,23 @@ export const verifyNIN = async (req: Request, res: Response) => {
             return res.status(400).json({ success: false, message: "Invalid NIN" });
         }
 
-        // Fake biodata (To be replace with NimC API later)
         const biodata = {
-            fullName: "John Doe",
+            firstName: "Philip",
+            lastName: "Wasem",
             dob: "1995-05-20",
             gender: "Male",
             state: "Abuja",
-        };
+            lga: "Gwagwalada",
+            languages: ["English", "Hausa"],
+            maritalStatus: "Single",
+            occupation: "Software Developer"
+        }
 
         return res.status(200).json({
             success: true,
             data: biodata,
         });
+
     } catch (error) {
         return res.status(500).json({ success: false, message: "Server Error" });
     }

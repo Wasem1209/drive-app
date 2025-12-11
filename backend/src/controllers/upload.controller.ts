@@ -7,19 +7,29 @@ const upload = multer({ dest: "uploads/" }).single("file");
 
 export const uploadImage = (req: Request, res: Response) => {
     upload(req, res, async (err: any) => {
-        if (err) return res.status(500).json({ success: false, message: "Upload error" });
+        if (err) {
+            return res.status(500).json({
+                success: false,
+                message: "Upload error",
+            });
+        }
 
-        const uploadedFile = (req as any).file; // FIX
-        if (!uploadedFile) return res.status(400).json({ success: false, message: "No file uploaded" });
+        const uploadedFile = (req as any).file;
+        if (!uploadedFile) {
+            return res.status(400).json({
+                success: false,
+                message: "No file uploaded",
+            });
+        }
 
-        const filePath = uploadedFile.path; // FIX
+        const filePath = uploadedFile.path;
 
         try {
-            const file = fs.readFileSync(filePath);
+            const fileBuffer = fs.readFileSync(filePath);
 
-            const response = await axios.post(
+            const ipfsRes = await axios.post(
                 "https://ipfs.blockfrost.io/api/v0/ipfs/add",
-                file,
+                fileBuffer,
                 {
                     headers: {
                         "Content-Type": "application/octet-stream",
@@ -28,15 +38,19 @@ export const uploadImage = (req: Request, res: Response) => {
                 }
             );
 
-            // Delete tmp file
-            fs.unlinkSync(filePath);
+            fs.unlinkSync(filePath); // cleanup temp file
 
             return res.json({
                 success: true,
-                ipfsUrl: `ipfs://${response.data.ipfs_hash}`,
+                ipfsUrl: `ipfs://${ipfsRes.data.ipfs_hash}`,
             });
-        } catch (error) {
-            return res.status(500).json({ success: false, message: "IPFS Upload Failed" });
+        } catch (error: any) {
+            console.error("IPFS Upload Error:", error?.response?.data || error.message);
+
+            return res.status(500).json({
+                success: false,
+                message: "IPFS Upload Failed",
+            });
         }
     });
 };
