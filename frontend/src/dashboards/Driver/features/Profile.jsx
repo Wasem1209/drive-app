@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import axios from "axios";
 import "./Profile.css";
 
+// BASE URL for your backend
+const BASE_URL = "https://drive-app-2-r58o.onrender.com";
+
 const Profile = () => {
     const [profile, setProfile] = useState({
         fullName: "",
@@ -31,15 +34,13 @@ const Profile = () => {
     // ======================================
     const verifyNIN = async () => {
         if (!profile.nin) return setError("Enter your NIN first.");
-
         setError("");
         setLoading(true);
 
         try {
-            const res = await axios.post("/api/profile/nin/verify", {
+            const res = await axios.post(`${BASE_URL}/api/profile/nin/verify`, {
                 nin: profile.nin,
             });
-
             setNinData(res.data.data);
             setModal({
                 open: true,
@@ -65,7 +66,7 @@ const Profile = () => {
         setLoading(true);
 
         try {
-            const res = await axios.post("/api/profile/driver/register", {
+            const res = await axios.post(`${BASE_URL}/api/profile/driver/register`, {
                 plateNumber: profile.plateNumber,
                 vehicleType: profile.vehicleType,
                 color: profile.color,
@@ -96,7 +97,7 @@ const Profile = () => {
         setLoading(true);
 
         try {
-            const res = await axios.post("/api/profile/cardano/driver-identity", {
+            const res = await axios.post(`${BASE_URL}/api/profile/cardano/driver-identity`, {
                 fullName: profile.fullName,
                 nin: profile.nin,
             });
@@ -129,8 +130,7 @@ const Profile = () => {
     // UPLOAD IMAGES → BACKEND
     // ======================================
     const uploadImages = async () => {
-        if (imageFiles.length === 0)
-            return setError("Select at least one image first.");
+        if (imageFiles.length === 0) return setError("Select at least one image first.");
 
         setError("");
         setLoading(true);
@@ -139,6 +139,9 @@ const Profile = () => {
             const formData = new FormData();
             imageFiles.forEach((file) => formData.append("images", file));
 
+            await axios.post(`${BASE_URL}/api/profile/upload/image`, formData, {
+                headers: { "Content-Type": "multipart/form-data" },
+            });
 
             setModal({
                 open: true,
@@ -154,7 +157,6 @@ const Profile = () => {
 
     return (
         <div className="profile-container">
-
             {error && <div className="error">{error}</div>}
             {loading && <div className="loading">Processing... Please wait</div>}
 
@@ -168,7 +170,6 @@ const Profile = () => {
                     value={profile.fullName}
                     onChange={handleChange}
                 />
-
                 <input
                     name="nin"
                     placeholder="Enter NIN"
@@ -176,7 +177,7 @@ const Profile = () => {
                     onChange={handleChange}
                 />
 
-                <button onClick={verifyNIN}>Verify</button>
+                <button onClick={verifyNIN}>Verify NIN</button>
 
                 {ninData && (
                     <div className="result-box">
@@ -187,7 +188,7 @@ const Profile = () => {
                 )}
 
                 <button className="agree-btn" onClick={mintProfileNFT}>
-                    Mint NFT
+                    Mint Identity NFT
                 </button>
 
                 {mintStatus && (
@@ -208,14 +209,12 @@ const Profile = () => {
                     value={profile.plateNumber}
                     onChange={handleChange}
                 />
-
                 <input
                     name="vehicleType"
                     placeholder="Vehicle Type"
                     value={profile.vehicleType}
                     onChange={handleChange}
                 />
-
                 <input
                     name="color"
                     placeholder="Vehicle Color"
@@ -246,14 +245,30 @@ const Profile = () => {
 
                 {previewUrls.length > 0 && (
                     <div className="preview-grid">
-                        {previewUrls.map((src, i) => (
+                        <div className="preview-item">
+                            <label>Front View</label>
                             <img
-                                key={i}
-                                src={src}
-                                alt="preview"
+                                src={previewUrls[0]}
+                                alt="Front View"
                                 className="preview-img"
                             />
-                        ))}
+                        </div>
+                        <div className="preview-item">
+                            <label>Back View</label>
+                            <img
+                                src={previewUrls[1]}
+                                alt="Back View"
+                                className="preview-img"
+                            />
+                        </div>
+                        <div className="preview-item">
+                            <label>Plate Number</label>
+                            <img
+                                src={previewUrls[2]}
+                                alt="Plate Number"
+                                className="preview-img"
+                            />
+                        </div>
                     </div>
                 )}
 
