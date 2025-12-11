@@ -1,286 +1,238 @@
 import React, { useState } from "react";
-import axios from "axios";
 import "./Profile.css";
 
-// Correct backend URL
+// BASE URL
 const BASE_URL = "https://drive-app-2-r58o.onrender.com/api/profile";
 
-const Profile = () => {
-    const [profile, setProfile] = useState({
-        fullName: "",
-        nin: "",
-        plateNumber: "",
-        vehicleType: "",
-        color: "",
-    });
-
-    const [loading, setLoading] = useState(false);
+export default function Profile() {
+    const [nin, setNin] = useState("");
     const [ninData, setNinData] = useState(null);
-    const [, setVehicleStatus] = useState(null);
-    const [driverMintStatus, setDriverMintStatus] = useState(null);
-    const [vehicleMintStatus, setVehicleMintStatus] = useState(null);
-    const [modal, setModal] = useState({ open: false, message: "" });
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
-    // IMAGE UPLOAD STATES
-    const [imageFiles, setImageFiles] = useState([]);
-    const [previewUrls, setPreviewUrls] = useState([]);
+    const [driverImage, setDriverImage] = useState(null);
+    const [driverImageUrl, setDriverImageUrl] = useState("");
 
-    const handleChange = (e) => {
-        setProfile({ ...profile, [e.target.name]: e.target.value });
+    const [email, setEmail] = useState("");
+    const [phone, setPhone] = useState("");
+    const [walletAddress, setWalletAddress] = useState("");
+
+    const [mintResult, setMintResult] = useState(null);
+
+    // 🔵 1. VERIFY NIN
+    const handleVerifyNIN = async () => {
+        setLoading(true);
+        setError("");
+        setNinData(null);
+
+        try {
+            const res = await fetch(`${BASE_URL}/nin/verify`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ nin }),
+            });
+
+            const data = await res.json();
+
+            if (!data.success) {
+                setError(data.message);
+            } else {
+                setNinData(data.data);
+            }
+            // eslint-disable-next-line no-unused-vars
+        } catch (err) {
+            setError("Network error while verifying NIN.");
+        }
+
+        setLoading(false);
     };
 
-    // ======================================
-    // VERIFY NIN (Mints NIN to blockchain)
-    // ======================================
-    const verifyNIN = async () => {
-        if (!profile.nin) return setError("Enter your NIN first.");
-        setError("");
+    // 🔵 2. UPLOAD DRIVER IMAGE → IPFS
+    const uploadDriverImage = async () => {
+        if (!driverImage) {
+            alert("Please select an image");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("file", driverImage);
+
+        try {
+            const res = await fetch(`${BASE_URL}/upload/image`, {
+                method: "POST",
+                body: formData,
+            });
+
+            const data = await res.json();
+
+            if (data.success) {
+                setDriverImageUrl(data.ipfsUrl);
+            } else {
+                alert("Upload failed.");
+            }
+            // eslint-disable-next-line no-unused-vars
+        } catch (error) {
+            alert("Network error during image upload.");
+        }
+    };
+
+    // 🔵 3. REGISTER DRIVER IN DATABASE
+    const registerDriver = async () => {
+        if (!ninData) return alert("Verify NIN first.");
+
         setLoading(true);
 
         try {
-            const res = await axios.post(`${BASE_URL}/nin/verify`, {
-                nin: profile.nin,
+            const res = await fetch(`${BASE_URL}/driver/register`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    nin: ninData.nin,
+                    fullName: ninData.fullName,
+                    dob: ninData.dob,
+                    gender: ninData.gender,
+
+                    email,
+                    phone,
+
+                    walletAddress,
+                    driverImage: driverImageUrl,
+                }),
             });
 
-            setNinData(res.data.data);
+            const data = await res.json();
 
-            setModal({
-                open: true,
-                message: "NIN verified and stored on Cardano Blockchain!",
-            });
+            if (!data.success) {
+                setError(data.message);
+            } else {
+                alert("Driver registered successfully!");
+            }
             // eslint-disable-next-line no-unused-vars
-        } catch (err) {
-            setError("Unable to verify NIN.");
-        } finally {
-            setLoading(false);
+        } catch (error) {
+            setError("Registration failed.");
         }
+
+        setLoading(false);
     };
 
-    // ======================================
-    // REGISTER VEHICLE (Send to DB)
-    // ======================================
-    const registerVehicle = async () => {
-        if (!profile.plateNumber || !profile.vehicleType || !profile.color) {
-            return setError("All vehicle fields are required.");
-        }
-
-        setError("");
-        setLoading(true);
-
-        try {
-            const res = await axios.post(`${BASE_URL}/driver/register`, {
-                plateNumber: profile.plateNumber,
-                vehicleType: profile.vehicleType,
-                color: profile.color,
-            });
-
-            setVehicleStatus(res.data);
-
-            setModal({
-                open: true,
-                message: "Vehicle Registered Successfully!",
-            });
-            // eslint-disable-next-line no-unused-vars
-        } catch (err) {
-            setError("Vehicle registration failed.");
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    // ======================================
-    // MINT DRIVER NFT ON CARDANO
-    // ======================================
+    // 🔵 4. MINT DRIVER IDENTITY NFT
     const mintDriverIdentity = async () => {
-        if (!profile.fullName || !profile.nin) {
-            return setError("Full name & NIN are required.");
-        }
-
-        setError("");
         setLoading(true);
 
         try {
-            const res = await axios.post(`${BASE_URL}/cardano/driver-identity`, {
-                fullName: profile.fullName,
-                nin: profile.nin,
+            const res = await fetch(`${BASE_URL}/cardano/driver-identity`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    nin: ninData.nin,
+                }),
             });
 
-            setDriverMintStatus(res.data);
+            const data = await res.json();
 
-            setModal({
-                open: true,
-                message: "Driver Identity NFT Minted Successfully!",
-            });
+            if (!data.success) {
+                setError(data.message);
+            } else {
+                setMintResult(data);
+            }
             // eslint-disable-next-line no-unused-vars
-        } catch (err) {
-            setError("Failed to mint driver identity NFT.");
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    // ======================================
-    // MINT VEHICLE NFT ON CARDANO
-    // ======================================
-    const mintVehicleIdentity = async () => {
-        if (!profile.plateNumber || !profile.vehicleType || !profile.color) {
-            return setError("Register vehicle first.");
+        } catch (error) {
+            setError("Minting failed.");
         }
 
-        setError("");
-        setLoading(true);
-
-        try {
-            const res = await axios.post(`${BASE_URL}/cardano/vehicle-identity`, {
-                plateNumber: profile.plateNumber,
-                vehicleType: profile.vehicleType,
-                color: profile.color,
-            });
-
-            setVehicleMintStatus(res.data);
-
-            setModal({
-                open: true,
-                message: "Vehicle Identity NFT Minted Successfully!",
-            });
-            // eslint-disable-next-line no-unused-vars
-        } catch (err) {
-            setError("Vehicle NFT minting failed.");
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    // ======================================
-    // IMAGE PREVIEW HANDLER
-    // ======================================
-    const handleImageUpload = (e) => {
-        const files = Array.from(e.target.files);
-        setImageFiles(files);
-
-        const previews = files.map((f) => URL.createObjectURL(f));
-        setPreviewUrls(previews);
-    };
-
-    // ======================================
-    // UPLOAD IMAGES → IPFS
-    // ======================================
-    const uploadImages = async () => {
-        if (imageFiles.length === 0) return setError("Select at least one image first.");
-
-        setError("");
-        setLoading(true);
-
-        try {
-            const formData = new FormData();
-            imageFiles.forEach((file) => formData.append("images", file));
-
-            await axios.post(`${BASE_URL}/upload/image`, formData, {
-                headers: { "Content-Type": "multipart/form-data" },
-            });
-
-            setModal({
-                open: true,
-                message: "Images uploaded successfully to IPFS!",
-            });
-            // eslint-disable-next-line no-unused-vars
-        } catch (err) {
-            setError("Image upload failed.");
-        } finally {
-            setLoading(false);
-        }
+        setLoading(false);
     };
 
     return (
         <div className="profile-container">
-            {error && <div className="error">{error}</div>}
-            {loading && <div className="loading">Processing... Please wait</div>}
 
-            {/* DRIVER PROFILE */}
+            {/* 1. VERIFY NIN */}
             <div className="card">
-                <h2>Driver Profile</h2>
+                <h2>Verify NIN</h2>
 
-                <input name="fullName" placeholder="Full Name" onChange={handleChange} />
-                <input name="nin" placeholder="Enter NIN" onChange={handleChange} />
+                <input
+                    type="text"
+                    placeholder="Enter NIN"
+                    value={nin}
+                    onChange={(e) => setNin(e.target.value)}
+                />
 
-                <button onClick={verifyNIN}>Verify NIN</button>
+                <button onClick={handleVerifyNIN}>Verify NIN</button>
+
+                {loading && <p className="loading">Processing...</p>}
+                {error && <p className="error">{error}</p>}
 
                 {ninData && (
                     <div className="result-box">
                         <p><strong>Name:</strong> {ninData.fullName}</p>
-                        <p><strong>Gender:</strong> {ninData.gender}</p>
                         <p><strong>DOB:</strong> {ninData.dob}</p>
-                    </div>
-                )}
-
-                <button className="agree-btn" onClick={mintDriverIdentity}>
-                    Mint Driver NFT
-                </button>
-
-                {driverMintStatus && (
-                    <div className="result-box">
-                        <p className="success">Driver NFT Minted!</p>
-                        <p>TX Hash: {driverMintStatus.txHash}</p>
+                        <p><strong>Gender:</strong> {ninData.gender}</p>
+                        <p><strong>State:</strong> {ninData.state}</p>
+                        <p><strong>Local Gov:</strong> {ninData.local}</p>
                     </div>
                 )}
             </div>
 
-            {/* VEHICLE */}
+            {/* 2. UPLOAD DRIVER IMAGE */}
             <div className="card">
-                <h2>Vehicle Registration</h2>
+                <h2>Upload Driver Image</h2>
 
-                <input name="plateNumber" placeholder="Plate Number" onChange={handleChange} />
-                <input name="vehicleType" placeholder="Vehicle Type" onChange={handleChange} />
-                <input name="color" placeholder="Vehicle Color" onChange={handleChange} />
+                <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => setDriverImage(e.target.files[0])}
+                />
 
-                <button onClick={registerVehicle}>Register Vehicle</button>
+                <button onClick={uploadDriverImage}>Upload Image</button>
 
-                <button className="agree-btn" onClick={mintVehicleIdentity}>
-                    Mint Vehicle NFT
-                </button>
-
-                {vehicleMintStatus && (
-                    <div className="result-box">
-                        <p className="success">Vehicle NFT Minted!</p>
-                        <p>TX Hash: {vehicleMintStatus.txHash}</p>
-                    </div>
+                {driverImageUrl && (
+                    <p className="success">Uploaded → {driverImageUrl}</p>
                 )}
             </div>
 
-            {/* IMAGE UPLOAD */}
+            {/* 3. REGISTER DRIVER */}
             <div className="card">
-                <h2>Upload Driver / Vehicle Images</h2>
+                <h2>Register Driver</h2>
 
-                <input type="file" multiple accept="image/*" onChange={handleImageUpload} />
+                <input
+                    type="text"
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                />
 
-                {previewUrls.length > 0 && (
-                    <div className="preview-grid">
-                        {previewUrls.map((url, i) => (
-                            <div key={i} className="preview-item">
-                                <img src={url} alt="Preview" className="preview-img" />
-                            </div>
-                        ))}
-                    </div>
-                )}
+                <input
+                    type="text"
+                    placeholder="Phone"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                />
 
-                <button onClick={uploadImages}>Upload Images</button>
+                <input
+                    type="text"
+                    placeholder="Wallet Address"
+                    value={walletAddress}
+                    onChange={(e) => setWalletAddress(e.target.value)}
+                />
+
+                <button onClick={registerDriver}>Register Driver</button>
             </div>
 
-            {/* MODAL */}
-            {modal.open && (
-                <div className="modal-overlay">
-                    <div className="modal-box">
-                        <h3>Success</h3>
-                        <p>{modal.message}</p>
-                        <button onClick={() => setModal({ open: false, message: "" })}>
-                            OK
-                        </button>
+            {/* 4. MINT DRIVER NFT */}
+            <div className="card">
+                <h2>Mint Driver Identity NFT</h2>
+
+                <button onClick={mintDriverIdentity}>Mint NFT</button>
+
+                {mintResult && (
+                    <div className="result-box">
+                        <p><strong>Token:</strong> {mintResult.tokenName}</p>
+                        <p><strong>Token ID:</strong> {mintResult.tokenId}</p>
+                        <p><strong>Tx Hash:</strong> {mintResult.txHash}</p>
                     </div>
-                </div>
-            )}
+                )}
+            </div>
+
         </div>
     );
-};
-
-export default Profile;
+}
