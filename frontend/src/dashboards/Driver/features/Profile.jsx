@@ -4,16 +4,17 @@ import "./Profile.css";
 // BASE URL
 const BASE_URL = "https://drive-app-2-r58o.onrender.com";
 
-
-
 export default function Profile() {
     // --- Driver states ---
     const [nin, setNin] = useState("");
     const [ninData, setNinData] = useState(null);
     const [driverId, setDriverId] = useState(null);
 
-    const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
+    const [city, setCity] = useState("");
+    const [currentHomeAddress, setCurrentHomeAddress] = useState("");
+    const [permanentHomeAddress, setPermanentHomeAddress] = useState("");
+    const [occupation, setOccupation] = useState("");
 
     const [driverMintResult, setDriverMintResult] = useState(null);
 
@@ -37,7 +38,7 @@ export default function Profile() {
         setNinData(null);
 
         try {
-            const res = await fetch(`${BASE_URL}/nin/verify`, {
+            const res = await fetch(`${BASE_URL}/profile/nin/verify`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ nin }),
@@ -57,9 +58,10 @@ export default function Profile() {
     const registerDriver = async () => {
         if (!ninData) return alert("Verify NIN first.");
         setLoading(true);
+        setError("");
 
         try {
-            const res = await fetch(`${BASE_URL}/driver/register`, {
+            const res = await fetch(`${BASE_URL}/profile/driver/register`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -67,8 +69,11 @@ export default function Profile() {
                     fullName: ninData.fullName,
                     dob: ninData.dob,
                     gender: ninData.gender,
-                    email,
                     phone,
+                    city,
+                    currentHomeAddress,
+                    permanentHomeAddress,
+                    occupation,
                 }),
             });
 
@@ -91,8 +96,7 @@ export default function Profile() {
         setLoading(true);
 
         try {
-            // eslint-disable-next-line no-undef
-            const res = await fetch(`${VEHICLE_URL}/register`, {
+            const res = await fetch(`${BASE_URL}/profile/vehicle/register`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -123,7 +127,7 @@ export default function Profile() {
         setLoading(true);
 
         try {
-            const res = await fetch(`${BASE_URL}/cardano/driver-identity`, {
+            const res = await fetch(`${BASE_URL}/profile/cardano/driver-identity`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ driverId }),
@@ -131,11 +135,7 @@ export default function Profile() {
 
             const data = await res.json();
             if (!data.success) setError(data.message || "Minting failed");
-            else setDriverMintResult({
-                tokenName: data.tokenName,
-                tokenId: data.tokenId,
-                txHash: data.txHash,
-            });
+            else setDriverMintResult(data);
         } catch {
             setError("Driver NFT minting failed.");
         }
@@ -149,8 +149,7 @@ export default function Profile() {
         setLoading(true);
 
         try {
-            // eslint-disable-next-line no-undef
-            const res = await fetch(`${VEHICLE_URL}/cardano/vehicle-identity`, {
+            const res = await fetch(`${BASE_URL}/profile/cardano/vehicle-identity`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ vehicleId }),
@@ -158,11 +157,7 @@ export default function Profile() {
 
             const data = await res.json();
             if (!data.success) setError(data.message || "Minting failed");
-            else setVehicleMintResult({
-                tokenName: data.tokenName,
-                tokenId: data.tokenId,
-                txHash: data.txHash,
-            });
+            else setVehicleMintResult(data);
         } catch {
             setError("Vehicle NFT minting failed.");
         }
@@ -200,15 +195,33 @@ export default function Profile() {
                 <h2>Register Driver</h2>
                 <input
                     type="text"
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                />
-                <input
-                    type="text"
                     placeholder="Phone"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
+                />
+                <input
+                    type="text"
+                    placeholder="City"
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
+                />
+                <input
+                    type="text"
+                    placeholder="Current Home Address"
+                    value={currentHomeAddress}
+                    onChange={(e) => setCurrentHomeAddress(e.target.value)}
+                />
+                <input
+                    type="text"
+                    placeholder="Permanent Home Address"
+                    value={permanentHomeAddress}
+                    onChange={(e) => setPermanentHomeAddress(e.target.value)}
+                />
+                <input
+                    type="text"
+                    placeholder="Occupation"
+                    value={occupation}
+                    onChange={(e) => setOccupation(e.target.value)}
                 />
                 <button onClick={registerDriver}>Register Driver</button>
             </div>
