@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import "./Profile.css";
 
-// BASE URL
-const BASE_URL = "https://drive-app-2-r58o.onrender.com";
-const VEHICLE_URL = `${BASE_URL}/api/profile`;
+const BASE_URL = "https://drive-app-2-r58o.onrender.com/api/profile";
+const VEHICLE_URL = "https://drive-app-2-r58o.onrender.com/api/vehicle";
+
+
 
 export default function Profile() {
     // --- Driver states ---
