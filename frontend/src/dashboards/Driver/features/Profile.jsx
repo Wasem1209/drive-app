@@ -63,7 +63,7 @@ export default function Profile() {
         setError("");
 
         try {
-            const res = await fetch(`${BASE_URL}/api/profile/driver/register`, {
+            const res = await fetch(`${BASE_URL}/driver/register`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -131,7 +131,7 @@ export default function Profile() {
         setError("");
 
         try {
-            const res = await fetch(`${BASE_URL}/api/profile/cardano/driver-identity`, {
+            const res = await fetch(`${BASE_URL}/cardano/driver-identity`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ driverId }),
