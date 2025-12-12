@@ -21,12 +21,19 @@ export const verifyNIN = async (req: Request, res: Response) => {
             occupation: "Software Developer"
         }
 
+        // Add fullName by concatenating firstName and lastName
+        const fullName = `${biodata.firstName} ${biodata.lastName}`;
+
         return res.status(200).json({
             success: true,
-            data: biodata,
+            data: {
+                ...biodata,
+                fullName, // ✅ now included
+            },
         });
 
     } catch (error) {
+        console.error("NIN verification error:", error);
         return res.status(500).json({ success: false, message: "Server Error" });
     }
 };
