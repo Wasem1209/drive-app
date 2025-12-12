@@ -3,7 +3,6 @@ import "./Profile.css";
 import PhoneFrame from "../../../components/PhoneFrame";
 
 const BASE_URL = "https://drive-app-2-r58o.onrender.com/api/profile";
-const VEHICLE_URL = "https://drive-app-2-r58o.onrender.com/api/vehicle";
 
 export default function Profile() {
     // --- Driver states ---
@@ -98,7 +97,7 @@ export default function Profile() {
         setError("");
 
         try {
-            const res = await fetch(`${VEHICLE_URL}/register`, {
+            const res = await fetch(`${VEHICLE_URL}/vehicle/register`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
