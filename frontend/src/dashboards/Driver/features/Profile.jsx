@@ -40,7 +40,7 @@ export default function Profile() {
         setNinData(null);
 
         try {
-            const res = await fetch(`${BASE_URL}/api/profile/nin/verify`, {
+            const res = await fetch(`${BASE_URL}/nin/verify`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ nin }),
