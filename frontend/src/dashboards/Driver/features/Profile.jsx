@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./Profile.css";
+import PhoneFrame from "../../../components/PhoneFrame";
 
 const BASE_URL = "https://drive-app-2-r58o.onrender.com/api/profile";
 const VEHICLE_URL = "https://drive-app-2-r58o.onrender.com/api/vehicle";
@@ -169,121 +170,123 @@ export default function Profile() {
     };
 
     return (
-        <div className="profile-container">
-            {/* VERIFY NIN */}
-            <div className="card">
-                <h2>Verify NIN</h2>
-                <input
-                    type="text"
-                    placeholder="Enter NIN"
-                    value={nin}
-                    onChange={(e) => setNin(e.target.value)}
-                />
-                <button onClick={handleVerifyNIN}>Verify NIN</button>
-                {loading && <p className="loading">Processing...</p>}
-                {error && <p className="error">{error}</p>}
-                {ninData && (
-                    <div className="result-box">
-                        <p><strong>Name:</strong> {ninData.fullName}</p>
-                        <p><strong>DOB:</strong> {ninData.dob}</p>
-                        <p><strong>Gender:</strong> {ninData.gender}</p>
-                        <p><strong>State:</strong> {ninData.state}</p>
-                        <p><strong>Local Gov:</strong> {ninData.local}</p>
-                    </div>
-                )}
-            </div>
+        <PhoneFrame>
+            <div className="profile-container">
+                {/* VERIFY NIN */}
+                <div className="card">
+                    <h2>Verify NIN</h2>
+                    <input
+                        type="text"
+                        placeholder="Enter NIN"
+                        value={nin}
+                        onChange={(e) => setNin(e.target.value)}
+                    />
+                    <button onClick={handleVerifyNIN}>Verify NIN</button>
+                    {loading && <p className="loading">Processing...</p>}
+                    {error && <p className="error">{error}</p>}
+                    {ninData && (
+                        <div className="result-box">
+                            <p><strong>Name:</strong> {ninData.fullName}</p>
+                            <p><strong>DOB:</strong> {ninData.dob}</p>
+                            <p><strong>Gender:</strong> {ninData.gender}</p>
+                            <p><strong>State:</strong> {ninData.state}</p>
+                            <p><strong>Local Gov:</strong> {ninData.local}</p>
+                        </div>
+                    )}
+                </div>
 
-            {/* REGISTER DRIVER */}
-            <div className="card">
-                <h2>Register Driver</h2>
-                <input
-                    type="text"
-                    placeholder="Phone"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                />
-                <input
-                    type="text"
-                    placeholder="City"
-                    value={city}
-                    onChange={(e) => setCity(e.target.value)}
-                />
-                <input
-                    type="text"
-                    placeholder="Current Home Address"
-                    value={currentHomeAddress}
-                    onChange={(e) => setCurrentHomeAddress(e.target.value)}
-                />
-                <input
-                    type="text"
-                    placeholder="Permanent Home Address"
-                    value={permanentHomeAddress}
-                    onChange={(e) => setPermanentHomeAddress(e.target.value)}
-                />
-                <input
-                    type="text"
-                    placeholder="Occupation"
-                    value={occupation}
-                    onChange={(e) => setOccupation(e.target.value)}
-                />
-                <button onClick={registerDriver}>Register Driver</button>
-            </div>
+                {/* REGISTER DRIVER */}
+                <div className="card">
+                    <h2>Register Driver</h2>
+                    <input
+                        type="text"
+                        placeholder="Phone"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                    />
+                    <input
+                        type="text"
+                        placeholder="City"
+                        value={city}
+                        onChange={(e) => setCity(e.target.value)}
+                    />
+                    <input
+                        type="text"
+                        placeholder="Current Home Address"
+                        value={currentHomeAddress}
+                        onChange={(e) => setCurrentHomeAddress(e.target.value)}
+                    />
+                    <input
+                        type="text"
+                        placeholder="Permanent Home Address"
+                        value={permanentHomeAddress}
+                        onChange={(e) => setPermanentHomeAddress(e.target.value)}
+                    />
+                    <input
+                        type="text"
+                        placeholder="Occupation"
+                        value={occupation}
+                        onChange={(e) => setOccupation(e.target.value)}
+                    />
+                    <button onClick={registerDriver}>Register Driver</button>
+                </div>
 
-            {/* MINT DRIVER NFT */}
-            <div className="card">
-                <h2>Mint Driver Identity NFT</h2>
-                <button onClick={mintDriverIdentity}>Mint NFT</button>
-                {driverMintResult && (
-                    <div className="result-box">
-                        <p><strong>Token:</strong> {driverMintResult.tokenName}</p>
-                        <p><strong>Token ID:</strong> {driverMintResult.tokenId}</p>
-                        <p><strong>Tx Hash:</strong> {driverMintResult.txHash}</p>
-                    </div>
-                )}
-            </div>
+                {/* MINT DRIVER NFT */}
+                <div className="card">
+                    <h2>Mint Driver Identity NFT</h2>
+                    <button onClick={mintDriverIdentity}>Mint NFT</button>
+                    {driverMintResult && (
+                        <div className="result-box">
+                            <p><strong>Token:</strong> {driverMintResult.tokenName}</p>
+                            <p><strong>Token ID:</strong> {driverMintResult.tokenId}</p>
+                            <p><strong>Tx Hash:</strong> {driverMintResult.txHash}</p>
+                        </div>
+                    )}
+                </div>
 
-            {/* REGISTER VEHICLE */}
-            <div className="card">
-                <h2>Register Vehicle</h2>
-                <input
-                    type="text"
-                    placeholder="Plate Number"
-                    value={plateNumber}
-                    onChange={(e) => setPlateNumber(e.target.value)}
-                />
-                <input
-                    type="text"
-                    placeholder="VIN"
-                    value={vin}
-                    onChange={(e) => setVin(e.target.value)}
-                />
-                <input
-                    type="text"
-                    placeholder="Model"
-                    value={model}
-                    onChange={(e) => setModel(e.target.value)}
-                />
-                <input
-                    type="text"
-                    placeholder="Color"
-                    value={color}
-                    onChange={(e) => setColor(e.target.value)}
-                />
-                <button onClick={registerVehicle}>Register Vehicle</button>
-            </div>
+                {/* REGISTER VEHICLE */}
+                <div className="card">
+                    <h2>Register Vehicle</h2>
+                    <input
+                        type="text"
+                        placeholder="Plate Number"
+                        value={plateNumber}
+                        onChange={(e) => setPlateNumber(e.target.value)}
+                    />
+                    <input
+                        type="text"
+                        placeholder="VIN"
+                        value={vin}
+                        onChange={(e) => setVin(e.target.value)}
+                    />
+                    <input
+                        type="text"
+                        placeholder="Model"
+                        value={model}
+                        onChange={(e) => setModel(e.target.value)}
+                    />
+                    <input
+                        type="text"
+                        placeholder="Color"
+                        value={color}
+                        onChange={(e) => setColor(e.target.value)}
+                    />
+                    <button onClick={registerVehicle}>Register Vehicle</button>
+                </div>
 
-            {/* MINT VEHICLE NFT */}
-            <div className="card">
-                <h2>Mint Vehicle Identity NFT</h2>
-                <button onClick={mintVehicleIdentity}>Mint Vehicle NFT</button>
-                {vehicleMintResult && (
-                    <div className="result-box">
-                        <p><strong>Token:</strong> {vehicleMintResult.tokenName}</p>
-                        <p><strong>Token ID:</strong> {vehicleMintResult.tokenId}</p>
-                        <p><strong>Tx Hash:</strong> {vehicleMintResult.txHash}</p>
-                    </div>
-                )}
+                {/* MINT VEHICLE NFT */}
+                <div className="card">
+                    <h2>Mint Vehicle Identity NFT</h2>
+                    <button onClick={mintVehicleIdentity}>Mint Vehicle NFT</button>
+                    {vehicleMintResult && (
+                        <div className="result-box">
+                            <p><strong>Token:</strong> {vehicleMintResult.tokenName}</p>
+                            <p><strong>Token ID:</strong> {vehicleMintResult.tokenId}</p>
+                            <p><strong>Tx Hash:</strong> {vehicleMintResult.txHash}</p>
+                        </div>
+                    )}
+                </div>
             </div>
-        </div>
+        </PhoneFrame>
     );
 }
