@@ -40,7 +40,7 @@ export default function Profile() {
         setNinData(null);
 
         try {
-            const res = await fetch(`${BASE_URL}/profile/nin/verify`, {
+            const res = await fetch(`${BASE_URL}/api/profile/nin/verify`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ nin }),
@@ -63,7 +63,7 @@ export default function Profile() {
         setError("");
 
         try {
-            const res = await fetch(`${BASE_URL}/profile/driver/register`, {
+            const res = await fetch(`${BASE_URL}/api/profile/driver/register`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -96,9 +96,10 @@ export default function Profile() {
     const registerVehicle = async () => {
         if (!driverId) return alert("Register driver first.");
         setLoading(true);
+        setError("");
 
         try {
-            const res = await fetch(`${BASE_URL}/profile/vehicle/register`, {
+            const res = await fetch(`${VEHICLE_URL}/vehicle/register`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -127,9 +128,10 @@ export default function Profile() {
     const mintDriverIdentity = async () => {
         if (!driverId) return alert("Register driver first.");
         setLoading(true);
+        setError("");
 
         try {
-            const res = await fetch(`${BASE_URL}/profile/cardano/driver-identity`, {
+            const res = await fetch(`${BASE_URL}/api/profile/cardano/driver-identity`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ driverId }),
@@ -149,9 +151,10 @@ export default function Profile() {
     const mintVehicleIdentity = async () => {
         if (!vehicleId) return alert("Register vehicle first.");
         setLoading(true);
+        setError("");
 
         try {
-            const res = await fetch(`${BASE_URL}/profile/cardano/vehicle-identity`, {
+            const res = await fetch(`${VEHICLE_URL}/cardano/vehicle-identity`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ vehicleId }),
