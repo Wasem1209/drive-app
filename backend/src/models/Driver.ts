@@ -5,8 +5,11 @@ export interface IDriver extends Document {
     fullName: string;
     dob: string;
     gender: string;
-    email?: string;
     phone?: string;
+    city?: string;
+    currentHomeAddress?: string;
+    permanentHomeAddress?: string;
+    occupation?: string;
     vehicleId?: string;
     cardanoIdentity?: {
         tokenName: string;
@@ -22,8 +25,11 @@ const DriverSchema = new Schema<IDriver>(
         dob: { type: String, required: true },
         gender: { type: String, required: true },
 
-        email: { type: String, required: false },
-        phone: { type: String, required: false },
+        phone: { type: String },
+        city: { type: String },
+        currentHomeAddress: { type: String },
+        permanentHomeAddress: { type: String },
+        occupation: { type: String },
 
         vehicleId: { type: String, default: null },
 
