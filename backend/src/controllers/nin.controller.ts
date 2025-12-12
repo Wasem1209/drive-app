@@ -19,16 +19,23 @@ export const verifyNIN = async (req: Request, res: Response) => {
             languages: ["English", "Hausa"],
             maritalStatus: "Single",
             occupation: "Software Developer"
-        }
+        };
 
-        // Add fullName by concatenating firstName and lastName
         const fullName = `${biodata.firstName} ${biodata.lastName}`;
 
+        // Include all required fields for driver registration
         return res.status(200).json({
             success: true,
             data: {
-                ...biodata,
-                fullName, // ✅ now included
+                nin,           // ✅ Include NIN
+                fullName,      // ✅ Include fullName
+                dob: biodata.dob, // ✅ Include DOB
+                gender: biodata.gender, // ✅ Include Gender
+                state: biodata.state,
+                lga: biodata.lga,
+                languages: biodata.languages,
+                maritalStatus: biodata.maritalStatus,
+                occupation: biodata.occupation
             },
         });
 
