@@ -98,7 +98,7 @@ export default function Profile() {
         setError("");
 
         try {
-            const res = await fetch(`${VEHICLE_URL}/vehicle/register`, {
+            const res = await fetch(`${VEHICLE_URL}/register`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
