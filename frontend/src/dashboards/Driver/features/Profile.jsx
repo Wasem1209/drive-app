@@ -4,6 +4,7 @@ import PhoneFrame from "../../../components/PhoneFrame";
 
 const BASE_URL = "https://drive-app-2-r58o.onrender.com/api/profile";
 
+
 export default function Profile() {
     // --- Driver states ---
     const [nin, setNin] = useState("");
