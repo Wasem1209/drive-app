@@ -1,4 +1,7 @@
-const API_BASE = "https://drive-app-2-r58o.onrender.com/api";
+// api/auth.js
+
+const API_BASE = "https://drive-app-2-r58o.onrender.com/api"; // your live backend URL
+
 
 export async function loginUser(payload) {
   const res = await fetch(`${API_BASE}/users/login`, {

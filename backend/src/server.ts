@@ -5,7 +5,7 @@ import helmet from "helmet";
 import { connectDB } from "./config/db";
 import authRoutes from "./routes/auth.routes";
 import profileRoutes from "./routes/profile.routes";
-import dashboardRoutes from "./routes/dashboardRoutes";
+import dashboardRoutes from "./routes/dashboard.routes"; // ✅ corrected import
 import vehicleRoutes from "./routes/vehicle.routes";
 
 
