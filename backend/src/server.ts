@@ -6,6 +6,8 @@ import { connectDB } from "./config/db";
 import authRoutes from "./routes/auth.routes";
 import profileRoutes from "./routes/profile.routes";
 import dashboardRoutes from "./routes/dashboardRoutes";
+import vehicleRoutes from "./routes/vehicle.routes";
+
 
 dotenv.config();
 
@@ -31,6 +33,8 @@ app.use((req: Request, _res: Response, next: NextFunction) => {
 app.use("/api/users", authRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/profile", profileRoutes);
+app.use("/api/vehicle", vehicleRoutes);
+
 
 // --- Health Check ---
 app.get("/", (_req: Request, res: Response) => {
