@@ -103,20 +103,21 @@ export default function Profile() {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
+                    ownerId: driverId,
                     plateNumber,
                     vin,
-                    vehicleModel: model,   // FIXED
-                    color
+                    model,
+                    color,
                 }),
             });
 
             const data = await res.json();
+
             if (!data.success) {
                 setError(data.message);
             } else {
-                const id = data.vehicle?._id;
-                setVehicleId(id);
-                alert(`Vehicle registered successfully! ID: ${id}`);
+                setVehicleId(data.vehicle._id);
+                alert(`Vehicle registered successfully! ID: ${data.vehicle._id}`);
             }
         } catch {
             setError("Vehicle registration failed.");
@@ -124,6 +125,7 @@ export default function Profile() {
 
         setLoading(false);
     };
+
 
 
 
