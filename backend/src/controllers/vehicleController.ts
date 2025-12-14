@@ -9,11 +9,17 @@ export const registerVehicle = async (req: Request, res: Response) => {
             return res.status(400).json({ success: false, message: "All fields are required." });
         }
 
+        // 👉 MOCK OWNER ID + WALLET ADDRESS so MongoDB will not fail
+        const ownerId = "TEMP_DRIVER_ID";
+        const walletAddress = "MOCK_WALLET_" + Math.random().toString(36).substring(2, 12);
+
         const newVehicle = await Vehicle.create({
             plateNumber,
             vin,
             vehicleModel: model,
-            color
+            color,
+            ownerId,
+            walletAddress
         });
 
         return res.status(201).json({
