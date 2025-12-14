@@ -6,7 +6,7 @@
     "plutusVersion": "v3",
     "compiler": {
       "name": "Aiken",
-      "version": "v1.1.19+e525483"
+      "version": "v1.1.21+42babe5"
     },
     "license": "Apache-2.0"
   },
@@ -104,31 +104,6 @@
       },
       "compiledCode": "58ad01010029800aba2aba1aab9faab9eaab9dab9a48888896600264646644b30013370e900018031baa00189991198008009bac300b300c300c300c300c300c300c300c300c30093754601600c6eb8c024c01cdd5000912cc00400629422b30013371e6eb8c02c00522011814ed029a5d871f49cd81c378181a40820f135c487571e6fa008a518998010011806000a00e4029164014600e002600e6010002600e00260066ea801e29344d95900101",
       "hash": "4b3db6d4d9a07d7d689172f1bf62bbf95821d08d099d19e25e4757e7"
-    },
-    {
-      "title": "violation_manager.violation_manager.spend",
-      "datum": {
-        "title": "_datum",
-        "schema": {
-          "$ref": "#/definitions/violation_manager~1ViolationDatum"
-        }
-      },
-      "redeemer": {
-        "title": "redeemer",
-        "schema": {
-          "$ref": "#/definitions/violation_manager~1ViolationRedeemer"
-        }
-      },
-      "compiledCode": "59015d01010029800aba2aba1aab9faab9eaab9dab9a48888896600264653001300700198039804000cdc3a400530070024888966002600460106ea800e2653001300c00198061806800cc024dd5002c4cc896600266e1d20000018998010021bae300e300c375400f1598009802800c4cc008010dd7180718061baa00789980100224411814ed029a5d871f49cd81c378181a40820f135c487571e6fa004028805088c8cc004004dd618079808180818081808180818081808180818069baa0032259800800c528456600266e3cdd71808000801c528c4cc008008c04400500c201e3009375400a91112cc004cdc3a400000513232598009809801400e2c8088dd7180880098071baa0098acc004c01c00a26464b30013013002801c590111bae3011001300e375401315980099b874801000a2b3001300e37540130018b201e8b20184030806060126ea800e2c8038600e00260066ea801e29344d95900101",
-      "hash": "cdc5b1180784c16dc7d4faa49ad59167f6c5352568eccdb8ef737367"
-    },
-    {
-      "title": "violation_manager.violation_manager.else",
-      "redeemer": {
-        "schema": {}
-      },
-      "compiledCode": "59015d01010029800aba2aba1aab9faab9eaab9dab9a48888896600264653001300700198039804000cdc3a400530070024888966002600460106ea800e2653001300c00198061806800cc024dd5002c4cc896600266e1d20000018998010021bae300e300c375400f1598009802800c4cc008010dd7180718061baa00789980100224411814ed029a5d871f49cd81c378181a40820f135c487571e6fa004028805088c8cc004004dd618079808180818081808180818081808180818069baa0032259800800c528456600266e3cdd71808000801c528c4cc008008c04400500c201e3009375400a91112cc004cdc3a400000513232598009809801400e2c8088dd7180880098071baa0098acc004c01c00a26464b30013013002801c590111bae3011001300e375401315980099b874801000a2b3001300e37540130018b201e8b20184030806060126ea800e2c8038600e00260066ea801e29344d95900101",
-      "hash": "cdc5b1180784c16dc7d4faa49ad59167f6c5352568eccdb8ef737367"
     }
   ],
   "definitions": {
@@ -327,83 +302,6 @@
           "title": "Unregister",
           "dataType": "constructor",
           "index": 1,
-          "fields": []
-        }
-      ]
-    },
-    "violation_manager/ViolationDatum": {
-      "title": "ViolationDatum",
-      "anyOf": [
-        {
-          "title": "ViolationDatum",
-          "dataType": "constructor",
-          "index": 0,
-          "fields": [
-            {
-              "title": "fine_id",
-              "$ref": "#/definitions/ByteArray"
-            },
-            {
-              "title": "vehicle_policy",
-              "$ref": "#/definitions/ByteArray"
-            },
-            {
-              "title": "vehicle_token",
-              "$ref": "#/definitions/ByteArray"
-            },
-            {
-              "title": "amount",
-              "$ref": "#/definitions/Int"
-            },
-            {
-              "title": "evidence_cid",
-              "$ref": "#/definitions/ByteArray"
-            },
-            {
-              "title": "officer_pkh",
-              "$ref": "#/definitions/aiken~1crypto~1VerificationKeyHash"
-            },
-            {
-              "title": "issued_at",
-              "$ref": "#/definitions/Int"
-            },
-            {
-              "title": "status",
-              "$ref": "#/definitions/ByteArray"
-            }
-          ]
-        }
-      ]
-    },
-    "violation_manager/ViolationRedeemer": {
-      "title": "ViolationRedeemer",
-      "anyOf": [
-        {
-          "title": "Issue",
-          "dataType": "constructor",
-          "index": 0,
-          "fields": [
-            {
-              "title": "officer",
-              "$ref": "#/definitions/aiken~1crypto~1VerificationKeyHash"
-            }
-          ]
-        },
-        {
-          "title": "Pay",
-          "dataType": "constructor",
-          "index": 1,
-          "fields": [
-            {
-              "title": "driver",
-              "$ref": "#/definitions/aiken~1crypto~1VerificationKeyHash"
-            }
-          ]
-        },
-        {
-          "title": "Revoke",
-          "dataType": "constructor",
-          "index": 2,
           "fields": []
         }
       ]
