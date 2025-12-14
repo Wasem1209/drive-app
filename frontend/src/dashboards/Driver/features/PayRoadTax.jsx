@@ -1,5 +1,5 @@
 import { useState } from "react";
-import cardanoMock from "../../cardanoMock"; // <-- adjust path if needed
+import cardanoMock from "../../../cardanoMock"; // <-- adjust path if needed
 import "../../../styles/verify-modal.css";
 
 export default function PayRoadTax({ onClose, mode }) {
