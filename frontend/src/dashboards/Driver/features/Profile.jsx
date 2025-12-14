@@ -92,7 +92,6 @@ export default function Profile() {
     };
 
     // --- 3. REGISTER VEHICLE ---
-    // --- 3. REGISTER VEHICLE ---
     const registerVehicle = async () => {
         if (!driverId) return alert("Register driver first.");
         setLoading(true);
@@ -103,32 +102,28 @@ export default function Profile() {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    ownerId: driverId,
                     plateNumber,
                     vin,
-                    vehicleModel: model,     // FIXED NAME
-                    color,
-                    walletAddress: "MOCK_WALLET_" + Math.random().toString(36).substring(2, 10) // ADDED MOCK
+                    vehicleModel: model,   // FIXED
+                    color
                 }),
             });
 
             const data = await res.json();
-
             if (!data.success) {
-                setError(data.message || "Vehicle registration failed.");
+                setError(data.message);
             } else {
-                const id = data.vehicle?._id;   // FIX: get real ID
+                const id = data.vehicle?._id;
                 setVehicleId(id);
                 alert(`Vehicle registered successfully! ID: ${id}`);
             }
-
-            // eslint-disable-next-line no-unused-vars
-        } catch (err) {
+        } catch {
             setError("Vehicle registration failed.");
         }
 
         setLoading(false);
     };
+
 
 
     // --- 4. MINT DRIVER NFT ---
