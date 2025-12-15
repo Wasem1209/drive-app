@@ -1,80 +1,21 @@
-import express from "express";
-import { authMiddleware } from "../middleware/authMiddleware";
-import CarRecord from "../models/CarRecord.model";
-import NinRecord from "../models/NinRecord";
-import DriverAgreement from "../models/DriverAgreement.model";
+import { Router } from "express";
+import { verifyNIN } from "../controllers/nin.controller";
+import { registerDriver } from "../controllers/Driver.controller";
+import { mintDriverIdentity, mintVehicleIdentity } from "../controllers/cardano.controller";
 
-const router = express.Router();
+const router = Router();
 
-/**
- * 1️⃣ Get Personal Info (name + email)
- */
-router.get("/me", authMiddleware, async (req: any, res) => {
-    const { name, email } = req.user;
-    res.json({ name, email });
-});
+// NIN verification box
+router.post("/nin/verify", verifyNIN);
 
-/**
- * 2️⃣ Save Car Plate + fetch backend data
- */
-router.post("/car", authMiddleware, async (req: any, res) => {
-    const { plateNumber } = req.body;
 
-    // FAKE BACKEND DATA (for hackathon)
-    const mockCarData = {
-        carMake: "Toyota",
-        carModel: "Corolla",
-        carYear: "2018",
-    };
+// Register driver + vehicle into MongoDB
+router.post("/driver/register", registerDriver);
 
-    const car = await CarRecord.create({
-        userId: req.user.id,
-        plateNumber,
-        ...mockCarData,
-        fetchedData: mockCarData,
-    });
+// Mint Driver Identity NFT
+router.post("/cardano/driver-identity", mintDriverIdentity);
 
-    res.json({ message: "Car data saved", data: car });
-});
-
-/**
- * 3️⃣ Fetch NIN data and save
- */
-router.post("/nin", authMiddleware, async (req: any, res) => {
-    const { nin } = req.body;
-
-    const mockNinData = {
-        firstname: "David",
-        lastname: "Johnson",
-        age: 29,
-        gender: "Male",
-    };
-
-    const ninRecord = await NinRecord.create({
-        userId: req.user.id,
-        nin,
-        ninData: mockNinData,
-    });
-
-    res.json({ message: "NIN data saved", data: ninRecord });
-});
-
-/**
- * 4️⃣ Save Driver Agreement (only once)
- */
-router.post("/agreement", authMiddleware, async (req: any, res) => {
-    const exists = await DriverAgreement.findOne({ userId: req.user.id });
-
-    if (exists) {
-        return res.status(400).json({ message: "Agreement already accepted" });
-    }
-
-    const agreement = await DriverAgreement.create({
-        userId: req.user.id,
-        accepted: true,
-    });
-
-    res.json({ message: "Agreement saved", data: agreement });
-});
+// Mint Vehicle Identity NFT
+router.post("/cardano/vehicle-identity", mintVehicleIdentity);
 
 export default router;

@@ -1,398 +1,298 @@
-// src/pages/driver/Profile.jsx
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "./Profile.css";
 import PhoneFrame from "../../../components/PhoneFrame";
 
-const API = "https://autofy-ys5x.onrender.com/api/profile";
+const BASE_URL = "https://drive-app-2-r58o.onrender.com/api/profile";
+const VEHICLE_URL = "https://drive-app-2-r58o.onrender.com/api/vehicle";
 
-const SuccessModal = ({ title, message, onClose, link }) => (
-  <div className="modal-overlay">
-    <div className="modal-box">
-      <h3>{title}</h3>
-      <p style={{ whiteSpace: "pre-wrap" }}>{message}</p>
-      {link && (
-        <p style={{ marginTop: 8 }}>
-          View on explorer:{" "}
-          <a href={link} target="_blank" rel="noreferrer">
-            Open tx
-          </a>
-        </p>
-      )}
-      <button onClick={onClose}>Okay</button>
-    </div>
-  </div>
-);
 
-const Profile = () => {
-  // Driver personal
-  const [personal, setPersonal] = useState({ name: "", email: "" });
+export default function Profile() {
+    // --- Driver states ---
+    const [nin, setNin] = useState("");
+    const [ninData, setNinData] = useState(null);
+    const [driverId, setDriverId] = useState(null);
 
-  // Vehicle
-  const [plateNumber, setPlateNumber] = useState("");
-  const [chassis, setChassis] = useState("");
-  const [engineNumber, setEngineNumber] = useState("");
-  const [carModel, setCarModel] = useState("");
-  const [carColor, setCarColor] = useState("");
-  const [carYear, setCarYear] = useState("");
+    const [phone, setPhone] = useState("");
+    const [city, setCity] = useState("");
+    const [currentHomeAddress, setCurrentHomeAddress] = useState("");
+    const [permanentHomeAddress, setPermanentHomeAddress] = useState("");
+    const [occupation, setOccupation] = useState("");
 
-  // images + preview
-  const [images, setImages] = useState({
-    front: null,
-    back: null,
-    plate: null,
-    engine: null,
-    chassis: null,
-  });
-  const [preview, setPreview] = useState({});
+    const [driverMintResult, setDriverMintResult] = useState(null);
 
-  // ipfs urls returned from backend
-  const [ipfsUrls, setIpfsUrls] = useState(null);
+    // --- Vehicle states ---
+    const [plateNumber, setPlateNumber] = useState("");
+    const [vin, setVin] = useState("");
+    const [model, setModel] = useState("");
+    const [color, setColor] = useState("");
 
-  // optional fetched car details (if you use an external lookup)
-  const [carData, setCarData] = useState(null);
+    const [vehicleId, setVehicleId] = useState(null);
+    const [vehicleMintResult, setVehicleMintResult] = useState(null);
 
-  // NIN (mock)
-  const [nin, setNin] = useState("");
-  const [ninData, setNinData] = useState(null);
+    // --- General states ---
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
 
-  // agreement
-  const [agreementAccepted, setAgreementAccepted] = useState(false);
+    // --- 1. VERIFY NIN ---
+    const handleVerifyNIN = async () => {
+        setLoading(true);
+        setError("");
+        setNinData(null);
 
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+        try {
+            const res = await fetch(`${BASE_URL}/nin/verify`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ nin }),
+            });
 
-  // success modal
-  const [success, setSuccess] = useState({ open: false, title: "", message: "", link: "" });
+            const data = await res.json();
+            if (!data.success) setError(data.message);
+            else setNinData(data.data);
+        } catch {
+            setError("Network error while verifying NIN.");
+        }
 
-  const token = localStorage.getItem("token");
-
-  useEffect(() => {
-    // If you want to prefill personal from backend:
-    const fetchMe = async () => {
-      if (!token) return;
-      setLoading(true);
-      try {
-        const res = await fetch(`${API}/me`, { headers: { Authorization: `Bearer ${token}` } });
-        if (!res.ok) throw new Error("Failed to fetch profile");
-        const data = await res.json();
-        if (data) setPersonal({ name: data.name || "", email: data.email || "" });
-      } catch (err) {
-        console.warn("Profile fetch", err);
-      } finally {
         setLoading(false);
-      }
     };
-    fetchMe();
-  }, [token]);
 
-  // image select & preview
-  const handleImageChange = (e, type) => {
-    const file = e.target.files && e.target.files[0];
-    if (!file) return;
-    setImages((p) => ({ ...p, [type]: file }));
-    setPreview((p) => ({ ...p, [type]: URL.createObjectURL(file) }));
-  };
+    // --- 2. REGISTER DRIVER ---
+    const registerDriver = async () => {
+        if (!ninData) return alert("Verify NIN first.");
+        setLoading(true);
+        setError("");
 
-  // upload images to backend which returns IPFS links
-  const uploadImagesToIPFS = async () => {
-    setError("");
-    setLoading(true);
-    try {
-      const fd = new FormData();
-      Object.keys(images).forEach((k) => {
-        if (images[k]) fd.append(k, images[k]);
-      });
+        try {
+            const res = await fetch(`${BASE_URL}/driver/register`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    nin: ninData.nin,
+                    fullName: ninData.fullName,
+                    dob: ninData.dob,
+                    gender: ninData.gender,
+                    phone,
+                    city,
+                    currentHomeAddress,
+                    permanentHomeAddress,
+                    occupation,
+                }),
+            });
 
-      const res = await fetch(`${API}/upload-images`, {
-        method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
-        body: fd,
-      });
+            const data = await res.json();
+            if (!data.success) setError(data.message);
+            else {
+                setDriverId(data.driverId);
+                alert(`Driver registered successfully! ID: ${data.driverId}`);
+            }
+        } catch {
+            setError("Driver registration failed.");
+        }
 
-      if (!res.ok) {
-        const txt = await res.text();
-        throw new Error(txt || "Upload failed");
-      }
-      const data = await res.json();
-      // backend returns { ipfs: { front: 'ipfs://..', ... } }
-      setIpfsUrls(data.ipfs);
-      setSuccess({ open: true, title: "Images uploaded", message: "Vehicle images uploaded to IPFS.", link: "" });
-    } catch (err) {
-      setError(err.message || "Upload failed");
-    } finally {
-      setLoading(false);
-    }
-  };
+        setLoading(false);
+    };
 
-  // mock NIN verification (we'll pretend any input maps to a person)
-  const submitNin = async () => {
-    setError("");
-    if (!nin) return setError("Please enter NIN (mock)");
-    // mock: produce some fake data to display
-    setNinData({
-      firstname: personal.name || "John",
-      lastname: personal.name ? "" : "Doe",
-      age: 32,
-      gender: "M",
-      nin,
-    });
-  };
+    // --- 3. REGISTER VEHICLE ---
+    const registerVehicle = async () => {
+        if (!driverId) return alert("Register driver first.");
+        setLoading(true);
+        setError("");
 
-  // optional fetch car info (existing)
-  const submitCar = async () => {
-    setError("");
-    if (!plateNumber) return setError("Enter plate number first");
-    setLoading(true);
-    try {
-      const res = await fetch(`${API}/car`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ plateNumber }),
-      });
-      if (!res.ok) {
-        // maybe server returns not found; ignore for hackathon
-        const txt = await res.text();
-        throw new Error(txt || "Car lookup failed");
-      }
-      const data = await res.json();
-      setCarData(data.data || null);
-    } catch (err) {
-      // for hackathon we can ignore — show message
-      setError(err.message || "Car lookup failed");
-    } finally {
-      setLoading(false);
-    }
-  };
+        try {
+            const res = await fetch(`${VEHICLE_URL}/register`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    ownerId: driverId,
+                    plateNumber,
+                    vin,
+                    model,
+                    color,
+                }),
+            });
 
-  // register driver record (optional - stores on your backend DB)
-  const registerDriverOnBackend = async () => {
-    setLoading(true);
-    setError("");
-    try {
-      const payload = {
-        personal,
-        ninData,
-      };
-      const res = await fetch(`${API}/register-driver`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-        body: JSON.stringify(payload),
-      });
-      if (!res.ok) {
-        const txt = await res.text();
-        throw new Error(txt || "Failed to register driver");
-      }
-      const data = await res.json();
-      return data;
-    } catch (err) {
-      setError(err.message || "Register driver failed");
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  };
+            const data = await res.json();
 
-  // final mint: ask backend to mint driver & vehicle NFT
-  const mintVehicle = async () => {
-    setError("");
-    if (!agreementAccepted) return setError("Please accept the driver agreement first.");
-    if (!ipfsUrls) return setError("Upload vehicle images first.");
-    if (!ninData) return setError("Please verify NIN (mock) first.");
+            if (!data.success) {
+                setError(data.message);
+            } else {
+                setVehicleId(data.vehicle._id);
+                alert(`Vehicle registered successfully! ID: ${data.vehicle._id}`);
+            }
+        } catch {
+            setError("Vehicle registration failed.");
+        }
 
-    setLoading(true);
-    try {
-      // (optional) register driver in backend DB
-      await registerDriverOnBackend().catch(() => {
-        // non-fatal — continue
-      });
+        setLoading(false);
+    };
 
-      const body = {
-        personal,
-        ninData,
-        vehicle: {
-          plateNumber,
-          chassis,
-          engineNumber,
-          carModel,
-          carColor,
-          carYear,
-        },
-        ipfs: ipfsUrls,
-      };
 
-      const res = await fetch(`${API}/mint-nft`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-        body: JSON.stringify(body),
-      });
 
-      if (!res.ok) {
-        const txt = await res.text();
-        throw new Error(txt || "Minting failed");
-      }
 
-      const data = await res.json();
-      // backend returns { ok: true, txHash, policyId, driverAssetId, vehicleAssetId }
-      const tx = data.txHash;
-      const driverAsset = data.driverAsset || null;
-      const vehicleAsset = data.vehicleAsset || null;
+    // --- 4. MINT DRIVER NFT ---
+    const mintDriverIdentity = async () => {
+        if (!driverId) return alert("Register driver first.");
+        setLoading(true);
+        setError("");
 
-      const explorerBase = (data.network || "mainnet") === "mainnet"
-        ? "https://cardanoscan.io/transaction/"
-        : "https://preprod.cardanoscan.io/transaction/";
+        try {
+            const res = await fetch(`${BASE_URL}/cardano/driver-identity`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ driverId }),
+            });
 
-      setSuccess({
-        open: true,
-        title: "Mint Successful",
-        message: `Driver NFT: ${driverAsset || "n/a"}\nVehicle NFT: ${vehicleAsset || "n/a"}\n\nTx: ${tx}`,
-        link: explorerBase + tx,
-      });
-    } catch (err) {
-      setError(err.message || "Mint failed");
-    } finally {
-      setLoading(false);
-    }
-  };
+            const data = await res.json();
+            if (!data.success) setError(data.message || "Minting failed");
+            else setDriverMintResult(data);
+        } catch {
+            setError("Driver NFT minting failed.");
+        }
 
-  return (
-    <PhoneFrame>
-      <div className="profile-container">
-        {loading && <div className="loading">Loading...</div>}
-        {error && <div className="error">{error}</div>}
+        setLoading(false);
+    };
 
-        {success.open && (
-          <SuccessModal
-            title={success.title}
-            message={success.message}
-            link={success.link}
-            onClose={() => setSuccess({ open: false, title: "", message: "", link: "" })}
-          />
-        )}
+    // --- 5. MINT VEHICLE NFT ---
+    const mintVehicleIdentity = async () => {
+        if (!vehicleId) return alert("Register vehicle first.");
+        setLoading(true);
+        setError("");
 
-        {/* PERSONAL INFO */}
-        <section className="card">
-          <h2>Personal Information</h2>
-          <input
-            placeholder="Full Name"
-            value={personal.name}
-            onChange={(e) => setPersonal((p) => ({ ...p, name: e.target.value }))}
-          />
-          <input
-            placeholder="Email"
-            value={personal.email}
-            onChange={(e) => setPersonal((p) => ({ ...p, email: e.target.value }))}
-          />
-        </section>
+        try {
+            const res = await fetch(`${VEHICLE_URL}/cardano/vehicle-identity`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ vehicleId }),
+            });
 
-        {/* VEHICLE DETAILS */}
-        <section className="card">
-          <h2>Vehicle Details</h2>
-          <input placeholder="Plate Number" value={plateNumber} onChange={(e) => setPlateNumber(e.target.value)} />
-          <input placeholder="Chassis Number" value={chassis} onChange={(e) => setChassis(e.target.value)} />
-          <input placeholder="Engine Number" value={engineNumber} onChange={(e) => setEngineNumber(e.target.value)} />
-          <input placeholder="Car Model" value={carModel} onChange={(e) => setCarModel(e.target.value)} />
-          <input placeholder="Car Color" value={carColor} onChange={(e) => setCarColor(e.target.value)} />
-          <input placeholder="Manufacture Year" value={carYear} onChange={(e) => setCarYear(e.target.value)} />
+            const data = await res.json();
+            if (!data.success) setError(data.message || "Minting failed");
+            else setVehicleMintResult(data);
+        } catch {
+            setError("Vehicle NFT minting failed.");
+        }
 
-          <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
-            <button onClick={submitCar}>Fetch Car Info</button>
-            <button onClick={() => { setPlateNumber(""); setChassis(""); setEngineNumber(""); setCarModel(""); setCarColor(""); setCarYear(""); }}>
-              Clear
-            </button>
-          </div>
+        setLoading(false);
+    };
 
-          {carData && (
-            <div className="result-box">
-              <p>Car Make: {carData.carMake}</p>
-              <p>Model: {carData.carModel}</p>
-              <p>Year: {carData.carYear}</p>
+    return (
+        <PhoneFrame>
+            <div className="profile-container">
+                {/* VERIFY NIN */}
+                <div className="card">
+                    <h2>Verify NIN</h2>
+                    <input
+                        type="text"
+                        placeholder="Enter NIN"
+                        value={nin}
+                        onChange={(e) => setNin(e.target.value)}
+                    />
+                    <button onClick={handleVerifyNIN}>Verify NIN</button>
+                    {loading && <p className="loading">Processing...</p>}
+                    {error && <p className="error">{error}</p>}
+                    {ninData && (
+                        <div className="result-box">
+                            <p><strong>Name:</strong> {ninData.fullName}</p>
+                            <p><strong>DOB:</strong> {ninData.dob}</p>
+                            <p><strong>Gender:</strong> {ninData.gender}</p>
+                            <p><strong>State:</strong> {ninData.state}</p>
+                            <p><strong>Local Gov:</strong> {ninData.local}</p>
+                        </div>
+                    )}
+                </div>
+
+                {/* REGISTER DRIVER */}
+                <div className="card">
+                    <h2>Register Driver</h2>
+                    <input
+                        type="text"
+                        placeholder="Phone"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                    />
+                    <input
+                        type="text"
+                        placeholder="City"
+                        value={city}
+                        onChange={(e) => setCity(e.target.value)}
+                    />
+                    <input
+                        type="text"
+                        placeholder="Current Home Address"
+                        value={currentHomeAddress}
+                        onChange={(e) => setCurrentHomeAddress(e.target.value)}
+                    />
+                    <input
+                        type="text"
+                        placeholder="Permanent Home Address"
+                        value={permanentHomeAddress}
+                        onChange={(e) => setPermanentHomeAddress(e.target.value)}
+                    />
+                    <input
+                        type="text"
+                        placeholder="Occupation"
+                        value={occupation}
+                        onChange={(e) => setOccupation(e.target.value)}
+                    />
+                    <button onClick={registerDriver}>Register Driver</button>
+                </div>
+
+                {/* MINT DRIVER NFT */}
+                <div className="card">
+                    <h2>Mint Driver Identity NFT</h2>
+                    <button onClick={mintDriverIdentity}>Mint NFT</button>
+                    {driverMintResult && (
+                        <div className="result-box">
+                            <p><strong>Token:</strong> {driverMintResult.tokenName}</p>
+                            <p><strong>Token ID:</strong> {driverMintResult.tokenId}</p>
+                            <p><strong>Tx Hash:</strong> {driverMintResult.txHash}</p>
+                        </div>
+                    )}
+                </div>
+
+                {/* REGISTER VEHICLE */}
+                <div className="card">
+                    <h2>Register Vehicle</h2>
+                    <input
+                        type="text"
+                        placeholder="Plate Number"
+                        value={plateNumber}
+                        onChange={(e) => setPlateNumber(e.target.value)}
+                    />
+                    <input
+                        type="text"
+                        placeholder="VIN"
+                        value={vin}
+                        onChange={(e) => setVin(e.target.value)}
+                    />
+                    <input
+                        type="text"
+                        placeholder="Model"
+                        value={model}
+                        onChange={(e) => setModel(e.target.value)}
+                    />
+                    <input
+                        type="text"
+                        placeholder="Color"
+                        value={color}
+                        onChange={(e) => setColor(e.target.value)}
+                    />
+                    <button onClick={registerVehicle}>Register Vehicle</button>
+                </div>
+
+                {/* MINT VEHICLE NFT */}
+                <div className="card">
+                    <h2>Mint Vehicle Identity NFT</h2>
+                    <button onClick={mintVehicleIdentity}>Mint Vehicle NFT</button>
+                    {vehicleMintResult && (
+                        <div className="result-box">
+                            <p><strong>Token:</strong> {vehicleMintResult.tokenName}</p>
+                            <p><strong>Token ID:</strong> {vehicleMintResult.tokenId}</p>
+                            <p><strong>Tx Hash:</strong> {vehicleMintResult.txHash}</p>
+                        </div>
+                    )}
+                </div>
             </div>
-          )}
-        </section>
-
-        {/* IMAGE UPLOAD */}
-        <section className="card">
-          <h2>Upload Vehicle Images</h2>
-          {["front", "back", "plate", "engine", "chassis"].map((type) => (
-            <div key={type} className="img-upload-row">
-              <label style={{ textTransform: "uppercase" }}>{type}</label>
-              <input type="file" accept="image/*" onChange={(e) => handleImageChange(e, type)} />
-              {preview[type] && <img src={preview[type]} alt={type} className="preview-img" />}
-            </div>
-          ))}
-
-          <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
-            <button onClick={uploadImagesToIPFS}>Upload Images to IPFS</button>
-            <button
-              onClick={() => {
-                setImages({ front: null, back: null, plate: null, engine: null, chassis: null });
-                setPreview({});
-                setIpfsUrls(null);
-              }}
-            >
-              Reset Images
-            </button>
-          </div>
-
-          {ipfsUrls && (
-            <div className="result-box">
-              <p>✔ Images uploaded to IPFS</p>
-            </div>
-          )}
-        </section>
-
-        {/* NIN (mock) */}
-        <section className="card">
-          <h2>NIN (mock)</h2>
-          <input placeholder="NIN (mock)" value={nin} onChange={(e) => setNin(e.target.value)} />
-          <button onClick={submitNin}>Verify NIN (mock)</button>
-
-          {ninData && (
-            <div className="result-box">
-              <p>
-                Name: {ninData.firstname} {ninData.lastname}
-              </p>
-              <p>Age: {ninData.age}</p>
-              <p>Gender: {ninData.gender}</p>
-            </div>
-          )}
-        </section>
-
-        {/* Agreement */}
-        <section className="card">
-          <h2>Driver Agreement</h2>
-          {!agreementAccepted ? (
-            <button className="agree-btn" onClick={() => setAgreementAccepted(true)}>
-              Accept & Save
-            </button>
-          ) : (
-            <p className="success">✔ Agreement Accepted</p>
-          )}
-        </section>
-
-        {/* MINT */}
-        <section className="card">
-          <h2>Mint Vehicle Identity</h2>
-          <p style={{ marginTop: 0, opacity: 0.8 }}>
-            This will mint two NFTs: one for the driver (driver identity) and one for the vehicle (vehicle identity).
-            Metadata and images are stored on IPFS.
-          </p>
-
-          <div style={{ display: "flex", gap: 8 }}>
-            <button onClick={mintVehicle}>Mint on Cardano</button>
-            <button
-              onClick={() => {
-                setIpfsUrls(null);
-                setSuccess({ open: false, title: "", message: "", link: "" });
-              }}
-            >
-              Cancel
-            </button>
-          </div>
-        </section>
-      </div>
-    </PhoneFrame>
-  );
-};
-
-export default Profile;
+        </PhoneFrame>
+    );
+}
