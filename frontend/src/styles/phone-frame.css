@@ -166,7 +166,7 @@
 }
 
 
-@media (max-width: 500px) {
+@media (max-width: 350px) {
 	.driver-page::before {
 		display: none;
 	}
