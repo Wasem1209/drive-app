@@ -28,6 +28,7 @@ import PayRoadTax from "./features/PayRoadTax.jsx";
 import ScanPlateNo from "./features/ScanPlateNo.jsx";
 import TransactionHistory from "../Passenger/features/TransactionHistory";
 import { hexToBech32, parseBalance } from "../../utils/cardano";
+import { addPassengerTransaction } from "../../api/transactions";
 
 export default function DriverDashboard() {
   const navigate = useNavigate();
@@ -48,6 +49,8 @@ export default function DriverDashboard() {
   const [availableProviders, setAvailableProviders] = useState([]);
   const [connectionNotice, setConnectionNotice] = useState("");
   const [connectingProvider, setConnectingProvider] = useState("");
+  const walletApiRef = useRef(null);
+  const [payStatus, setPayStatus] = useState({ state: "idle", message: "" });
 
   // Discover wallet providers (runs on demand, safe for SSR because it runs on click)
   const discoverProviders = () => {
@@ -196,6 +199,7 @@ export default function DriverDashboard() {
       } catch (e) {}
       if (!addr) addr = "addr_test1qpxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 
+      walletApiRef.current = api;
       setWalletAddress(addr);
       setWalletConnected(true);
 
@@ -239,6 +243,7 @@ export default function DriverDashboard() {
     setWalletConnected(false);
     setWalletAddress("");
     setBalance("0.00");
+    walletApiRef.current = null;
     setWalletModalOpen(false);
   };
 
@@ -407,6 +412,39 @@ export default function DriverDashboard() {
       setEarlyHint("");
     } catch (e) {
       /* ignore */
+    }
+  };
+
+  const handlePayment = async ({ plate, amount, kind }) => {
+    const amt = Number(amount || 0);
+    if (!walletConnected || !walletApiRef.current) {
+      setPayStatus({ state: "error", message: "Connect wallet before paying." });
+      return false;
+    }
+    if (!plate || Number.isNaN(amt) || amt <= 0) {
+      setPayStatus({ state: "error", message: "Enter a valid plate and amount." });
+      return false;
+    }
+
+    setPayStatus({ state: "pending", message: "Requesting wallet signature..." });
+    try {
+      // Placeholder: integrate real tx build + submit (Blockfrost / backend) here
+      // For now, we simulate a successful payment and store it locally.
+      const txHash = `tx_${Date.now()}`;
+      addPassengerTransaction({
+        id: txHash,
+        driverWallet: walletAddress || "",
+        route: kind === "insurance" ? "Insurance" : "Road Tax",
+        amountAda: amt,
+        split: { driver: 0, gov: 100 },
+        txHash,
+        timestamp: Date.now(),
+      });
+      setPayStatus({ state: "success", message: "Payment recorded locally (mock)." });
+      return true;
+    } catch (e) {
+      setPayStatus({ state: "error", message: e?.message || "Payment failed." });
+      return false;
     }
   };
 
@@ -720,9 +758,23 @@ export default function DriverDashboard() {
         <Outlet />
 
         {/* Modals / inline feature components (open instead of navigating) */}
-        {showPayTax && <PayRoadTax onClose={() => setShowPayTax(false)} />}
+        {showPayTax && (
+          <PayRoadTax
+            onClose={() => setShowPayTax(false)}
+            onPay={handlePayment}
+            payState={payStatus}
+            mode="roadtax"
+          />
+        )}
         {showScanPlate && <ScanPlateNo onClose={() => setShowScanPlate(false)} />}
-        {showPayInsurance && <PayRoadTax onClose={() => setShowPayInsurance(false)} mode="insurance" />}
+        {showPayInsurance && (
+          <PayRoadTax
+            onClose={() => setShowPayInsurance(false)}
+            onPay={handlePayment}
+            payState={payStatus}
+            mode="insurance"
+          />
+        )}
         {showHistory && <TransactionHistory onClose={() => setShowHistory(false)} />}
 
       </div>

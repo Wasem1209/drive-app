@@ -3,9 +3,11 @@ import PhoneFrame from "../../components/PhoneFrame";
 import '../../styles/driverdashboard.css';
 import '../../styles/admin.css';
 import * as api from '../../api/adminMock';
+import { useNavigate } from 'react-router-dom';
 
 // Minimal Admin Dashboard MVP (local/mock implementation)
 export default function AdminDashboard() {
+    const navigate = useNavigate();
     // --- Multisig auth simulation ---
     const [adminAddresses, setAdminAddresses] = useState(['addr_admin1', 'addr_admin2', 'addr_admin3']);
     const [threshold, setThreshold] = useState(2);
@@ -206,11 +208,14 @@ export default function AdminDashboard() {
 
                     <main className="admin-main">
                         <header className="admin-hero">
-                            <div>
-                                <p className="eyebrow">Admin Console</p>
-                                <h1 className="page-title">High-security control</h1>
-                                <p className="muted">Multisig approvals, officer actions, and token controls in one place.</p>
-                            </div>
+                                <div className="admin-hero-left">
+                                    <button className="back-btn-admin" onClick={() => navigate(-1)} aria-label="Go back">←</button>
+                                    <div>
+                                        <p className="eyebrow">Admin Console</p>
+                                        <h1 className="page-title">High-security control</h1>
+                                        <p className="muted">Multisig approvals, officer actions, and token controls in one place.</p>
+                                    </div>
+                                </div>
                             <div className="hero-meta">
                                 <div className="pill pill-success">Operational</div>
                                 <div className="pill">Last sync {new Date().toLocaleTimeString()}</div>

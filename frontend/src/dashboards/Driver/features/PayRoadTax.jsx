@@ -1,7 +1,17 @@
+import { useState } from 'react';
 import '../../../styles/verify-modal.css';
 
-export default function PayRoadTax({ onClose, mode }) {
+export default function PayRoadTax({ onClose, onPay, payState, mode }) {
     const title = mode === 'insurance' ? 'Pay Insurance' : 'Pay Road Tax';
+    const [plate, setPlate] = useState('');
+    const [amount, setAmount] = useState('');
+
+    const handleSubmit = async () => {
+        const ok = await onPay?.({ plate, amount, kind: mode });
+        if (ok) onClose?.();
+    };
+
+    const isPending = payState?.state === 'pending';
 
     return (
         <div
@@ -51,14 +61,48 @@ export default function PayRoadTax({ onClose, mode }) {
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                     <label style={{ fontSize: 13, opacity: 0.85 }}>Vehicle Plate</label>
-                    <input placeholder="Enter plate number" style={{ padding: '10px 12px', borderRadius: 10, border: '1px solid #334155', background: '#0b1220', color: '#fff' }} />
+                    <input
+                        value={plate}
+                        onChange={(e) => setPlate(e.target.value)}
+                        placeholder="Enter plate number"
+                        style={{ padding: '10px 12px', borderRadius: 10, border: '1px solid #334155', background: '#0b1220', color: '#fff' }}
+                    />
 
                     <label style={{ fontSize: 13, opacity: 0.85 }}>Amount (ADA)</label>
-                    <input placeholder="0.00" style={{ padding: '10px 12px', borderRadius: 10, border: '1px solid #334155', background: '#0b1220', color: '#fff' }} />
+                    <input
+                        value={amount}
+                        onChange={(e) => setAmount(e.target.value)}
+                        placeholder="0.00"
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        style={{ padding: '10px 12px', borderRadius: 10, border: '1px solid #334155', background: '#0b1220', color: '#fff' }}
+                    />
+
+                    {payState?.message && (
+                        <div style={{ fontSize: 12, color: payState.state === 'error' ? '#fca5a5' : '#a5f3fc' }}>
+                            {payState.message}
+                        </div>
+                    )}
 
                     <div style={{ display: 'flex', gap: 10, marginTop: 8 }}>
                         <button onClick={onClose} style={{ flex: 1, background: 'transparent', border: '1px solid #334155', color: '#fff', padding: '10px 12px', borderRadius: 10 }}>Cancel</button>
-                        <button style={{ flex: 1, background: 'linear-gradient(90deg,#2563eb,#3b82f6)', border: 'none', color: '#fff', padding: '10px 12px', borderRadius: 10 }}>Pay</button>
+                        <button
+                            onClick={handleSubmit}
+                            disabled={isPending}
+                            style={{
+                                flex: 1,
+                                background: 'linear-gradient(90deg,#2563eb,#3b82f6)',
+                                border: 'none',
+                                color: '#fff',
+                                padding: '10px 12px',
+                                borderRadius: 10,
+                                opacity: isPending ? 0.7 : 1,
+                                cursor: isPending ? 'wait' : 'pointer'
+                            }}
+                        >
+                            {isPending ? 'Processing…' : 'Pay'}
+                        </button>
                     </div>
                 </div>
             </div>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FaCar, FaRoad, FaExclamationTriangle, FaClipboardList, FaCertificate, FaHeartbeat, FaUserPlus } from 'react-icons/fa';
+import { FaCar, FaRoad, FaExclamationTriangle, FaClipboardList, FaCertificate, FaHeartbeat, FaUserPlus, FaArrowLeft } from 'react-icons/fa';
 import './Driver.css';
 import { useNavigate } from 'react-router-dom';
 
@@ -20,13 +20,19 @@ export default function Driver() {
     return (
         <div className="driver-container">
 
-            {/* Header */}
-            <div className="driver-header">
-                <h1>
-                    <FaCar style={{ marginRight: '10px', verticalAlign: 'middle', color: '#075a5a' }} />
-                    Driver Experience Standard
-                </h1>
-                <p>Aligned with FCT / FRSC international driving competencies & rules</p>
+            <div className="driver-top">
+                <button className="back-btn" onClick={() => navigate(-1)} aria-label="Go back">
+                    <FaArrowLeft />
+                </button>
+
+                {/* Header */}
+                <div className="driver-header">
+                    <h1>
+                        <FaCar style={{ marginRight: '10px', verticalAlign: 'middle', color: '#075a5a' }} />
+                        Driver Experience Standard
+                    </h1>
+                    <p>Aligned with FCT / FRSC international driving competencies & rules</p>
+                </div>
             </div>
 
             {/* Driver Experience Requirements */}
@@ -103,7 +109,7 @@ export default function Driver() {
             </div>
 
             {/* Register Button at the bottom */}
-            <div style={{ textAlign: 'center', marginTop: '30px' }}>
+            <div className="register-container">
                 <button
                     className="register-btn"
                     onClick={() => navigate('/register')}

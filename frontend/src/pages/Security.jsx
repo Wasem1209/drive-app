@@ -5,7 +5,8 @@ import {
     FaCarSide,
     FaUsers,
     FaExclamationTriangle,
-    FaUserPlus
+    FaUserPlus,
+    FaArrowLeft
 } from "react-icons/fa";
 import "./Security.css";
 import { useNavigate } from "react-router-dom";
@@ -31,16 +32,22 @@ export default function Security() {
     return (
         <div className="security-container">
 
-            {/* Header */}
-            <div className="security-header">
-                <h1 className="security-title">
-                    <FaShieldAlt className="security-icon" />
-                    Road Security Experience
-                </h1>
-                <p className="security-subtitle">
-                    Guidelines for drivers, passengers, and security agencies to ensure
-                    safe, lawful, and respectful road interactions.
-                </p>
+            <div className="page-top">
+                <button className="back-btn" onClick={() => navigate(-1)} aria-label="Go back">
+                    <FaArrowLeft />
+                </button>
+
+                {/* Header */}
+                <div className="security-header">
+                    <h1 className="security-title">
+                        <FaShieldAlt className="security-icon" />
+                        Road Security Experience
+                    </h1>
+                    <p className="security-subtitle">
+                        Guidelines for drivers, passengers, and security agencies to ensure
+                        safe, lawful, and respectful road interactions.
+                    </p>
+                </div>
             </div>
 
             {/* Driver Security Expectations */}

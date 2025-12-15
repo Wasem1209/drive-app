@@ -3,6 +3,7 @@ import "./../styles/Auth.css";
 import { registerUser } from "../api/auth";
 import illustration from "./../assets/image-left.jpg";
 import { Link, useNavigate } from "react-router-dom";
+import { FaArrowLeft } from "react-icons/fa";
 
 function Register() {
   const navigate = useNavigate();
@@ -19,6 +20,8 @@ function Register() {
   const [serverError, setServerError] = useState("");
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -70,132 +73,163 @@ function Register() {
   };
 
   return (
-    <div className="auth-page">
-      <div className="auth-shell">
-        <div className="auth-left">
-          <div className="auth-intro">
-            <h1 className="auth-title">Create your account</h1>
-            <p className="auth-sub">
-              Your vehicle’s compliance status, verified in seconds. Fast, secure, and corruption-free.
+    <div className="auth-page register-page">
+      <div className="auth-shell register-shell">
+        <div className="auth-left register-left">
+          <div className="register-card" role="region" aria-label="Create account">
+            <div className="register-top">
+              <button type="button" className="back-btn" onClick={() => navigate(-1)} aria-label="Go back">
+                <FaArrowLeft />
+              </button>
+
+              <div className="auth-intro">
+                <h1 className="auth-title">Create your account</h1>
+                <p className="auth-sub">
+                  Your vehicle’s compliance status, verified in seconds. Fast, secure, and corruption-free.
+                </p>
+              </div>
+            </div>
+
+            <form className="auth-form register-form" onSubmit={handleSubmit} noValidate>
+              {serverError && <p className="error-msg" role="alert">{serverError}</p>}
+
+              <div className={`field register-field ${errors.fullName ? "field-error" : ""}`}>
+                <input
+                  id="fullName"
+                  name="fullName"
+                  value={formData.fullName}
+                  onChange={handleChange}
+                  placeholder=" "
+                  className="input"
+                  autoComplete="name"
+                />
+                <label htmlFor="fullName" className="label">Full name</label>
+                {errors.fullName && <div className="error-msg">{errors.fullName}</div>}
+              </div>
+
+              <div className={`field register-field ${errors.email ? "field-error" : ""}`}>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder=" "
+                  className="input"
+                  autoComplete="email"
+                />
+                <label htmlFor="email" className="label">Email</label>
+                {errors.email && <div className="error-msg">{errors.email}</div>}
+              </div>
+
+              <div className={`field register-field ${errors.password ? "field-error" : ""}`}>
+                <div className="input-affix">
+                  <input
+                    id="password"
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    value={formData.password}
+                    onChange={handleChange}
+                    placeholder=" "
+                    className="input"
+                    autoComplete="new-password"
+                  />
+                  <label htmlFor="password" className="label">Password</label>
+                  <button
+                    type="button"
+                    className="affix-btn"
+                    onClick={() => setShowPassword((s) => !s)}
+                    aria-pressed={showPassword}
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                  >
+                    {showPassword ? "Hide" : "Show"}
+                  </button>
+                </div>
+                {errors.password && <div className="error-msg">{errors.password}</div>}
+              </div>
+
+              <div className={`field register-field ${errors.confirmPassword ? "field-error" : ""}`}>
+                <div className="input-affix">
+                  <input
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    type={showConfirmPassword ? "text" : "password"}
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    placeholder=" "
+                    className="input"
+                    autoComplete="new-password"
+                  />
+                  <label htmlFor="confirmPassword" className="label">Confirm password</label>
+                  <button
+                    type="button"
+                    className="affix-btn"
+                    onClick={() => setShowConfirmPassword((s) => !s)}
+                    aria-pressed={showConfirmPassword}
+                    aria-label={showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
+                  >
+                    {showConfirmPassword ? "Hide" : "Show"}
+                  </button>
+                </div>
+                {errors.confirmPassword && <div className="error-msg">{errors.confirmPassword}</div>}
+              </div>
+
+              <div className={`field ${errors.role ? "field-error" : ""}`}>
+                <div className="role-label">Account type</div>
+                <div className="role-grid" role="radiogroup" aria-label="Account type">
+                  {[
+                    { value: "driver", label: "Driver" },
+                    { value: "passenger", label: "Passenger" },
+                    { value: "officer", label: "Officer" },
+                    { value: "admin", label: "Admin" },
+                  ].map((r) => (
+                    <button
+                      key={r.value}
+                      type="button"
+                      className={`role-tile ${formData.role === r.value ? "active" : ""}`}
+                      onClick={() => setFormData((p) => ({ ...p, role: r.value }))}
+                      role="radio"
+                      aria-checked={formData.role === r.value}
+                    >
+                      <span className="role-title">{r.label}</span>
+                      <span className="role-sub">Select</span>
+                    </button>
+                  ))}
+                </div>
+                {errors.role && <div className="error-msg">{errors.role}</div>}
+              </div>
+
+              <button type="submit" className="btn-primary register-cta" disabled={loading}>
+                {loading ? "Creating account…" : "Create account"}
+              </button>
+            </form>
+
+            <p className="auth-foot register-foot">
+              Already have an account? <Link to="/login">Log in</Link>
             </p>
           </div>
-
-          <form className="auth-form" onSubmit={handleSubmit} noValidate>
-            {serverError && <p className="error-msg">{serverError}</p>}
-
-            {/* Full Name */}
-            <div className={`field ${errors.fullName ? "field-error" : ""}`}>
-              <input
-                id="fullName"
-                name="fullName"
-                value={formData.fullName}
-                onChange={handleChange}
-                placeholder=" "
-                className="input"
-              />
-              <label htmlFor="fullName" className="label">Full Name</label>
-              {errors.fullName && <div className="error-msg">{errors.fullName}</div>}
-            </div>
-
-            {/* Email */}
-            <div className={`field ${errors.email ? "field-error" : ""}`}>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                value={formData.email}
-                onChange={handleChange}
-                placeholder=" "
-                className="input"
-              />
-              <label htmlFor="email" className="label">Email</label>
-              {errors.email && <div className="error-msg">{errors.email}</div>}
-            </div>
-
-            {/* Password */}
-            <div className={`field ${errors.password ? "field-error" : ""}`}>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                value={formData.password}
-                onChange={handleChange}
-                placeholder=" "
-                className="input"
-              />
-              <label htmlFor="password" className="label">Password</label>
-              {errors.password && <div className="error-msg">{errors.password}</div>}
-            </div>
-
-            {/* Confirm Password */}
-            <div className={`field ${errors.confirmPassword ? "field-error" : ""}`}>
-              <input
-                id="confirmPassword"
-                name="confirmPassword"
-                type="password"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                placeholder=" "
-                className="input"
-              />
-              <label htmlFor="confirmPassword" className="label">Confirm Password</label>
-              {errors.confirmPassword && <div className="error-msg">{errors.confirmPassword}</div>}
-            </div>
-
-            {/* Role */}
-            <div className={`field select-field ${errors.role ? "field-error" : ""}`}>
-              <select
-                id="role"
-                name="role"
-                value={formData.role}
-                onChange={handleChange}
-                className="input select-input"
-              >
-                <option value="">Choose account type</option>
-                <option value="driver">Driver</option>
-                <option value="passenger">Passenger</option>
-                <option value="officer">Officer</option>
-                <option value="admin">Admin</option>
-              </select>
-              <label htmlFor="role" className="label small-label">Account type</label>
-              {errors.role && <div className="error-msg">{errors.role}</div>}
-            </div>
-
-            <button type="submit" className="btn-primary" disabled={loading}>
-              {loading ? "Creating Account..." : "Register"}
-            </button>
-          </form>
-
-          <p className="auth-foot">
-            Already have an account? <Link to="/login">Log in</Link>
-          </p>
         </div>
 
-        <div className="auth-right">
-          <img src={illustration} alt="" className="auth-illustration" />
+        <div className="auth-right register-right" aria-hidden="true">
+          <div className="register-visual">
+            <img src={illustration} alt="" className="auth-illustration register-illustration" />
+          </div>
         </div>
       </div>
 
-      {/* SUCCESS MODAL */}
       {showSuccessModal && (
-        <div className="modal-overlay">
+        <div className="modal-overlay" role="dialog" aria-modal="true" aria-label="Account created">
           <div className="modal-box">
-            <h2>Account Created Successfully 🎉</h2>
-            <p>Your account has been created. You can now log in.</p>
+            <div className="success-badge" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 6L9 17L4 12" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </div>
+            <h2>Account created</h2>
+            <p className="modal-sub">Your account has been created successfully. You can now log in.</p>
 
-            <button
-              className="modal-btn"
-              onClick={() => navigate("/login")}
-            >
-              Go to Login
-            </button>
-
-            <button
-              className="modal-close"
-              onClick={() => setShowSuccessModal(false)}
-            >
-              Close
-            </button>
+            <button className="modal-btn" onClick={() => navigate("/login")}>Go to Login</button>
+            <button className="modal-close" onClick={() => setShowSuccessModal(false)}>Close</button>
           </div>
         </div>
       )}

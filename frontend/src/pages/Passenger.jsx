@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FaChair, FaBus, FaSmile, FaClipboardList, FaHeartbeat, FaUserPlus } from 'react-icons/fa';
+import { FaChair, FaBus, FaSmile, FaClipboardList, FaHeartbeat, FaUserPlus, FaArrowLeft } from 'react-icons/fa';
 import './Passenger.css';
 import { useNavigate } from 'react-router-dom';
 
@@ -20,15 +20,20 @@ export default function Passenger() {
   return (
     <div className="passenger-container">
 
-      {/* Header */}
-      <div className="passenger-header">
-        <h1 className="header-title">
-          <FaBus className="header-icon" />
-          Modern Passenger Experience
-        </h1>
-        <p className="header-subtitle">
-          A safe, secure, and educational transport system aligned with FCT / FRSC standards
-        </p>
+      <div className="page-top">
+        <button className="back-btn" onClick={() => navigate(-1)} aria-label="Go back">
+          <FaArrowLeft />
+        </button>
+
+        <div className="passenger-header">
+          <h1 className="header-title">
+            <FaBus className="header-icon" />
+            Modern Passenger Experience
+          </h1>
+          <p className="header-subtitle">
+            A safe, secure, and educational transport system aligned with FCT / FRSC standards
+          </p>
+        </div>
       </div>
 
       {/* Comfort & Accessibility */}

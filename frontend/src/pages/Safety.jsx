@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaShieldAlt, FaBook, FaEye, FaExclamationTriangle, FaUserPlus } from "react-icons/fa";
+import { FaShieldAlt, FaBook, FaEye, FaExclamationTriangle, FaUserPlus, FaArrowLeft } from "react-icons/fa";
 import "./Frsc.css";
 import { useNavigate } from "react-router-dom";
 
@@ -23,15 +23,21 @@ export default function Frsc() {
     return (
         <div className="frsc-container">
 
-            {/* Header */}
-            <div className="frsc-header">
-                <h1 className="header-title">
-                    <FaShieldAlt className="header-icon" />
-                    FRSC Road Safety Guidelines
-                </h1>
-                <p className="header-subtitle">
-                    What every driver and passenger must know about compliance, safety, and responsible road use.
-                </p>
+            <div className="page-top">
+                <button className="back-btn" onClick={() => navigate(-1)} aria-label="Go back">
+                    <FaArrowLeft />
+                </button>
+
+                {/* Header */}
+                <div className="frsc-header">
+                    <h1 className="header-title">
+                        <FaShieldAlt className="header-icon" />
+                        FRSC Road Safety Guidelines
+                    </h1>
+                    <p className="header-subtitle">
+                        What every driver and passenger must know about compliance, safety, and responsible road use.
+                    </p>
+                </div>
             </div>
 
             {/* Roles & Responsibilities */}
