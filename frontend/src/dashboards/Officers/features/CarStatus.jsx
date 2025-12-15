@@ -21,6 +21,7 @@ export default function CarStatus({ onClose, onFine }) {
 		try {
 			const res = await verifyVehicle(p);
 			setResult(res);
+			// eslint-disable-next-line no-unused-vars
 		} catch (e) {
 			setError('Lookup failed.');
 		} finally {
@@ -40,6 +41,7 @@ export default function CarStatus({ onClose, onFine }) {
 					videoRef.current.srcObject = stream;
 					await videoRef.current.play();
 				}
+				// eslint-disable-next-line no-unused-vars
 			} catch (e) {
 				setError('Camera access denied.');
 				setCameraOn(false);
@@ -74,6 +76,7 @@ export default function CarStatus({ onClose, onFine }) {
 				setPlate(normalized);
 				await query();
 			}
+			// eslint-disable-next-line no-unused-vars
 		} catch (e) {
 			setError('Scan failed.');
 		} finally {
@@ -88,16 +91,16 @@ export default function CarStatus({ onClose, onFine }) {
 				<button onClick={onClose} style={{ position: 'absolute', top: 60, right: 12, background: 'transparent', border: 'none', color: '#fff', fontSize: 18, cursor: 'pointer' }}>×</button>
 				<h3 style={{ margin: '0 0 16px', fontSize: 20 }}>Vehicle Status</h3>
 				<div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
-					<input value={plate} onChange={(e)=>setPlate(e.target.value)} placeholder="Enter Plate e.g. ABC123JK" style={{ flex: 1, padding: '10px 12px', borderRadius: 10, border: '1px solid #334155', background: '#1e293b', color: '#fff', fontSize: 14 }} />
+					<input value={plate} onChange={(e) => setPlate(e.target.value)} placeholder="Enter Plate e.g. ABC123JK" style={{ flex: 1, padding: '10px 12px', borderRadius: 10, border: '1px solid #334155', background: '#1e293b', color: '#fff', fontSize: 14 }} />
 					<button onClick={query} disabled={loading} style={{ background: 'linear-gradient(90deg,#2563eb,#3b82f6)', border: 'none', color: '#fff', padding: '10px 12px', borderRadius: 10, cursor: 'pointer', fontSize: 14 }}>{loading ? 'Checking…' : 'Check'}</button>
-					<button onClick={()=>setCameraOn(true)} disabled={cameraOn} style={{ background: '#334155', border: 'none', color: '#fff', padding: '10px 12px', borderRadius: 10, cursor: cameraOn ? 'not-allowed' : 'pointer', fontSize: 14 }}>Scan</button>
+					<button onClick={() => setCameraOn(true)} disabled={cameraOn} style={{ background: '#334155', border: 'none', color: '#fff', padding: '10px 12px', borderRadius: 10, cursor: cameraOn ? 'not-allowed' : 'pointer', fontSize: 14 }}>Scan</button>
 				</div>
 				{cameraOn && (
 					<div style={{ border: '1px solid #1e293b', borderRadius: 12, padding: 12, marginBottom: 12 }}>
 						<video ref={videoRef} playsInline muted style={{ width: '100%', borderRadius: 10, background: '#0f172a', aspectRatio: '16/9', objectFit: 'cover' }} />
 						<div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
 							<button onClick={captureAndScan} style={{ flex: 1, background: 'linear-gradient(90deg,#2563eb,#3b82f6)', border: 'none', color: '#fff', padding: '10px 12px', borderRadius: 10, cursor: 'pointer', fontSize: 14 }}>Scan Now</button>
-							<button onClick={()=>setCameraOn(false)} style={{ flex: 1, background: '#334155', border: 'none', color: '#fff', padding: '10px 12px', borderRadius: 10, cursor: 'pointer', fontSize: 14 }}>Cancel</button>
+							<button onClick={() => setCameraOn(false)} style={{ flex: 1, background: '#334155', border: 'none', color: '#fff', padding: '10px 12px', borderRadius: 10, cursor: 'pointer', fontSize: 14 }}>Cancel</button>
 						</div>
 					</div>
 				)}
@@ -108,7 +111,7 @@ export default function CarStatus({ onClose, onFine }) {
 						{!result.found && (
 							<div style={{ background: '#1e293b', padding: '12px 14px', borderRadius: 12 }}>
 								<strong style={{ fontSize: 14 }}>Not Found</strong>
-								<div style={{ fontSize: 12, opacity: 0.7 }}>No record matched: {result.query}</div>
+								<div style={{ fontSize: 12, opacity: 0.7 }}>No record for this vehicle: {result.query}</div>
 							</div>
 						)}
 						{result.found && (
