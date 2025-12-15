@@ -14,7 +14,7 @@ export default function PayFare({ onClose, onPaymentSuccess }) {
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState('');
 	const [receipt, setReceipt] = useState(null);
-// checking things
+// checking thingsgbbb b
 	const canProceed = walletId.trim() && route.trim() && Number(amount) > 0;
 	const [connectedProvider, setConnectedProvider] = useState(null);
 	const [connectedAddress, setConnectedAddress] = useState('');
