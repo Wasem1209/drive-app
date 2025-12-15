@@ -49,7 +49,7 @@ export default function Driver() {
                         <li>Vehicle Control: Smooth acceleration and braking; proper steering; mirror use; gear control.</li>
                         <li>Situational Awareness: Anticipating hazards, maintaining following distances, monitoring road conditions.</li>
                         <li>Decision-Making & Judgment: Defensive driving, calm responses, and safe choices under pressure.</li>
-                        <li>Compliance with Laws: Recognize signs, obey speed limits, and yield appropriately.</li>
+                        <li>Compliance with Laws: Recognize signs, obeying of speed limits, and yield appropriately.</li>
                     </ul>
                 </div>
             </div>
